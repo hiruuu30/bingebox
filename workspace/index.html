@@ -217,33 +217,7 @@
         <label class="upload-field span-2">Upload poster<input id="posterFile" type="file" accept="image/jpeg,image/png,image/webp" /><span id="posterUploadStatus"></span></label>
         <div class="poster-preview-wrap span-2"><img id="posterPreview" class="poster-preview hidden" alt="Poster preview" /></div>
 
-        <section class="rights-panel permission-panel span-2" aria-labelledby="rightsPanelTitle">
-          <div class="rights-panel-head">
-            <div><p class="kicker">PUBLISHING PERMISSION</p><h3 id="rightsPanelTitle">Permission confirmation</h3></div>
-            <span id="rightsStateBadge" class="rights-state">Not confirmed</span>
-          </div>
-          <label class="permission-auto">
-            <input id="autoConfirmRights" type="checkbox" />
-            <span><strong>Auto-confirm permission in Workspace</strong><small>When enabled, new or unverified dramas open with publishing permission already confirmed. You can turn this off any time.</small></span>
-          </label>
-          <label class="permission-attest">
-            <input id="rightsAttestation" type="checkbox" />
-            <span><strong>I confirm BingeBox has permission to distribute this title.</strong><small>This confirmation applies to this drama and its episodes. Publishing remains blocked until it is checked.</small></span>
-          </label>
-          <details class="rights-advanced">
-            <summary>Advanced rights details <span>optional</span></summary>
-            <p class="rights-help">Optional private record-keeping. These details are not shown in the public catalog.</p>
-            <div class="rights-grid">
-              <label>Rights basis<select id="rightsBasis"><option value="other">Permission confirmed</option><option value="licensed">Licensed</option><option value="owned">Owned / commissioned</option><option value="public_domain">Public domain</option><option value="unverified">Not specified</option></select></label>
-              <label>Rights holder / licensor<input id="rightsHolder" placeholder="Optional" /></label>
-              <label>License / agreement reference<input id="rightsReference" placeholder="Optional contract or internal reference" /></label>
-              <label>Licensed territories<input id="rightsTerritories" placeholder="Optional" /></label>
-              <label>Rights expiry<input id="rightsExpiry" type="date" /></label>
-              <label class="span-2">Internal notes<textarea id="rightsNotes" rows="3" placeholder="Optional internal notes"></textarea></label>
-            </div>
-          </details>
-          <p id="rightsMessage" class="status"></p>
-        </section>
+        
       </div>
       <div class="toggle-row">
         <label class="switch-label legacy-featured-control hidden"><input id="featured" type="checkbox" /><span></span>Legacy featured flag</label>
@@ -279,7 +253,6 @@
         <button id="bulkModeBtn" class="hidden" type="button" role="tab" aria-selected="false">Legacy upload</button>
       </div>
 
-      <div id="episodeRightsNotice" class="rights-episode-notice hidden"></div>
       <section id="singleEpisodePanel" class="episode-panel">
         <div class="episode-create episode-source-create">
           <label>Episode #<input id="episodeNumber" type="number" min="1" value="1" /></label>
