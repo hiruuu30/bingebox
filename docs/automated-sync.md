@@ -1,190 +1,204 @@
-# Episode sync and delivery — operational status
+# BingeBox automated sync — production status
 
 Updated 2026-09-21.
 
-Frontend layout and user-facing behavior remain unchanged. The user later permitted frontend changes if they become necessary, but no layout/behavior changes were needed for the backend repair described here.
+## Current architecture
+BingeBox now follows the Animori production pattern:
 
-## Current public catalog
-The live catalog is intentionally limited to verified R2-backed media:
-- 3 published dramas.
-- 116 published episodes.
-- 116/116 published episodes have `video_key`.
-- 0 published external-only episodes.
+```
+DramaBox/Webfic source adapters
+        ↓
+Supabase scanner / discovery
+        ↓
+source_sync_state + fingerprints
+        ↓
+sync_queue
+        ↓
+dramafren-sync-worker
+        ↓
+normalized PostgreSQL
+        ↓
+BingeBox frontend
+```
 
-The three published dramas are:
-- Hero Husband's Apocalypse Harem — 61 episodes.
-- You Got the Wrong Guy — 50 episodes.
-- Blind to Love: the Alpha's Secret Heir — 5 episodes.
+Discovery, episode resolution, media validation and publishing state are separated. Queue jobs use deterministic idempotency keys, atomic `FOR UPDATE SKIP LOCKED` claims, worker leases, retry/backoff and stale-worker recovery.
 
-All other legacy titles remain stored but unpublished in the reversible quarantine described below.
+Frontend layout and behavior were not changed.
 
-## What runs now
-Supabase owns scheduling and queue processing; Vercel has no production cron schedule for sync.
+## Source adapters
 
-- `bingebox-cloud-importer`: each minute, queue-gated for pending/running `server_fetch` jobs.
-- `bingebox-cloud-seed-importer`: each minute, queue-gated for seeded `browser_seed` jobs.
-- `bingebox-expire-sources`: every ten minutes, retires elapsed temporary sources.
-- `bingebox-sync-scheduler`: every fifteen minutes, reconciles configured direct sync targets and enqueues due jobs.
-- `bingebox-dramafren-metadata-sync`: every minute, queue-gated for due DramaFren metadata discovery/refresh work.
-- `bingebox-dramafren-home-seed`: every six hours at minute 17, seeds the public Webfic/DramaBox home shelves into the metadata queue.
-- Duplicate `bingebox-cloud-importer-heartbeat` remains disabled.
+### Catalog / metadata
+The primary discovery source is the public DramaBox/Webfic browse feed:
 
-The `cloud-importer` worker is v4. Server-fetch jobs are claimed through `claim_bingebox_cloud_import_job()` with `FOR UPDATE SKIP LOCKED` and a time-bounded lease. A crashed worker can be reclaimed after lease expiry and concurrent invocations cannot claim the same active lease.
+- `POST https://www.webfic.com/webfic/home/browse`
+- `pline: DRAMABOX`
+- `language: en`
+- `{ typeTwoId: 0, pageNo: N, pageSize: 100 }`
 
-## DramaFren: dramabox.dramafren.org
-Direct backend HTML fetching is still blocked by Cloudflare:
-- Supabase server-fetch attempts receive HTTP 403 before discovery.
-- A temporary Vercel runtime probe independently received the same HTTP 403 / "Just a moment" challenge for home, detail, and watch pages.
-- The temporary Vercel probe endpoint was removed after verification.
-- No CAPTCHA, Cloudflare challenge, signed-app API, or paywall bypass is used.
+It currently exposes 30 pages / about 3,000 English titles with book ID, title, poster, synopsis, tags, shelf time and episode count.
 
-The original `https://dramabox.dramafren.org/` direct sync target reached three bounded HTTP 403 failures and is automatically paused. There are no pending/running jobs repeatedly hammering it.
+`dramafren-catalog-sync`:
+- scans the latest 500 titles every 2 minutes;
+- scans the complete 30-page catalog every 15 minutes;
+- fingerprints title metadata;
+- detects new IDs, episode-count changes and meaningful metadata changes;
+- places only post-baseline deltas into `sync_queue`.
 
-### Public metadata route
-A separate metadata-only pipeline is working through ordinary unsigned Webfic endpoints used by the DramaBox web client:
-- `POST https://www.webfic.com/webfic/book/detail` with `pline: DRAMABOX` returns title metadata, poster, synopsis, tags, shelf date, chapter count, and recommendations.
-- `POST https://www.webfic.com/webfic/home/index` with the same public web headers returns public home-shelf metadata.
-- `/webfic/book/detail/v2` was tested with current and older IDs and currently returns success without a useful data payload, so it is not used.
-- Protected/signed mobile-app chapter APIs are not used.
+The historical catalog was explicitly established as a future-only baseline. The first fingerprint pass over all 30 pages produced zero false new-release jobs.
 
-Metadata work is stored in `public.dramafren_catalog_queue` and claimed atomically through `claim_dramafren_catalog_item()`.
+### Episode / public media
+Direct requests to `dramabox.dramafren.org` still receive a Cloudflare HTTP 403 from both Supabase and Vercel. BingeBox does not bypass that challenge.
 
-The metadata worker:
-- validates numeric book IDs;
-- generates the canonical `dramabox.dramafren.org` detail URL;
-- stores current title/poster/description/tags/chapter count/shelf time;
-- follows English recommendation IDs to a bounded depth of 3;
-- links exact-title matches to existing BingeBox dramas when one exists;
-- retries failures with exponential backoff;
-- refreshes ready records every 12 hours;
-- never publishes a title merely because metadata was discovered.
+The episode adapter instead uses the official DramaBox website:
 
-Verified fresh September 2026 seeds include:
-- `42000024547` — My Billionaire Patient Is My Baby Daddy — 45 episodes.
-- `42000026687` — The Zero-Talent Nanny Raised Beast Kings — 50 episodes.
-- `42000027224` — The Heirless Alpha's Miracle Omega — 53 episodes.
-- `42000027388` — Brains! Love! Success! She Takes It All! — 55 episodes.
-- `42000027425` — My Client's Son Wants Me—and He's Half My Age — 30 episodes.
+- `GET https://www.dramabox.com/en/drama/{bookId}`
+- ordinary public HTTPS request;
+- server-rendered `__NEXT_DATA__`;
+- `props.pageProps.chapterList` supplies chapter IDs, indices, duration, unlock state and any publicly available MP4.
 
-The first public-home seed returned 25 shelf items and added 19 previously unseen queue records after deduplication. After the verification burst, the queue contained 31 records and all 31 were `ready` with zero failed items. None had an exact-title match to the 78 quarantined legacy dramas.
+This route is reachable from Supabase and returns HTTP 200.
 
-A live refresh test on book `42000027388` reclaimed the ready row, returned the same 55-episode count, and scheduled its next refresh exactly 12 hours later.
+Only already-public/unlocked media is accepted. BingeBox does **not** call signed mobile-app unlock/batch-download APIs and does not attempt to unlock protected episodes.
 
-### Current limitation of metadata sync
-The verified public Webfic endpoints do not expose usable current chapter media URLs. Public `detail/v2` produced no chapter-list payload, and an inspected public sample player used hard-coded demo MP4s rather than a real catalog stream endpoint.
+## Verified production tests
 
-Therefore the metadata pipeline can automatically discover and refresh title metadata and episode counts, but it does not yet make newly discovered titles playable. New titles remain staged and unpublished until media is obtained through a reachable authorized source.
+### Container Tycoon: The Billion-Dollar Bid — 42000028125
+Official DramaBox detail:
+- 70 chapters detected;
+- 13 publicly unlocked MP4s exposed.
 
-## Existing-title reconciliation
-`cloud-importer` v4 no longer immediately marks an existing title as `skipped_duplicate`. When a reachable provider page is available, it reconciles against the existing drama:
-- R2-backed episodes (`video_key` present) are left untouched.
-- Missing episode rows are created as drafts.
-- Existing external/direct sources can be refreshed by stable host+path fingerprint.
-- Missing external/direct sources can be added without replacing the existing title.
-- `episode.video_url` is changed only for episodes without `video_key`.
+BingeBox worker result:
+- 70 episode rows;
+- 13 active `dramabox_web` direct sources;
+- 0 failed jobs;
+- 0 pending media jobs after validation.
 
-This path is deployed, but direct DramaFren HTML cannot exercise it while the provider returns HTTP 403.
+### The Heirless Alpha's Miracle Omega — 42000027224
+Official DramaBox detail:
+- 53 chapters detected;
+- 11 publicly unlocked MP4s exposed.
 
-## Delivery / egress
-The currently published catalog no longer depends on the Supabase `external-media` relay for video bytes.
+BingeBox worker result:
+- 53 episode rows;
+- 11 active direct sources;
+- 0 failed jobs.
 
-The signed R2 flow has been verified repeatedly:
-1. the Cloudflare token endpoint returns HTTP 200 with a signed `media.bingebox.bond` URL;
-2. a byte-range request to that URL returns HTTP 206 `video/mp4`;
-3. the video body is served by Cloudflare/R2 rather than streamed through Supabase.
+### Direct media verification
+A representative official DramaBox MP4 was requested with `Range: bytes=0-0` and returned:
+- HTTP 206;
+- `video/mp4`;
+- byte-range support;
+- CloudFront/S3 origin.
 
-After the clean reset, episode 1 from every surviving title was checked:
-- Blind to Love: the Alpha's Secret Heir — `bytes 0-0/14134921`.
-- You Got the Wrong Guy — `bytes 0-0/17980511`.
-- Hero Husband's Apocalypse Harem — `bytes 0-0/13883793`.
+The BingeBox frontend already loads any non-`legacy_r2` `episode_sources.source_url` directly in the browser. Therefore new `dramabox_web` sources do not stream video bytes through Supabase or Vercel.
 
-`external-media` remains deployed for future external sources. If it streams MP4/HLS bodies, those bytes count as Supabase egress. The target architecture remains Supabase for metadata/authorization and Cloudflare/R2 for video bytes.
+Existing `legacy_r2` media remains untouched and preferred for episodes that already have `video_key`.
 
-## Clean live-library reset
-A reversible quarantine was applied rather than deleting the old library.
+## Temporary source lifecycle
+Official DramaBox MP4 URLs can be signed/temporary. The worker:
+- parses URL expiry;
+- stores `expires_at`;
+- marks source stability `temporary`;
+- validates every MP4 before storing it;
+- records health and last verification time.
 
-- 78 published dramas with no published R2-backed episode were set unpublished.
-- 3,797 episodes under those dramas were snapshotted and set unpublished.
-- Source records and original episode rows were preserved.
-- Hero highlight setting remains `[]`, so the unchanged frontend automatically selects from the surviving published catalog.
+`bingebox-dramabox-source-refresh` runs every 30 minutes for published mapped titles and queues a high-priority episode refresh when a source:
+- is within 3 hours of expiry;
+- is already expired/failed/inactive; or
+- is missing for a published episode without R2.
 
-Quarantine batch:
-`4eedac8d-a329-4223-9d64-94db1faf6e7f`
+The existing source-expiry job continues running every 10 minutes.
 
-Migration:
-`supabase/migrations/20260921_quarantine_unplayable_library.sql`
+## Queue and future-only baseline
+Tables:
+- `source_sync_state`
+- `sync_queue`
+- `sync_events`
+- `content_source_map`
 
-Manual rollback:
-`supabase/operations/20260921_restore_quarantined_library.sql`
+The initial browse catalog is historical baseline/backfill, not normal new-release traffic.
 
-Do not run the rollback until replacement media is reachable and verified.
+Priority policy:
+- expiry/source recovery: priority 5-6;
+- new episode-count changes / new releases: priority 10-50;
+- explicit historical title backfill: priority 200;
+- historical episode backfill: priority 210;
+- historical media validation: priority 220.
 
-## Backend repair history
-### 2026-09-20
-- `cloud-importer` v2 isolated `server_fetch` from `browser_seed` work.
-- Media verification reads were bounded.
-- HTML responses, encrypted/incomplete HLS, and unsafe redirects were rejected.
-- Duplicate heartbeat disabled.
-- Queue gates and expiry cleanup installed.
-- Original v1 source retained under `supabase/rollback/cloud-importer-v1/`.
+Fresh releases therefore always outrank historical backfill.
 
-### 2026-09-21
-- Added crash-safe job leasing, recurring target scheduling, failure backoff, and auto-pause.
-- `cloud-importer` v3 switched worker selection to atomic lease claims.
-- `cloud-importer` v4 added existing-title episode/source reconciliation.
-- Added reversible clean-library quarantine.
-- Added `dramafren_catalog_queue`, bounded recommendation discovery, atomic claiming, recurring refresh, and exact-title linking.
-- Deployed `dramafren-metadata-sync` v2.
-- Added minute-level queue-gated metadata processing and six-hour public-home seeding.
-- Removed the temporary Vercel DramaFren probe after confirming the same Cloudflare 403.
-- Frontend layout/behavior files were not changed.
+## Explicit historical backfill
+The owner explicitly requested the full historical catalog to be synchronized.
 
-## Remaining work
-Playback and full media sync are not restored for the newly discovered DramaFren catalog.
+All current browse titles were bulk-created/mapped as unpublished BingeBox drafts without spending Edge Function invocations on trivial one-by-one title inserts.
 
-The remaining hard dependency is a reachable authorized media source for those titles. When one becomes available:
-1. map media to the staged `book_id` and chapter/episode numbers;
-2. verify the media source without bypassing access controls;
-3. reconcile/create episode rows as drafts;
-4. transfer recoverable licensed media to R2 using the existing key/token access model;
-5. verify signed R2 byte-range playback;
-6. publish only after rights/source verification succeeds.
+The remaining backfill path is:
+1. one `resolve_episodes` job per title;
+2. bulk episode upsert;
+3. one batched `resolve_media` job per title;
+4. each public MP4 range-validated independently;
+5. direct sources persisted.
 
-Do not claim full DramaFren playback restoration until newly discovered titles have verified playable media.
+The worker cron is queue-gated and currently invokes up to 20 worker calls per minute while work exists. Each Edge invocation processes up to five queue jobs. When the queue is empty, the gate makes no worker calls.
 
+At the latest production health check during backfill:
+- catalog ready: 3,029;
+- browse titles mapped: 3,003;
+- BingeBox dramas: 3,030;
+- BingeBox episode rows: 15,899 and increasing;
+- queue failures: 0;
+- published catalog remains 3 dramas / 116 episodes until rights/publication requirements are satisfied.
 
-## Full DramaFren title catalog sync (2026-09-21)
-The Cloudflare 403 is no longer a blocker for title/catalog discovery.
+These numbers are an in-progress snapshot; `get_bingebox_sync_health()` is the authoritative live state.
 
-A verified unsigned public Webfic browse endpoint is now the primary catalog source:
-- POST https://www.webfic.com/webfic/home/browse
-- headers: pline=DRAMABOX, language=en
-- payload: typeTwoId=0, pageNo=N, pageSize=100
+## Publishing / rights
+Automatically discovered historical/new titles are created as drafts. New `drama_rights` rows remain unverified unless an existing mapped BingeBox title already has verified rights.
 
-The endpoint reports 30 pages / 3,000 English catalog entries and returns rich metadata including bookId, title, poster, synopsis, tags, shelf time, chapter count, and completion/status fields.
+The worker does not auto-publish a newly discovered title merely because a public stream exists.
 
-New Edge Function: dramafren-catalog-sync v1.
-- group 0 => pages 1-5 (500 newest titles)
-- group 1 => pages 6-10
-- group 2 => pages 11-15
-- group 3 => pages 16-20
-- group 4 => pages 21-25
-- group 5 => pages 26-30
-- each invocation fetches five pages and bulk-upserts their metadata into public.dramafren_catalog_queue.
+For an already-published, rights-verified mapped title, a newly resolved playable episode can be published without replacing any existing R2 source.
 
-Initial production sync verification:
-- all six groups returned HTTP 200;
-- every page returned 100 titles;
-- 3,000 browse titles were upserted;
-- staging queue now contains 3,026 ready records total, including 26 prior indexed/recommendation discoveries;
-- zero catalog queue failures;
-- newest shelf date observed: 2026-09-21.
+## R2
+The clean public catalog still contains 116 R2-backed published episodes. Signed R2 delivery was previously verified end to end with HTTP 206 range playback.
 
-Scheduling:
-- bingebox-dramafren-catalog-latest: group 0 every 2 minutes (latest 500 titles).
-- bingebox-dramafren-catalog-full: all six groups every 15 minutes (entire 3,000-title catalog).
-- old bingebox-dramafren-home-seed is disabled because the browse feed supersedes it.
-- per-title detail worker now processes only pending/failed/stale-processing rows; ready browse rows are not needlessly re-fetched.
-- direct dramabox.dramafren.org server-fetch recovery probe remains enabled hourly. It still returns HTTP 403 as of the latest verification.
+R2 is no longer a prerequisite for normal upstream playback. It remains appropriate for media BingeBox intentionally owns/mirrors.
 
-This architecture uses Supabase invocations for useful catalog work instead of repeatedly hammering the Cloudflare challenge. The remaining blocker is episode media/chapter streams; title discovery and metadata sync are fully operational.
+## Direct DramaFren HTTP 403
+`https://dramabox.dramafren.org/` remains an hourly low-cost recovery probe. Its 403 no longer blocks:
+- catalog discovery;
+- metadata sync;
+- episode discovery;
+- public-media resolution.
+
+The working source chain is currently:
+```
+Webfic public browse → catalog
+official dramabox.com SSR → chapterList + public MP4
+browser → direct dramaboxdb.com MP4
+```
+
+## Operational retention
+Daily cleanup preserves production/deduplication state while bounding operational history:
+- completed sync jobs: 30 days;
+- failed/blocked jobs: 90 days;
+- sync events: 14 days.
+
+Pending/processing work, source mappings, fingerprints, catalog state and deduplication state are not deleted.
+
+## Health
+Service-role RPC:
+`public.get_bingebox_sync_health()`
+
+It reports:
+- source watermark / last successful scanner run;
+- catalog/mapping counts;
+- queue pending/processing/retry/failed/completed counts;
+- library episode/source counts;
+- latest structured sync events.
+
+## Current limitations
+1. Only media already publicly exposed by the official DramaBox web page is imported. Locked/protected chapters are intentionally not unlocked through private/signed mobile APIs.
+2. Newly discovered dramas remain unpublished until BingeBox's rights/publication requirements are satisfied.
+3. The historical episode/media backfill is still being drained by Supabase workers; use the health RPC for current completion state.
+
+Do not claim the entire 3,000-title historical catalog is playable until the backfill has completed and the resulting source inventory is verified.
