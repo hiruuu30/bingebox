@@ -27,9 +27,9 @@
   }
 
   function setupSearch(){
-    const ov=document.createElement('div');ov.className='bb-search-overlay';ov.innerHTML='<div class="bb-search-head"><input class="bb-search-input" type="search" placeholder="Search BingeBox titles, genres or moods…" autocomplete="off"><button class="bb-search-close" type="button" aria-label="Close">×</button></div><div class="bb-search-results"></div>';document.body.appendChild(ov);
+    const ov=document.createElement('div');ov.className='bb-search-overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Search BingeBox');ov.innerHTML='<div class="bb-search-head"><input class="bb-search-input" type="search" placeholder="Search BingeBox titles, genres or moods…" autocomplete="off"><button class="bb-search-close" type="button" aria-label="Close">×</button></div><div class="bb-search-results"></div>';document.body.appendChild(ov);
     const input=qs('.bb-search-input',ov),results=qs('.bb-search-results',ov); const render=()=>{const q=norm(input.value.trim());const list=dramas.filter(d=>!q||norm(`${d.title} ${d.genre} ${(d.mood||[]).join(' ')}`).includes(q)).slice(0,25);results.innerHTML=list.map(d=>`<a class="bb-search-card" href="${watch(d)}"><img src="${esc(d.poster)}" alt="${esc(d.title)}"><strong>${esc(d.title)}</strong><small>${esc(meta(d))}</small></a>`).join('')||'<p>No matching title.</p>'};
-    const open=()=>{ov.classList.add('open');render();setTimeout(()=>input.focus(),50)},close=()=>ov.classList.remove('open');
+    const root=qs('#__next');const open=()=>{ov.classList.add('open');if(root)root.inert=true;render();setTimeout(()=>input.focus(),50)},close=()=>{ov.classList.remove('open');if(root)root.inert=false;qs('header button[aria-label="Search"]')?.focus()};
     const btn=qs('header button[aria-label="Search"]'); if(btn)btn.addEventListener('click',e=>{e.preventDefault();open()}); input.addEventListener('input',render);qs('.bb-search-close',ov).onclick=close;ov.addEventListener('click',e=>{if(e.target===ov)close()});addEventListener('keydown',e=>{if(e.key==='Escape')close()});
   }
 
@@ -77,7 +77,7 @@
     if(type==='mylist')wrapper.id='bb-my-list';
     if(type==='romance')wrapper.id='bb-categories';
     const cards=qsa('.BookItem_bookItem__sK4Qp',wrapper); const list=shelfItems(type);
-    cards.forEach((card,i)=>{const d=list[i];(card.closest('.Slider_item__28DWA')||card).style.display=d?'':'none';if(d)setPicture(card,d)});
+    cards.forEach((card,i)=>{const d=list[i];(card.closest('.Slider_item__28DWA')||card).style.display=d?'':'none';if(d)setPicture(card,d);else{qsa('a',card).forEach(a=>{a.removeAttribute('href');a.textContent=''});qsa('img',card).forEach(img=>{img.src='/assets/brand/mark.svg';img.removeAttribute('srcset');img.alt=''});qsa('source',card).forEach(e=>e.remove());card.dataset.bbSlug='';}});
     let empty=qs('.bb-empty-shelf',wrapper);if(!list.length){if(!empty){empty=document.createElement('p');empty.className='bb-empty-shelf';empty.textContent=type==='mylist'?'Titles you save will appear here.':'No titles in this category yet.';wrapper.appendChild(empty)}}else empty?.remove();
   }
   function paintShelves(){
