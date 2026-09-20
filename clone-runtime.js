@@ -12,6 +12,7 @@
     if(index<0)index=0;
     const show=(next)=>{
       index=(next+slides.length)%slides.length;
+      qsa('button[aria-label^="Show "],button[aria-label^="Preview "]',hero).forEach((b,i)=>b.setAttribute('aria-pressed',String(i%slides.length===index)));
       slides.forEach((s,i)=>{
         const on=i===index;
         s.setAttribute('aria-hidden',String(!on));s.tabIndex=on?0:-1;
