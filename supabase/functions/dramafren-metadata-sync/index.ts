@@ -7,7 +7,7 @@ const db=createClient(U,K,{auth:{persistSession:false}});
 const H={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"};
 const J=(x:any,s=200)=>new Response(JSON.stringify(x),{status:s,headers:H});
 const N=()=>new Date().toISOString();
-const REFRESH_MS=12*60*60*1000;
+const REFRESH_MS=60*60*1000;
 
 function slugify(v:any){
   return String(v||"")
@@ -219,5 +219,16 @@ Deno.serve(async(req:Request)=>{
   if(u.searchParams.get("action")==="seed_home"){
     try{return J(await seedHome())}catch(e){return J({ok:false,error:e?.message||String(e)},502)}
   }
-  return J(await work());
+  const results:any[]=[];
+  for(let i=0;i<5;i++){
+    const result=await work();
+    results.push(result);
+    if(result?.idle)break;
+  }
+  return J({
+    ok:results.every((x:any)=>x?.ok!==false),
+    processed:results.filter((x:any)=>!x?.idle).length,
+    idle:results.length===1&&results[0]?.idle===true,
+    results
+  });
 });
