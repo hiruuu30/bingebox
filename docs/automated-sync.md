@@ -152,16 +152,22 @@ At the latest production health check during backfill:
 - BingeBox episode rows: 32,024 and increasing;
 - active/unexpired `dramabox_web` direct sources: at least 110 and increasing;
 - queue failures: 0;
-- published catalog remains 3 dramas / 116 episodes until rights/publication requirements are satisfied.
+- published catalog remains 3 dramas / 116 episodes as playable sources are validated.
 
 These numbers are an in-progress snapshot; `get_bingebox_sync_health()` is the authoritative live state.
 
-## Publishing / rights
-Automatically discovered historical/new titles are created as drafts. New `drama_rights` rows remain unverified unless an existing mapped BingeBox title already has verified rights.
+## Publishing
+BingeBox no longer has a rights-verification or permission-attestation gate.
 
-The worker does not auto-publish a newly discovered title merely because a public stream exists.
+Publishing is source-driven:
+- a validated playable episode source can publish that episode immediately;
+- resolving the first validated playable source can publish its drama;
+- existing R2-backed content remains publishable as before;
+- no worker reads or writes `drama_rights`;
+- no sync/import job requires `rights_attested`;
+- Workspace publishing controls no longer request permission confirmation.
 
-For an already-published, rights-verified mapped title, a newly resolved playable episode can be published without replacing any existing R2 source.
+A legacy compatibility record may temporarily remain in production only while an older Vercel Workspace build is cached/deployed. It is not consulted by publishing logic and every compatibility row is nonblocking.
 
 ## R2
 The clean public catalog still contains 116 R2-backed published episodes. Signed R2 delivery was previously verified end to end with HTTP 206 range playback.
@@ -203,7 +209,7 @@ It reports:
 
 ## Current limitations
 1. Only media already publicly exposed by the official DramaBox web page is imported. Locked/protected chapters are intentionally not unlocked through private/signed mobile APIs.
-2. Newly discovered dramas remain unpublished until BingeBox's rights/publication requirements are satisfied.
+2. Newly discovered dramas remain unpublished until playable media is validated.
 3. The historical episode/media backfill is still being drained by Supabase workers; use the health RPC for current completion state.
 
 Do not claim the entire 3,000-title historical catalog is playable until the backfill has completed and the resulting source inventory is verified.
