@@ -7,6 +7,7 @@ const db=createClient(U,K,{auth:{persistSession:false}});
 const H={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"};
 const J=(x:any,s=200)=>new Response(JSON.stringify(x),{status:s,headers:H});
 const N=()=>new Date().toISOString();
+const REFRESH_MS=12*60*60*1000;
 
 function slugify(v:any){
   return String(v||"")
@@ -15,6 +16,13 @@ function slugify(v:any){
     .replace(/[^a-z0-9]+/g,"-")
     .replace(/^-+|-+$/g,"")
     .slice(0,100);
+}
+function titleKey(v:any){
+  return String(v||"")
+    .toLowerCase()
+    .replace(/[’‘`´']/g,"")
+    .replace(/[^a-z0-9]+/g,"")
+    .trim();
 }
 function asIso(v:any){
   const s=String(v||"").trim();
@@ -31,6 +39,13 @@ function canonical(book:any){
   const id=String(book?.bookId||"");
   const slug=slugify(book?.bookNameLower||book?.replacedBookName||book?.bookName||"");
   return `https://dramabox.dramafren.org/index.php?page=detail&id=${encodeURIComponent(id)}&lang=en${slug?`&slug=${encodeURIComponent(slug)}`:""}`;
+}
+function tagsOf(book:any){
+  return [...new Set([
+    ...(Array.isArray(book?.tags)?book.tags:[]),
+    ...(Array.isArray(book?.labels)?book.labels:[]),
+    ...(Array.isArray(book?.typeTwoNames)?book.typeTwoNames:[])
+  ].map((x:any)=>String(x||"").trim()).filter(Boolean))].slice(0,20);
 }
 async function detail(bookId:string){
   const r=await fetch("https://www.webfic.com/webfic/book/detail",{
@@ -54,6 +69,57 @@ async function detail(bookId:string){
   if(String(book.bookId)!==String(bookId))throw new Error("Webfic metadata book ID mismatch");
   return {book,recommends:Array.isArray(json?.data?.recommends)?json.data.recommends:[]};
 }
+async function exactDramaMatch(title:any){
+  const k=titleKey(title);
+  if(!k)return null;
+  const {data,error}=await db.from("dramas").select("id,title,published");
+  if(error)throw error;
+  return (data||[]).find((d:any)=>titleKey(d.title)===k)||null;
+}
+async function seedHome(){
+  const r=await fetch("https://www.webfic.com/webfic/home/index",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Accept":"application/json",
+      "pline":"DRAMABOX",
+      "language":"en",
+      "User-Agent":"BingeBox Metadata Sync/1.0 (+https://bingebox.bond)"
+    },
+    body:"{}",
+    signal:AbortSignal.timeout(12000)
+  });
+  const text=await r.text();
+  if(!r.ok)throw new Error(`Webfic home metadata HTTP ${r.status}`);
+  let json:any;
+  try{json=JSON.parse(text)}catch{throw new Error("Webfic home returned invalid JSON")}
+  const sections=Array.isArray(json?.data)?json.data:[];
+  const seen=new Map<string,any>();
+  for(const section of sections){
+    for(const book of Array.isArray(section?.items)?section.items:[]){
+      const id=String(book?.bookId||"");
+      if(!/^[0-9]{6,20}$/.test(id))continue;
+      seen.set(id,book);
+    }
+  }
+  const rows=[...seen.values()].map((book:any)=>({
+    book_id:String(book.bookId),
+    canonical_url:canonical(book),
+    discovered_from:"webfic_home",
+    status:"pending",
+    depth:0,
+    title:String(book.bookName||book.name||"").trim()||null,
+    cover_url:String(book.cover||book.coverWap||"").trim()||null,
+    description:String(book.introduction||"").trim().slice(0,8000)||null,
+    chapter_count:Number.isFinite(Number(book.chapterCount))?Number(book.chapterCount):null,
+    tags:tagsOf(book),
+    updated_at:N()
+  }));
+  if(!rows.length)return {ok:true,seeded:0,sections:sections.length};
+  const {error}=await db.from("dramafren_catalog_queue").upsert(rows,{onConflict:"book_id",ignoreDuplicates:true});
+  if(error)throw error;
+  return {ok:true,seeded:rows.length,sections:sections.length};
+}
 
 async function work(){
   const worker=crypto.randomUUID();
@@ -64,17 +130,14 @@ async function work(){
 
   try{
     const {book,recommends}=await detail(String(item.book_id));
-    const tags=[...new Set([
-      ...(Array.isArray(book.tags)?book.tags:[]),
-      ...(Array.isArray(book.labels)?book.labels:[]),
-      ...(Array.isArray(book.typeTwoNames)?book.typeTwoNames:[])
-    ].map((x:any)=>String(x||"").trim()).filter(Boolean))].slice(0,20);
     const recs=recommends
       .filter((x:any)=>x?.bookId&&isEnglish(x))
       .map((x:any)=>String(x.bookId))
       .filter((v:string)=>/^[0-9]{6,20}$/.test(v));
     const recIds=[...new Set(recs)].slice(0,20);
+    const match=await exactDramaMatch(book.bookName);
     const now=N();
+    const next=new Date(Date.now()+REFRESH_MS).toISOString();
 
     const {error:updateError}=await db.from("dramafren_catalog_queue").update({
       canonical_url:canonical(book),
@@ -85,12 +148,14 @@ async function work(){
       language:String(book.simpleLanguage||book.language||"en"),
       chapter_count:Number.isFinite(Number(book.chapterCount))?Number(book.chapterCount):null,
       shelf_time:asIso(book.firstShelfTime||book.shelfTime),
-      tags,
+      tags:tagsOf(book),
       recommendation_ids:recIds,
       metadata:{book,metadata_source:"https://www.webfic.com/webfic/book/detail"},
+      matched_drama_id:match?.id||null,
+      matched_at:match?now:null,
       last_error:null,
       last_fetched_at:now,
-      next_attempt_at:now,
+      next_attempt_at:next,
       updated_at:now
     }).eq("book_id",item.book_id);
     if(updateError)throw updateError;
@@ -113,18 +178,24 @@ async function work(){
           language:String(rec.simpleLanguage||rec.language||"en"),
           chapter_count:Number.isFinite(Number(rec.chapterCount))?Number(rec.chapterCount):null,
           shelf_time:asIso(rec.firstShelfTime||rec.shelfTime),
-          tags:[...new Set([
-            ...(Array.isArray(rec.tags)?rec.tags:[]),
-            ...(Array.isArray(rec.labels)?rec.labels:[]),
-            ...(Array.isArray(rec.typeTwoNames)?rec.typeTwoNames:[])
-          ].map((x:any)=>String(x||"").trim()).filter(Boolean))].slice(0,20),
+          tags:tagsOf(rec),
           updated_at:now
         };
         const {error}=await db.from("dramafren_catalog_queue").upsert(payload,{onConflict:"book_id",ignoreDuplicates:true});
         if(!error)enqueued++;
       }
     }
-    return {ok:true,book_id:item.book_id,title:book.bookName,chapter_count:book.chapterCount,recommendations:recIds.length,enqueued};
+    return {
+      ok:true,
+      book_id:item.book_id,
+      title:book.bookName,
+      chapter_count:book.chapterCount,
+      recommendations:recIds.length,
+      enqueued,
+      matched_drama_id:match?.id||null,
+      matched_published:match?.published??null,
+      refresh_at:next
+    };
   }catch(e){
     const m=e?.message||String(e);
     const attempts=Number(item.attempt_count||1);
@@ -142,7 +213,11 @@ async function work(){
 }
 
 Deno.serve(async(req:Request)=>{
+  const u=new URL(req.url);
   if(req.method==="GET")return J({ok:true,service:"dramafren-metadata-sync",source:"webfic-public-metadata"});
   if(req.method!=="POST")return J({error:"Method not allowed"},405);
+  if(u.searchParams.get("action")==="seed_home"){
+    try{return J(await seedHome())}catch(e){return J({ok:false,error:e?.message||String(e)},502)}
+  }
   return J(await work());
 });
