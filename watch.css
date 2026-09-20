@@ -298,3 +298,9 @@ html.player-landscape,body.player-landscape{background:#000}
 .controls-visible .swipe-landscape:not(.hidden):focus-visible:after{opacity:1}
 .swipe-shell.landscape-mode #swipeVideo{object-fit:contain;background:#000}
 @media(hover:hover){.swipe-landscape:hover:after{opacity:1}}
+
+/* Keep recovery navigation usable when a video fails. */
+.swipe-loading:has(.playback-failure){z-index:6;pointer-events:none}
+.playback-failure{pointer-events:auto}
+.swipe-shell:has(.playback-failure) .swipe-center-controls,
+.swipe-shell:has(.playback-failure) .swipe-progress{display:none!important}

@@ -12,6 +12,7 @@
   const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const toast=msg=>{const t=$('#swipeToast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1800)};
   function setChrome(show=true,hold=false){
+    if(!loading.classList.contains('hidden')&&loading.querySelector('.playback-failure')){show=true;hold=true}
     shell.classList.toggle('controls-visible',show);
     if(chromeTimer)clearTimeout(chromeTimer);
     if(!show){closeReactionTray();return}
