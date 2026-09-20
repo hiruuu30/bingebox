@@ -90,10 +90,7 @@ async function ensureDrama(bookId:string,allowCreate=true){
     is_complete:complete,is_r18:false
   }).select("*").single();
   if(error)throw error;
-  await db.from("drama_rights").upsert({
-    drama_id:d.id,rights_basis:"unverified",verified:false,
-    rights_notes:"Created by automated DramaBox/Webfic sync. Publication remains blocked until rights are verified."
-  },{onConflict:"drama_id"});
+
   await db.from("content_source_map").insert({
     source_key:SOURCE,source_content_id:bookId,drama_id:d.id,source_url:c.canonical_url,
     metadata:{created_by:"dramafren-sync-worker"}
@@ -146,7 +143,7 @@ async function resolveEpisodes(job:any){
   const d=await ensureDrama(bookId,false);
   if(!d)throw new Error("Source mapping not ready; title job must complete first");
   const {info,chapters,final_url}=await fetchOfficial(bookId);
-  const {data:rights}=await db.from("drama_rights").select("verified").eq("drama_id",d.id).maybeSingle();
+
   const {data:existing,error:existingError}=await db.from("episodes")
     .select("id,episode_number,video_key,video_url,published")
     .eq("drama_id",d.id);
@@ -209,7 +206,7 @@ async function resolveEpisodes(job:any){
   return {
     book_id:bookId,drama_id:d.id,title:info.bookName||d.title,chapters:chapters.length,
     episodes_upserted:(eps||[]).length,public_media:mediaItems.length,
-    media_jobs:mediaItems.length?1:0,rights_verified:!!rights?.verified,media_priority:mediaPriority
+    media_jobs:mediaItems.length?1:0,media_priority:mediaPriority
   };
 }
 async function verifyMedia(url:string,referer:string){
@@ -263,12 +260,8 @@ async function storeOneMedia(p:any){
       await db.from("episode_sources").update({active:false,health_status:"expired",last_failed_at:N(),updated_at:N()}).eq("id",old.id);
     }
   }
-  await db.from("episodes").update({video_url:url,updated_at:N()}).eq("id",ep.id);
-  const {data:drama}=await db.from("dramas").select("published").eq("id",ep.drama_id).maybeSingle();
-  const {data:rights}=await db.from("drama_rights").select("verified").eq("drama_id",ep.drama_id).maybeSingle();
-  if(drama?.published&&rights?.verified&&!ep.published){
-    await db.from("episodes").update({published:true,updated_at:N()}).eq("id",ep.id);
-  }
+  await db.from("episodes").update({video_url:url,published:true,publish_at:null,updated_at:N()}).eq("id",ep.id);
+  await db.from("dramas").update({published:true,publish_at:null,updated_at:N()}).eq("id",ep.drama_id);
   return {episode_id:ep.id,episode_number:ep.episode_number,source_id:sourceId,expires_at:exp,verified};
 }
 async function storeMedia(job:any){
