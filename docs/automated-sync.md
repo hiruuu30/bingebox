@@ -69,3 +69,26 @@ Playback/sync is not fully restored. The remaining hard dependency is replacemen
 6. migrate recoverable episodes to R2, then retire their Supabase relay routes.
 
 Do not claim full playback or automated sync restoration until steps 2-4 succeed against live provider data and the affected library has usable media.
+
+
+## Clean live-library reset (2026-09-21)
+With approval to start clean if necessary, the public catalog was reduced to verified R2-backed content without deleting source records.
+
+A reversible quarantine migration was applied:
+- 78 published dramas with no published R2-backed episode were set unpublished.
+- 3,797 episodes under those dramas were snapshotted into the private schema and set unpublished.
+- The surviving public catalog is 3 dramas / 116 episodes.
+- All 116 published episodes have video_key; published external-only episode count is zero.
+- Hero highlight setting remains [] so the existing frontend automatically selects from the surviving published catalog.
+- No frontend layout or behavior code was changed.
+
+Quarantine batch: 4eedac8d-a329-4223-9d64-94db1faf6e7f.
+Migration: supabase/migrations/20260921_quarantine_unplayable_library.sql.
+Manual rollback: supabase/operations/20260921_restore_quarantined_library.sql. Do not run rollback until replacement media is reachable and verified.
+
+Playback verification sampled episode 1 from every surviving title. Each token request returned HTTP 200 and each signed R2 byte-range request returned HTTP 206 video/mp4:
+- Blind to Love: the Alpha's Secret Heir: bytes 0-0/14134921.
+- You Got the Wrong Guy: bytes 0-0/17980511.
+- Hero Husband's Apocalypse Harem: bytes 0-0/13883793.
+
+For the currently published catalog, video bytes no longer need the Supabase external-media relay. Supabase still serves metadata/auth, and the relay remains available for future recovered external sources.
