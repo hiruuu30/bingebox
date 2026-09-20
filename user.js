@@ -119,7 +119,7 @@
   function localFavoriteSlugs(){
     try { const v=parseJSON(localStorage.getItem('bb-local-favorites')); return new Set(Array.isArray(v)?v:[]); } catch { return new Set(); }
   }
-  function saveLocalFavoriteSlugs(set){ try { localStorage.setItem('bb-local-favorites',JSON.stringify([...set])); } catch {} }
+  function saveLocalFavoriteSlugs(set){ try { const value=JSON.stringify([...set]);localStorage.setItem('bb-local-favorites',value);localStorage.setItem('bb-exact-favorites',value);window.dispatchEvent(new CustomEvent('bb-exact-favorites-changed')); } catch {} }
 
   function isFavorite(dramaDbId,slug){
     return session?.access_token ? favorites.has(dramaDbId) : localFavoriteSlugs().has(slug);
