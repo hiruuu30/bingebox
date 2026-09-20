@@ -1,4 +1,5 @@
 /**
+ * Vercel schedule: /api/bingebox-sync (configured in vercel.json).
  * BingeBox automated sync heartbeat.
  *
  * Vercel Cron calls this route. The existing Supabase cloud-importer remains
