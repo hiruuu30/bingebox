@@ -139,7 +139,8 @@ async function syncGroup(group:number){
       row.metadata_fingerprint=await fingerprint(row);
       const old=existingMap.get(row.book_id);
       const shelf=row.shelf_time?new Date(row.shelf_time):null;
-      const isFuture=!watermark||!shelf||shelf>=watermark;
+      const watermarkDay=watermark?new Date(Date.UTC(watermark.getUTCFullYear(),watermark.getUTCMonth(),watermark.getUTCDate())):null;
+      const isFuture=!watermarkDay||!shelf||shelf>=watermarkDay;
 
       if(!old){
         row.last_change_detected_at=now;
