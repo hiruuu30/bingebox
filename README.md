@@ -16,7 +16,12 @@ The public `config.js` retains BingeBox Supabase project `shffgnuprnycqblpwkrp`,
 
 ## Remaining migration work
 
-- Verify production domain `bingebox.bond` on Vercel, then change DNS after frontend checks pass.
+- Both `bingebox.bond` and `www.bingebox.bond` are attached to Vercel production. DNS remains pending in Cloudflare: CNAME `@` and CNAME `www` -> `2457351be69c0dc1.vercel-dns-017.com` (Vercel requests DNS-only / proxy disabled). Cloudflare security verification blocked the agent browser before any DNS edits.
 - Verify Supabase Auth site/redirect URLs and existing worker CORS. Worker source currently permits only `https://bingebox.bond` and `https://www.bingebox.bond`; administrative imports on Vercel preview domains may be blocked.
 - Existing importer is manual; the future discovery/queue/retry automation brief is a separate backend phase. Do not claim it is implemented by this frontend migration.
 - Backend administration requires access to the BingeBox Supabase project. Do not substitute another project's database.
+
+## Verification checkpoint
+
+2026-09-20: Commit `2addd58` deployed READY. `https://bingebox-two.vercel.app/` loads 81 catalog titles from the existing BingeBox backend. Workspace returns 200 with no-store/noindex headers; service-worker returns 200 with no-store; /admin and SQL source URLs return 404. A sampled title reports media error 4 in this browser on both old and new hosts; playback is not verified. Custom-domain DNS cutover and backend automation remain unfinished.
+
