@@ -301,9 +301,9 @@ async function retry(job:any,error:any){
   await db.from("sync_queue").update({status:"retry_wait",last_error:m.slice(0,1500),next_retry_at:new Date(Date.now()+minutes*60000).toISOString(),heartbeat_at:N(),lease_expires_at:null,updated_at:N()}).eq("id",job.id);
   return {retry:true,error:m,retry_minutes:minutes};
 }
-async function workOne(){
+async function workOne(types:string[]){
   const worker=crypto.randomUUID();
-  const {data:claimed,error}=await db.rpc("claim_sync_queue_job",{p_worker:worker,p_lease_seconds:150});
+  const {data:claimed,error}=await db.rpc("claim_sync_queue_job_filtered",{p_worker:worker,p_job_types:types,p_lease_seconds:150});
   if(error)return {ok:false,error:"claim: "+error.message};
   const job=claimed?.[0];
   if(!job)return {ok:true,idle:true};
@@ -329,13 +329,20 @@ async function workOne(){
   }
 }
 Deno.serve(async(req:Request)=>{
+  const u=new URL(req.url);
   if(req.method==="GET")return J({ok:true,service:"dramafren-sync-worker",architecture:"sync_queue->worker->postgres",media:"official public DramaBox web MP4 only"});
   if(req.method!=="POST")return J({error:"Method not allowed"},405);
+  const lane=u.searchParams.get("lane")||"general";
+  const types=lane==="media"
+    ? ["resolve_media"]
+    : lane==="episodes"
+      ? ["title_new","title_changed","episode_count_changed","resolve_episodes"]
+      : ["title_new","title_changed","episode_count_changed","resolve_episodes","resolve_media"];
   const results:any[]=[];
   for(let i=0;i<5;i++){
-    const r=await workOne();
+    const r=await workOne(types);
     results.push(r);
     if(r.idle)break;
   }
-  return J({ok:results.every(x=>x.ok!==false||x.retry===true),processed:results.filter(x=>!x.idle).length,results});
+  return J({ok:results.every(x=>x.ok!==false||x.retry===true),lane,processed:results.filter(x=>!x.idle).length,results});
 });
