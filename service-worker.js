@@ -1,0 +1,31 @@
+const CACHE='bingebox-shell-v26.6';
+const SHELL=['/','/index.html','/watch.html','/swipe.html','/donate.css?v=2470','/styles.css?v=2660','/bingebox-cinematic.css?v=2660','/watch.css?v=2470','/pwa.js?v=2660','/push.js?v=2660','/poster-fallback.js?v=2660','/app.js?v=2660','/watch.js?v=2470','/user.js?v=2660','/donate.js?v=2660','/lite.html','/lite.css?v=2470','/lite.js?v=2470','/manifest.webmanifest','/offline.html','/assets/brand/mark.svg','/assets/brand/wordmark-hd.png','/assets/brand/favicon.svg','/assets/brand/apple-touch-icon.png','/assets/brand/pwa-192.png','/assets/brand/pwa-512.png'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE&&k.startsWith('bingebox-shell-')).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{
+  const req=event.request;if(req.method!=='GET')return;const url=new URL(req.url);if(url.origin!==location.origin)return;
+  if(url.pathname.startsWith('/workspace')||url.pathname==='/config.js'||url.pathname.startsWith('/api/'))return;
+  if(req.mode==='navigate'){
+    event.respondWith(fetch(req).then(res=>{const clone=res.clone();caches.open(CACHE).then(c=>c.put(req,clone));return res}).catch(async()=>await caches.match(req)||await caches.match('/offline.html')));return;
+  }
+  if(/\.(?:css|js|svg|png|jpg|jpeg|webp|webmanifest)$/i.test(url.pathname)){
+    event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{if(res.ok){const clone=res.clone();caches.open(CACHE).then(c=>c.put(req,clone))}return res})));}
+});
+
+
+self.addEventListener('push',event=>{
+  let data={};try{data=event.data?.json?.()||{}}catch{data={body:event.data?.text?.()||''}}
+  const title=String(data.title||'BingeBox');
+  const options={body:String(data.body||'A new BingeBox update is ready.'),icon:'/assets/brand/pwa-192.png',badge:'/assets/brand/pwa-192.png',tag:String(data.tag||'bingebox-update'),data:{url:String(data.url||'/')},renotify:false};
+  event.waitUntil(self.registration.showNotification(title,options));
+});
+self.addEventListener('notificationclick',event=>{
+  event.notification.close();
+  const raw=event.notification?.data?.url||'/';
+  const target=new URL(raw,self.location.origin).href;
+  event.waitUntil((async()=>{
+    const wins=await clients.matchAll({type:'window',includeUncontrolled:true});
+    for(const win of wins){if('focus'in win){await win.focus();if('navigate'in win)await win.navigate(target);return}}
+    if(clients.openWindow)return clients.openWindow(target);
+  })());
+});

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node scripts/build.mjs",
+  "outputDirectory": "public",
+  "routes": [
+    {
+      "src": "/.*",
+      "headers": {
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+        "X-Permitted-Cross-Domain-Policies": "none",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' https://www.paypal.com https://www.paypalobjects.com https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: https://media.bingebox.bond https://*.supabase.co; connect-src 'self' https://*.supabase.co https://www.paypal.com https://*.paypal.com https://cloudflareinsights.com https://bingebox-upload.hero-tolentino.workers.dev https://bingebox-import.hero-tolentino.workers.dev https://upload.bingebox.bond; media-src 'self' https: blob:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://www.paypal.com https://*.paypal.com; upgrade-insecure-requests"
+      },
+      "continue": true
+    },
+    {
+      "src": "/assets/.*",
+      "headers": {
+        "Cache-Control": "public, max-age=86400, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/data/.*",
+      "headers": {
+        "Cache-Control": "public, max-age=300, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/.*\\.js",
+      "headers": {
+        "Cache-Control": "public, max-age=3600, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/.*\\.css",
+      "headers": {
+        "Cache-Control": "public, max-age=3600, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/workspace/.*",
+      "headers": {
+        "X-Robots-Tag": "noindex, nofollow, noarchive",
+        "Cache-Control": "no-store"
+      },
+      "continue": true
+    },
+    {
+      "src": "/config\\.js",
+      "headers": {
+        "Cache-Control": "no-store, max-age=0"
+      },
+      "continue": true
+    },
+    {
+      "src": "/workspace/admin\\.js",
+      "headers": {
+        "Cache-Control": "no-store, max-age=0"
+      },
+      "continue": true
+    },
+    {
+      "src": "/service-worker\\.js",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Service-Worker-Allowed": "/"
+      },
+      "continue": true
+    },
+    {
+      "src": "/lite\\.html",
+      "headers": {
+        "Cache-Control": "public, max-age=120, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/favicon\\.ico",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/workspace",
+      "status": 308,
+      "headers": {
+        "Location": "/workspace/"
+      }
+    },
+    {
+      "src": "/workspace/",
+      "dest": "/workspace/index.html"
+    },
+    {
+      "src": "/copyright",
+      "status": 301,
+      "headers": {
+        "Location": "/copyright.html"
+      }
+    },
+    {
+      "src": "/privacy",
+      "status": 301,
+      "headers": {
+        "Location": "/privacy.html"
+      }
+    },
+    {
+      "src": "/terms",
+      "status": 301,
+      "headers": {
+        "Location": "/terms.html"
+      }
+    },
+    {
+      "src": "/watch",
+      "dest": "/watch.html"
+    },
+    {
+      "src": "/admin(?:/.*)?",
+      "dest": "/404.html",
+      "status": 404
+    },
+    {
+      "src": "/swipe",
+      "dest": "/swipe.html"
+    },
+    {
+      "src": "/lite",
+      "dest": "/lite.html"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/404.html",
+      "status": 404
+    }
+  ]
+}

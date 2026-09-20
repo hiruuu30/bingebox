@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="35 20 205 220" role="img" aria-labelledby="title desc">
+  <title id="title">BingeBox Brand Mark</title>
+  <desc id="desc">Clean editable vector brand mark extracted from the supplied BingeBox brand board.</desc>
+  <path fill="#FF3830" fill-rule="evenodd" clip-rule="evenodd" d="
+    M132 31
+    L47 74
+    Q45 75 45 79
+    L45 185
+    Q45 190 50 193
+    L130 228
+    Q134 230 139 227
+    L157 217
+    L157 141
+    Q157 136 150 132
+    L87 98
+    L138 70
+    L179 91
+    L138 118
+    L177 139
+    C184 143 188 149 188 155
+    C188 164 179 172 162 181
+    L163 214
+    L213 188
+    C224 182 230 171 230 158
+    C230 145 222 135 207 127
+    C222 117 229 104 229 92
+    C229 81 225 73 217 68
+    Q215 66 212 64
+    L141 32
+    Q136 29 132 31
+    Z
+
+    M84 128
+    Q86 125 91 128
+    L126 148
+    Q132 151 127 155
+    L91 176
+    Q84 180 83 174
+    L83 132
+    Q83 129 84 128
+    Z
+  "/>
+</svg>

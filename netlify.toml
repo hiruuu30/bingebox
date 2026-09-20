@@ -1,0 +1,113 @@
+[build]
+  publish = "."
+
+[images]
+  remote_images = ['https://media\.bingebox\.bond/.*']
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+    X-Permitted-Cross-Domain-Policies = "none"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.paypal.com https://www.paypalobjects.com https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: https://media.bingebox.bond https://*.supabase.co; connect-src 'self' https://*.supabase.co https://www.paypal.com https://*.paypal.com https://cloudflareinsights.com https://bingebox-upload.hero-tolentino.workers.dev https://bingebox-import.hero-tolentino.workers.dev https://upload.bingebox.bond; media-src 'self' https: blob:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://www.paypal.com https://*.paypal.com; upgrade-insecure-requests"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+
+[[redirects]]
+  from = "/copyright"
+  to = "/copyright.html"
+  status = 301
+
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 301
+
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 301
+
+[[headers]]
+  for = "/workspace/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/config.js"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
+
+[[headers]]
+  for = "/workspace/admin.js"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
+
+[[redirects]]
+  from = "/watch"
+  to = "/watch.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[redirects]]
+  from = "/swipe"
+  to = "/swipe.html"
+  status = 200
+
+[[redirects]]
+  from = "/lite"
+  to = "/lite.html"
+  status = 200
+
+[[headers]]
+  for = "/lite.html"
+  [headers.values]
+    Cache-Control = "public, max-age=120, must-revalidate"
+
+[[headers]]
+for = "/favicon.ico"
+  [headers.values]
+  Cache-Control = "no-cache, no-store, must-revalidate"

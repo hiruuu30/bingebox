@@ -1,0 +1,7 @@
+name = "bingebox-import"
+main = "importer-worker.js"
+compatibility_date = "2026-08-30"
+
+[vars]
+SUPABASE_URL = "https://shffgnuprnycqblpwkrp.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_PeopMn9aiDdzxqLvSkkR6w_PUw9BIJH"
