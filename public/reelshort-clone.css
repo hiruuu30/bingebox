@@ -1,0 +1,260 @@
+/* BingeBox v25.1 — ReelShort source-driven reconstruction
+   Rebuilt from the user's 2026-09-11 full-page ReelShort capture.
+   Geometry retained from the capture: 80px header, 480px hero, 6vw content inset,
+   84x112 hero thumbs / 12px gaps, 222.4x296.6 shelf posters, 16px poster radius.
+   BingeBox data, player, workspace, Top 10 numbering, and low-egress behavior remain native. */
+
+:root{
+  --rs-red:#e52e2e;
+  --rs-black:#000;
+  --rs-panel:#141414;
+  --rs-row-x:6vw;
+  --rs-card-w:clamp(188px,16.38vw,222.44px);
+  --rs-card-gap:clamp(14px,1.25vw,17px);
+  --rs-header-h:80px;
+  --rs-ease:cubic-bezier(.22,.8,.25,1);
+}
+html,body{background:#000!important;color:#fff!important;overflow-x:hidden}
+body{font-family:"Noto Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+.grain{display:none!important}
+
+/* HEADER */
+.site-header{
+  height:80px!important;padding:0 2vw!important;display:flex!important;align-items:center!important;gap:32px!important;
+  background:transparent!important;border:0!important;z-index:999!important;
+  transition:background-color .3s cubic-bezier(0,0,.2,1),border-color .3s cubic-bezier(0,0,.2,1),backdrop-filter .3s cubic-bezier(0,0,.2,1)!important
+}
+.site-header.scrolled{background:rgba(12,12,12,.84)!important;border-bottom:1px solid rgba(255,255,255,.06)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+.brand-lockup{display:flex;align-items:center;gap:12px;height:100%}.brand-mark{width:38px!important;height:38px!important}.brand-wordmark{width:120px!important;height:auto!important}
+.desktop-nav{display:flex!important;align-items:center!important;gap:24px!important;height:100%;font-size:16px!important;font-weight:400!important;color:rgba(255,255,255,.86)!important}
+.desktop-nav a{height:100%;display:flex;align-items:center;color:inherit!important;position:relative;text-decoration:none!important}.desktop-nav a:hover{color:#fff!important}
+.desktop-nav a::after{content:"";position:absolute;left:0;right:0;bottom:13px;height:2px;background:var(--rs-red);transform:scaleX(0);transition:transform .2s ease}.desktop-nav a:hover::after{transform:scaleX(1)}
+.header-actions{margin-left:auto!important;display:flex!important;align-items:center!important;gap:14px!important}.round-button{width:38px!important;height:40px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#fff!important}.round-button:hover{background:rgba(255,255,255,.06)!important}
+.rs-language-button{border:0;background:transparent;color:rgba(255,255,255,.86);font:inherit;font-size:14px;cursor:pointer}.rs-support-button{height:40px;min-width:108px;border-radius:8px;background:#fff;color:#111!important;display:flex;align-items:center;justify-content:center;padding:0 18px;text-decoration:none;font-size:14px;font-weight:700}.menu-button{display:none!important}
+
+/* HERO — source geometry + BingeBox portrait-safe artwork */
+.rs-hero{padding:0!important;margin:0!important;min-height:0!important;overflow:hidden!important}
+.rs-hero-frame{position:relative!important;width:100vw!important;height:480px!important;max-width:none!important;margin:0!important;border:0!important;border-radius:0!important;background:#000!important;box-shadow:none!important;isolation:isolate;overflow:hidden!important}
+/* Ambient layer only: deliberately soft so a portrait poster is never stretched into the main art. */
+.rs-hero-bg{position:absolute!important;inset:0!important;background-size:cover!important;background-position:72% 22%!important;filter:blur(30px) saturate(.82) brightness(.42)!important;transform:scale(1.08)!important;opacity:.72!important;transition:background-image .28s ease,opacity .28s ease!important}
+.rs-hero-shade{display:block!important;position:absolute!important;inset:0!important;z-index:2!important;pointer-events:none!important;background:
+  linear-gradient(to bottom,rgba(0,0,0,.50),transparent 170px),
+  linear-gradient(to bottom,transparent 60%,#000 100%),
+  linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.76) 25%,rgba(0,0,0,.28) 50%,rgba(0,0,0,.04) 72%,rgba(0,0,0,.34) 100%)!important}
+/* Sharp hero art stays 3:4, constrained to the right, then dissolves into the gradients. */
+.rs-hero-poster-wrap{display:block!important;position:absolute!important;z-index:1!important;right:8.2vw!important;top:0!important;width:min(360px,29vw)!important;height:480px!important;overflow:hidden!important;pointer-events:none!important;opacity:.98!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%,#000 88%,transparent 100%),linear-gradient(0deg,transparent 0,#000 16%,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18%,#000 88%,transparent 100%),linear-gradient(0deg,transparent 0,#000 16%,#000 100%);-webkit-mask-composite:source-in;mask-composite:intersect}
+.rs-hero-poster{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 18%!important;transform:none!important;filter:saturate(.96) contrast(1.03)!important}
+.rs-hero-content{position:absolute!important;z-index:5!important;left:6vw!important;bottom:8px!important;top:auto!important;width:480px!important;max-width:42vw!important;transform:none!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important}
+.rs-hero-kicker{display:none!important}.rs-hero-content h1{margin:0!important;width:100%!important;max-width:480px!important;color:rgba(255,255,255,.90)!important;font-size:32px!important;line-height:1.34!important;font-weight:700!important;letter-spacing:0!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+.rs-hero-meta{margin:12px 0 0!important;display:flex!important;align-items:center!important;gap:8px!important;max-width:100%!important;overflow:hidden!important;color:#fff!important;min-height:29px!important}
+.rs-hero-meta .rs-hero-pill{display:block!important;max-width:140px!important;padding:5px 12px!important;border-radius:20px!important;background:rgba(255,255,255,.15)!important;color:rgba(255,255,255,.90)!important;font-size:14px!important;line-height:19px!important;font-weight:400!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important}
+.rs-hero-meta .rs-hero-pill-hot{background:var(--rs-red)!important;color:#fff!important}.rs-hero-meta span+span::before{display:none!important}
+.rs-hero-description{width:480px!important;max-width:100%!important;margin:12px 0 0!important;color:rgba(255,255,255,.70)!important;font-size:14px!important;line-height:19px!important;font-weight:400!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+.rs-hero-actions{margin-top:20px!important;display:flex!important;align-items:center!important;gap:10px!important}.rs-hero-actions .button{width:220px!important;height:56px!important;min-height:56px!important;border:0!important;border-radius:28px!important;padding:0 24px!important;font-size:18px!important;font-weight:700!important}.rs-hero-actions .button-primary{background:#fff!important;color:#111!important}.rs-hero-actions .button-primary:hover{background:var(--rs-red)!important;color:#fff!important}.rs-icon-button{width:56px!important;height:56px!important;border-radius:28px!important;border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.10)!important;color:#fff!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important}
+.rs-hero-thumbs{position:absolute!important;z-index:7!important;left:auto!important;right:calc(6vw + 24px)!important;bottom:8px!important;width:468px!important;height:112px!important;display:flex!important;align-items:center!important;gap:12px!important;overflow:hidden!important;mask-image:none!important;-webkit-mask-image:none!important}
+.rs-hero-thumb{position:relative!important;appearance:none!important;flex:0 0 84px!important;width:84px!important;height:112px!important;padding:0!important;border:0!important;border-radius:8px!important;background:transparent!important;overflow:hidden!important;cursor:pointer!important;opacity:1!important;transform:none!important;transition:transform .2s ease,opacity .2s ease!important}.rs-hero-thumb img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;transition:transform .2s ease!important}.rs-hero-thumb::after{content:"";position:absolute;inset:0;border-radius:8px;background:rgba(0,0,0,0);transition:background .2s ease,box-shadow .2s ease}.rs-hero-thumb.active img{transform:scale(1.05)!important}.rs-hero-thumb.active::after{background:rgba(0,0,0,.40);box-shadow:inset 0 0 0 2px rgba(255,255,255,.92)}.rs-hero-thumb:hover img{transform:scale(1.05)!important}.rs-hero-thumb span{position:absolute;left:-9999px}.rs-hero-dots{display:none!important}
+.rs-hero-arrow{position:absolute!important;z-index:8!important;top:auto!important;bottom:48px!important;width:32px!important;height:32px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#fff!important;font-size:34px!important;line-height:1!important;opacity:.70!important;transition:opacity .2s ease!important}.rs-hero-arrow:hover{opacity:1!important}.rs-prev{left:auto!important;right:calc(6vw + 504px)!important}.rs-next{right:calc(6vw - 8px)!important}
+
+/* SECTION RHYTHM */
+.section-pad{padding:31px 6vw 28px!important;max-width:none!important}.section-head,.continue-head,.compact-head,.genre-row-head{margin:0 0 24px!important;min-height:33px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important}.section-head h2,.continue-head h2,.compact-head h2,.genre-row-head h2{margin:0!important;color:rgba(255,255,255,.80)!important;font-size:24px!important;line-height:33px!important;font-weight:700!important;letter-spacing:0!important}.section-head h2 em,.continue-head h2 em,.compact-head h2 em{font-style:normal!important;color:inherit!important}.section-note,.continue-note{color:rgba(255,255,255,.50)!important;font-size:12px!important}.eyebrow{display:none!important}
+.genre-row{margin:0 0 64px!important}.genre-row-head{margin-bottom:24px!important}.genre-view-all{color:rgba(255,255,255,.50)!important;font-size:14px!important}.genre-view-all:hover{color:var(--rs-red)!important}
+
+/* ReelShort slider architecture: global row backdrop/foreground + local card layers */
+.rs-row-shell{--rs-hover-x:50%;--rs-hover-y:42%;position:relative!important;min-width:0!important;overflow:visible!important;isolation:isolate!important}
+.rs-row-hover-backdrop,.rs-row-hover-foreground{position:absolute;inset:-18px -6vw -86px;pointer-events:none;opacity:0;transition:opacity .24s ease;z-index:3}
+.rs-row-hover-backdrop{background:radial-gradient(circle 260px at var(--rs-hover-x) var(--rs-hover-y),rgba(34,34,34,.26) 0%,rgba(0,0,0,.52) 46%,rgba(0,0,0,.72) 100%);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.rs-row-hover-foreground{z-index:32;background:radial-gradient(circle 190px at var(--rs-hover-x) var(--rs-hover-y),rgba(255,255,255,.045),transparent 72%)}
+.rs-row-shell.is-hovering .rs-row-hover-backdrop,.rs-row-shell.is-hovering .rs-row-hover-foreground{opacity:1}
+.poster-grid,.compact-grid,.discovery-grid,.genre-row-track{position:relative!important;z-index:5!important;display:flex!important;grid-template-columns:none!important;gap:var(--rs-card-gap)!important;overflow-x:auto!important;overflow-y:visible!important;scrollbar-width:none!important;scroll-snap-type:x proximity!important;padding:0!important;margin:0!important;overscroll-behavior-x:contain!important;-webkit-overflow-scrolling:touch!important}.poster-grid::-webkit-scrollbar,.compact-grid::-webkit-scrollbar,.discovery-grid::-webkit-scrollbar,.genre-row-track::-webkit-scrollbar{display:none!important}
+.rs-row-arrow{position:absolute!important;z-index:45!important;top:120px!important;width:56px!important;height:56px!important;border:0!important;border-radius:0!important;background:linear-gradient(90deg,rgba(0,0,0,.82),rgba(0,0,0,.42))!important;color:#fff!important;font-size:42px!important;line-height:1!important;display:grid!important;place-items:center!important;cursor:pointer!important;opacity:0!important;transition:opacity .18s ease!important}.rs-row-shell:hover .rs-row-arrow{opacity:.92!important}.rs-row-arrow:hover{opacity:1!important}.rs-row-arrow.is-disabled{opacity:0!important;pointer-events:none!important}.rs-row-prev{left:-6vw!important}.rs-row-next{right:-6vw!important;transform:scaleX(-1)!important}
+
+.poster-card,.compact-grid .poster-card,.discovery-grid .poster-card,.genre-row-track .poster-card{position:relative!important;z-index:5!important;flex:0 0 var(--rs-card-w)!important;width:var(--rs-card-w)!important;min-width:var(--rs-card-w)!important;aspect-ratio:auto!important;border:0!important;border-radius:0!important;overflow:visible!important;background:transparent!important;box-shadow:none!important;scroll-snap-align:start!important;outline:none!important;transform:translateZ(0)!important;transform-origin:center 42%!important;transition:transform .28s var(--rs-ease),opacity .24s ease,filter .24s ease!important}
+.poster-card::after{display:none!important}.rs-row-shell.is-hovering .poster-card:not(.is-hovered){opacity:.48!important;filter:saturate(.72) brightness(.72)!important}.poster-card.is-hovered{z-index:35!important;transform:translateY(-16px) scale(1.085)!important;filter:none!important;opacity:1!important}
+.rs-local-backdrop{position:absolute;z-index:-1;inset:-10px -10px -72px;border:1px solid rgba(255,255,255,.10);border-radius:20px;background:rgba(20,20,20,.58);box-shadow:0 24px 70px rgba(0,0,0,.62);backdrop-filter:blur(18px) saturate(1.12);-webkit-backdrop-filter:blur(18px) saturate(1.12);opacity:0;transform:scale(.96);transition:opacity .22s ease,transform .28s var(--rs-ease)}.poster-card.is-hovered .rs-local-backdrop{opacity:1;transform:scale(1)}
+.poster-visual{position:relative!important;width:100%!important;aspect-ratio:3/4!important;overflow:hidden!important;background:#000!important;border-radius:16px!important;isolation:isolate!important;transition:box-shadow .28s ease!important}.poster-visual>img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;filter:none!important;transform:none!important;transition:transform .5s var(--rs-ease),filter .28s ease!important}.poster-card.is-hovered .poster-visual>img{transform:scale(1.045)!important;filter:brightness(.92) saturate(1.04)!important}.poster-card.is-hovered .poster-visual{box-shadow:0 18px 48px rgba(0,0,0,.50)!important}
+.rs-book-meta{position:relative!important;z-index:6!important;display:block!important;width:100%!important;min-height:63px!important;margin:0!important;padding:0!important;transition:opacity .18s ease!important}.rs-book-meta h3{margin:12px 0 0!important;min-height:19px!important;max-height:38px!important;color:rgba(255,255,255,.80)!important;font-size:14px!important;line-height:19px!important;font-weight:400!important;letter-spacing:0!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}.rs-book-meta p{display:block!important;margin:8px 0 0!important;height:17px!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important;color:rgba(255,255,255,.50)!important;font-size:12px!important;line-height:17px!important;font-weight:400!important}.rs-book-meta p span,.rs-book-meta p i{background:none!important;border:0!important;padding:0!important;color:inherit!important;font:inherit!important;font-style:normal!important}.poster-card.is-hovered .rs-book-meta{opacity:0!important}
+.rs-local-foreground{position:absolute;z-index:40;left:-5px;right:-5px;top:0;height:calc((var(--rs-card-w) * 4 / 3) + 70px);pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .18s ease,transform .28s var(--rs-ease)}.poster-card.is-hovered .rs-local-foreground{opacity:1;transform:none}.rs-hover-glass{position:absolute;left:0;right:0;bottom:0;min-height:118px;padding:34px 14px 13px;border-radius:0 0 18px 18px;background:linear-gradient(180deg,rgba(14,14,14,0) 0%,rgba(14,14,14,.72) 22%,rgba(20,20,20,.92) 58%,rgba(20,20,20,.96) 100%);backdrop-filter:blur(14px) saturate(1.15);-webkit-backdrop-filter:blur(14px) saturate(1.15);display:flex;align-items:flex-end;justify-content:space-between;gap:10px}.rs-hover-copy{min-width:0;display:flex;flex-direction:column;gap:5px}.rs-hover-copy strong{font-size:13px;line-height:17px;font-weight:650;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.rs-hover-copy span{font-size:10px;line-height:14px;color:rgba(255,255,255,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs-hover-actions{display:flex;gap:6px;flex:0 0 auto}.rs-hover-play,.rs-hover-add{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800}.rs-hover-play{background:#fff;color:#111}.rs-hover-add{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;backdrop-filter:blur(8px)}
+.catalog-resume{position:absolute!important;z-index:8!important;left:7px!important;top:-29px!important;margin:0!important;padding:4px 7px!important;border-radius:10px!important;color:#fff!important;background:rgba(0,0,0,.66)!important;font-size:9px!important;line-height:14px!important;font-weight:700!important;backdrop-filter:blur(8px)!important}.catalog-resume.is-next{background:rgba(229,46,46,.90)!important}.poster-progress{position:absolute!important;z-index:9!important;left:0!important;right:0!important;bottom:0!important;height:3px!important;background:rgba(255,255,255,.18)!important}.poster-progress i{display:block!important;height:100%!important;background:var(--rs-red)!important}.poster-favorite{position:absolute!important;z-index:12!important;right:7px!important;top:7px!important;width:30px!important;height:30px!important;border:0!important;border-radius:50%!important;background:rgba(0,0,0,.58)!important;color:#fff!important;font-size:16px!important;display:grid!important;place-items:center!important;opacity:0!important;transition:opacity .18s ease!important}.poster-card:hover .poster-favorite,.poster-favorite.active,.poster-favorite:focus-visible{opacity:1!important}.poster-favorite.active{background:#fff!important;color:#111!important}.poster-badge-stack{position:absolute!important;z-index:12!important;left:6px!important;top:6px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:4px!important}.poster-complete,.poster-r18,.poster-update-badge{position:static!important;margin:0!important;border:0!important;border-radius:10px!important;padding:3px 7px!important;background:rgba(229,46,46,.94)!important;color:#fff!important;font-size:8px!important;line-height:14px!important;font-weight:700!important;backdrop-filter:blur(6px)!important}.poster-r18{background:rgba(20,20,20,.82)!important}.poster-trending-badge{display:none!important}
+
+/* BingeBox Top 10 stays Netflix-numbered */
+#posterGrid{gap:16px!important;padding:0!important;overflow-x:auto!important}#posterGrid .top10-item{position:relative!important;display:flex!important;align-items:flex-start!important;flex:0 0 calc(var(--rs-card-w) + 54px)!important;padding-left:54px!important;scroll-snap-align:start!important;isolation:isolate!important}#posterGrid .top10-item .poster-card{width:var(--rs-card-w)!important;min-width:var(--rs-card-w)!important;flex:0 0 var(--rs-card-w)!important}#posterGrid .top10-rank{position:absolute!important;z-index:0!important;left:-4px!important;top:150px!important;width:66px!important;text-align:right!important;font-family:Inter,sans-serif!important;font-size:126px!important;font-weight:1000!important;line-height:.78!important;letter-spacing:-.13em!important;color:#000!important;-webkit-text-stroke:2px rgba(255,255,255,.88)!important;text-shadow:0 8px 28px rgba(0,0,0,.7)!important;pointer-events:none!important}
+
+/* More Recommended */
+.all-drama.section-pad{padding-top:31px!important;padding-bottom:58px!important}.all-drama .section-head{display:flex!important;align-items:flex-end!important;gap:20px!important;margin-bottom:24px!important}.all-drama-tools{margin-left:auto!important;display:flex!important;align-items:center!important;gap:12px!important}.filters{display:flex!important;gap:8px!important;background:transparent!important;padding:0!important;border:0!important;overflow-x:auto!important;scrollbar-width:none!important}.filters button{min-height:32px!important;border:0!important;border-radius:8px!important;padding:6px 11px!important;background:#222!important;color:rgba(255,255,255,.62)!important;font-size:12px!important;font-weight:500!important}.filters button.active{background:#fff!important;color:#111!important}.all-drama-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:30px var(--rs-card-gap)!important;align-items:start!important}.all-drama-grid .poster-card{width:100%!important;min-width:0!important;flex:auto!important}.all-drama-grid .poster-visual{width:100%!important}.all-drama-pagination{margin-top:34px!important}.all-drama-pagination button{border-radius:8px!important;background:#222!important;border:0!important}
+
+.continue-section,.my-list-section{border:0!important}.continue-card{border-radius:12px!important;background:#141414!important;border:1px solid rgba(255,255,255,.06)!important}.text-action{color:rgba(255,255,255,.52)!important}.text-action:hover{color:var(--rs-red)!important}.search-overlay{background:rgba(0,0,0,.96)!important}.search-shell{max-width:1180px!important}.detail-modal-card,.modal-card{background:#141414!important;border:0!important;border-radius:8px!important;box-shadow:0 24px 80px rgba(0,0,0,.5)!important}.modal-close{background:#222!important;border:0!important;border-radius:50%!important}.site-footer{background:#000!important;border-top:1px solid rgba(255,255,255,.06)!important;padding-left:6vw!important;padding-right:6vw!important}
+.all-drama-grid .clean-poster-card{aspect-ratio:auto!important;overflow:visible!important;border-radius:0!important;background:transparent!important}.all-drama-grid .clean-poster-card .poster-favorite{display:grid!important}.all-drama-grid .clean-poster-card .poster-progress{display:block!important}.all-drama-grid .clean-poster-card .poster-complete,.all-drama-grid .clean-poster-card .poster-r18,.all-drama-grid .clean-poster-card .poster-update-badge{display:block!important}
+
+@media(max-width:1000px){:root{--rs-row-x:4vw;--rs-card-w:clamp(170px,22vw,210px)}.desktop-nav{gap:18px!important;font-size:14px!important}.rs-language-button{display:none!important}.rs-hero-content{left:4vw!important;max-width:46vw!important}.rs-hero-poster-wrap{right:5vw!important;width:31vw!important}.rs-hero-thumbs{right:4vw!important;width:396px!important}.rs-prev{right:calc(4vw + 432px)!important}.rs-next{right:calc(4vw - 8px)!important}.all-drama-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+
+@media(max-width:760px){
+  :root{--rs-header-h:58px;--rs-row-x:12px;--rs-card-w:31vw;--rs-card-gap:10px}.site-header{height:58px!important;padding:0 12px!important;gap:12px!important;background:linear-gradient(180deg,rgba(0,0,0,.82),rgba(0,0,0,.18),transparent)!important}.brand-mark{width:28px!important;height:28px!important}.brand-wordmark{width:112px!important}.desktop-nav,.rs-language-button,.rs-support-button{display:none!important}.round-button{display:grid!important;width:38px!important;height:38px!important}.rs-hero-frame{height:470px!important}.rs-hero-bg{background-position:70% 18%!important;filter:blur(26px) saturate(.84) brightness(.42)!important}.rs-hero-shade{background:linear-gradient(to bottom,rgba(0,0,0,.42),transparent 120px),linear-gradient(to bottom,transparent 42%,rgba(0,0,0,.42) 61%,#000 100%),linear-gradient(to right,rgba(0,0,0,.50),rgba(0,0,0,.05) 58%,rgba(0,0,0,.18))!important}.rs-hero-poster-wrap{right:-2vw!important;top:0!important;width:68vw!important;height:350px!important;opacity:.96!important;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 100%),linear-gradient(0deg,transparent 0,#000 28%,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 100%),linear-gradient(0deg,transparent 0,#000 28%,#000 100%)}.rs-hero-content{left:16px!important;right:16px!important;bottom:64px!important;width:auto!important;max-width:none!important}.rs-hero-content h1{font-size:25px!important;line-height:1.22!important;max-width:94%!important}.rs-hero-meta{margin-top:7px!important;gap:6px!important}.rs-hero-meta .rs-hero-pill{font-size:10px!important;line-height:15px!important;padding:4px 8px!important;border-radius:12px!important;max-width:110px!important}.rs-hero-description{font-size:12px!important;line-height:17px!important;margin-top:7px!important;width:92%!important}.rs-hero-actions{margin-top:10px!important}.rs-hero-actions .button{width:168px!important;height:40px!important;min-height:40px!important;border-radius:20px!important;font-size:14px!important}.rs-icon-button{width:40px!important;height:40px!important;border-radius:20px!important}.rs-hero-thumbs{left:16px!important;right:16px!important;bottom:10px!important;width:auto!important;height:42px!important;gap:6px!important}.rs-hero-thumb{flex:1 1 0!important;width:auto!important;height:42px!important;border-radius:5px!important}.rs-hero-arrow{display:none!important}.section-pad{padding:24px 12px 18px!important}.section-head,.continue-head,.compact-head,.genre-row-head{margin-bottom:12px!important;min-height:27px!important}.section-head h2,.continue-head h2,.compact-head h2,.genre-row-head h2{font-size:18px!important;line-height:27px!important}.section-note,.continue-note{display:none!important}.poster-card,.compact-grid .poster-card,.discovery-grid .poster-card,.genre-row-track .poster-card{flex-basis:31vw!important;width:31vw!important;min-width:31vw!important}.poster-visual{border-radius:8px!important}.rs-book-meta{min-height:51px!important}.rs-book-meta h3{margin-top:8px!important;font-size:12px!important;line-height:16px!important;max-height:32px!important}.rs-book-meta p{margin-top:4px!important;font-size:9px!important;line-height:13px!important;height:13px!important}.rs-row-hover-backdrop,.rs-row-hover-foreground,.rs-local-backdrop,.rs-local-foreground{display:none!important}.poster-card.is-hovered,.poster-card:hover{transform:none!important;filter:none!important}.rs-row-shell.is-hovering .poster-card{opacity:1!important;filter:none!important}.poster-favorite{opacity:1!important;width:26px!important;height:26px!important}.rs-row-arrow{display:none!important}#posterGrid .top10-item{flex-basis:calc(46vw + 42px)!important;padding-left:42px!important}#posterGrid .top10-item .poster-card{width:46vw!important;min-width:46vw!important;flex-basis:46vw!important}#posterGrid .top10-rank{top:104px!important;font-size:92px!important;left:-6px!important;width:56px!important}.genre-row{margin-bottom:22px!important}.all-drama .section-head{display:block!important}.all-drama-tools{margin-top:12px!important;width:100%!important}.all-drama-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px 8px!important}.all-drama-grid .poster-card{width:100%!important;min-width:0!important}.all-drama-grid .rs-book-meta p{display:none!important}.mobile-tabbar{background:rgba(12,12,12,.95)!important;border:1px solid rgba(255,255,255,.09)!important;border-radius:16px!important}
+}
+@media(max-width:420px){.all-drama-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#posterGrid .top10-item{flex-basis:calc(52vw + 42px)!important}#posterGrid .top10-item .poster-card{width:52vw!important;min-width:52vw!important;flex-basis:52vw!important}}
+@media(hover:none){.rs-row-hover-backdrop,.rs-row-hover-foreground,.rs-local-backdrop,.rs-local-foreground{display:none!important}.poster-card:hover{transform:none!important;filter:none!important}}
+@media(prefers-reduced-motion:reduce){.poster-card,.poster-visual>img,.rs-local-backdrop,.rs-local-foreground,.rs-hero-thumb img{transition:none!important}}
+
+
+/* ==========================================================================\n   v25.2 — browser-QA corrections, source-driven from ReelShort capture\n   The capture shows global/local backdrop roots as transparent layering planes,\n   not shelf-wide blackout effects. Preserve that architecture without inventing\n   heavy dimming.\n   ========================================================================== */
+
+/* HERO — preserve the captured 480px composition while adapting portrait BingeBox art. */
+.rs-hero-bg{
+  background-repeat:no-repeat!important;
+  background-size:min(62vw,760px) auto!important;
+  background-position:78% 18%!important;
+  filter:blur(44px) saturate(.86) brightness(.46)!important;
+  transform:scale(1.16)!important;
+  opacity:.50!important;
+}
+.rs-hero-shade{
+  background:
+    linear-gradient(to bottom,rgba(0,0,0,.62) 0,rgba(0,0,0,0) 170px),
+    linear-gradient(to bottom,rgba(0,0,0,0) 58%,rgba(0,0,0,.30) 72%,#000 100%),
+    linear-gradient(to right,rgba(0,0,0,.94) 0%,rgba(0,0,0,.72) 25%,rgba(0,0,0,.25) 48%,rgba(0,0,0,.02) 68%,rgba(0,0,0,.28) 100%)!important;
+}
+.rs-hero-poster-wrap{
+  right:8.2vw!important;
+  top:28px!important;
+  width:304px!important;
+  height:405px!important;
+  aspect-ratio:3/4!important;
+  opacity:.94!important;
+  border-radius:0!important;
+  -webkit-mask-image:radial-gradient(ellipse 72% 78% at 58% 43%,#000 0%,#000 62%,rgba(0,0,0,.92) 72%,rgba(0,0,0,.35) 88%,transparent 100%)!important;
+  mask-image:radial-gradient(ellipse 72% 78% at 58% 43%,#000 0%,#000 62%,rgba(0,0,0,.92) 72%,rgba(0,0,0,.35) 88%,transparent 100%)!important;
+}
+.rs-hero-poster{object-fit:cover!important;object-position:center 16%!important}
+.rs-hero-meta{max-width:330px!important}
+.rs-hero-meta .rs-hero-pill{flex:0 1 auto!important}
+
+/* ReelShort shelf geometry: full-bleed slider plane, content starts at ~6vw. */
+.rs-row-shell{
+  margin-left:-6vw!important;
+  margin-right:-6vw!important;
+  padding:0!important;
+  overflow:clip visible!important;
+}
+.rs-row-shell>.poster-grid,
+.rs-row-shell>.compact-grid,
+.rs-row-shell>.discovery-grid,
+.rs-row-shell>.genre-row-track{
+  padding-left:6vw!important;
+  padding-right:6vw!important;
+  scroll-padding-left:6vw!important;
+  scroll-padding-right:6vw!important;
+}
+
+/* The JSON's global hover roots are transparent z-index planes. */
+.rs-row-hover-backdrop,.rs-row-hover-foreground{
+  inset:0!important;
+  background:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  opacity:1!important;
+  transition:none!important;
+}
+.rs-row-hover-backdrop{z-index:1!important}
+.rs-row-hover-foreground{z-index:3!important}
+.rs-row-shell.is-hovering .poster-card:not(.is-hovered){opacity:1!important;filter:none!important}
+
+/* Hover card: restrained lift + local glass only. */
+.poster-card.is-hovered{
+  z-index:35!important;
+  transform:translateY(-8px) scale(1.055)!important;
+  filter:none!important;
+  opacity:1!important;
+}
+.rs-local-backdrop{
+  inset:-6px -6px -8px!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  border-radius:19px!important;
+  background:rgba(18,18,18,.38)!important;
+  box-shadow:0 18px 52px rgba(0,0,0,.48)!important;
+  backdrop-filter:blur(16px) saturate(1.10)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(1.10)!important;
+  transform:scale(.985)!important;
+}
+.poster-card.is-hovered .rs-local-backdrop{transform:scale(1)!important}
+.poster-card.is-hovered .poster-visual>img{transform:scale(1.025)!important;filter:brightness(.96) saturate(1.03)!important}
+.poster-card.is-hovered .poster-visual{box-shadow:0 14px 38px rgba(0,0,0,.44)!important}
+.rs-local-foreground{
+  left:0!important;right:0!important;top:0!important;height:100%!important;
+  border-radius:16px!important;overflow:hidden!important;
+  transform:translateY(5px)!important;
+}
+.poster-card.is-hovered .rs-local-foreground{transform:none!important}
+.rs-hover-glass{
+  min-height:104px!important;
+  padding:28px 12px 11px!important;
+  border-radius:0 0 16px 16px!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  background:linear-gradient(180deg,rgba(18,18,18,0) 0%,rgba(18,18,18,.22) 18%,rgba(18,18,18,.66) 48%,rgba(20,20,20,.88) 100%)!important;
+  backdrop-filter:blur(10px) saturate(1.08)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(1.08)!important;
+}
+.rs-hover-copy strong{font-size:13px!important;line-height:17px!important}
+.rs-hover-copy span{font-size:10px!important;line-height:14px!important}
+.rs-hover-play,.rs-hover-add{width:28px!important;height:28px!important;font-size:11px!important}
+
+/* Slider arrows — circular controls, correct chevron direction, no black slabs. */
+.rs-row-arrow{
+  top:120px!important;
+  width:48px!important;height:48px!important;
+  border-radius:50%!important;
+  background:rgba(18,18,18,.58)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.28)!important;
+  backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;
+  font-size:32px!important;
+  opacity:0!important;
+}
+.rs-row-shell:hover .rs-row-arrow{opacity:.84!important}
+.rs-row-arrow:hover{opacity:1!important;background:rgba(28,28,28,.78)!important}
+.rs-row-prev{left:12px!important}
+.rs-row-next{right:12px!important;transform:none!important}
+
+/* Card badges: one red state badge + optional R18, not COMPLETE + NEW clutter. */
+.poster-badge-stack{gap:5px!important}
+.poster-complete,.poster-update-badge{font-size:8px!important;line-height:13px!important;padding:2px 7px!important}
+.poster-r18{font-size:8px!important;line-height:13px!important;padding:2px 7px!important;background:rgba(14,14,14,.78)!important}
+
+/* Keep the Netflix numbering readable without fighting the poster art. */
+#posterGrid .top10-rank{
+  left:0!important;
+  top:148px!important;
+  width:64px!important;
+  font-size:122px!important;
+  letter-spacing:-.10em!important;
+  -webkit-text-stroke:2px rgba(255,255,255,.82)!important;
+  text-shadow:0 8px 24px rgba(0,0,0,.62)!important;
+}
+
+/* Tablet: maintain a true 3:4 hero image instead of stretching it to 480px tall. */
+@media(max-width:1000px) and (min-width:761px){
+  .rs-row-shell{margin-left:-4vw!important;margin-right:-4vw!important}
+  .rs-row-shell>.poster-grid,.rs-row-shell>.compact-grid,.rs-row-shell>.discovery-grid,.rs-row-shell>.genre-row-track{padding-left:4vw!important;padding-right:4vw!important;scroll-padding-left:4vw!important;scroll-padding-right:4vw!important}
+  .rs-hero-poster-wrap{right:4.5vw!important;top:54px!important;width:252px!important;height:336px!important}
+  .rs-hero-bg{background-size:min(72vw,650px) auto!important;background-position:82% 16%!important;opacity:.44!important}
+  .rs-hero-shade{background:linear-gradient(to bottom,rgba(0,0,0,.58),transparent 160px),linear-gradient(to bottom,transparent 55%,rgba(0,0,0,.36) 73%,#000 100%),linear-gradient(to right,rgba(0,0,0,.94),rgba(0,0,0,.65) 36%,rgba(0,0,0,.10) 72%,rgba(0,0,0,.20))!important}
+  .rs-row-prev{left:8px!important}.rs-row-next{right:8px!important}
+}
+
+/* Mobile: portrait art stays compact and thumbnails scroll instead of being squeezed. */
+@media(max-width:760px){
+  .rs-row-shell{margin-left:-12px!important;margin-right:-12px!important}
+  .rs-row-shell>.poster-grid,.rs-row-shell>.compact-grid,.rs-row-shell>.discovery-grid,.rs-row-shell>.genre-row-track{padding-left:12px!important;padding-right:12px!important;scroll-padding-left:12px!important;scroll-padding-right:12px!important}
+  .rs-hero-bg{background-size:78vw auto!important;background-position:82% 6%!important;filter:blur(34px) saturate(.84) brightness(.42)!important;opacity:.43!important;transform:scale(1.10)!important}
+  .rs-hero-poster-wrap{right:-5px!important;top:16px!important;width:210px!important;height:280px!important;opacity:.91!important}
+  .rs-hero-shade{background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent 115px),linear-gradient(to bottom,transparent 38%,rgba(0,0,0,.38) 56%,#000 92%),linear-gradient(to right,rgba(0,0,0,.64),rgba(0,0,0,.10) 62%,rgba(0,0,0,.18))!important}
+  .rs-hero-content{bottom:64px!important}
+  .rs-hero-thumbs{overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;justify-content:flex-start!important}
+  .rs-hero-thumbs::-webkit-scrollbar{display:none!important}
+  .rs-hero-thumb{flex:0 0 52px!important;width:52px!important;height:42px!important}
+  .poster-favorite:not(.active){opacity:.72!important}
+  #posterGrid .top10-rank{font-size:88px!important;top:102px!important;left:0!important;width:52px!important}
+}
+
+/* v25.2 overlay stacking: ReelShort header sits at z-index 999, so app overlays must clear it. */
+.search-overlay{z-index:1100!important}
+.modal{z-index:1200!important}

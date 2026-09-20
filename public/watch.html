@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090909" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BingeBox" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="noindex,follow" />
+  <title>Watch — BingeBox</title>
+  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/donate.css?v=2310" />
+  <link rel="stylesheet" href="/watch.css?v=2470" />
+</head>
+<body>
+  <main class="swipe-shell controls-visible" id="swipeShell" aria-busy="true">
+    <video id="swipeVideo" playsinline preload="metadata" controlslist="nodownload noremoteplayback" disableremoteplayback></video>
+    <iframe id="swipeEmbed" class="swipe-embed hidden" title="Episode player" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="speed-hold hidden" id="speedHold" aria-hidden="true"><span class="speed-chevron" aria-hidden="true">▶▶</span><strong>2×</strong></div>
+    <div class="swipe-shade"></div>
+    <div class="swipe-loading" id="swipeLoading"><span></span><p>Loading episode…</p></div>
+    <div class="swipe-bursts" id="swipeBursts" aria-hidden="true"></div>
+
+    <div class="swipe-top swipe-chrome">
+      <div class="swipe-top-left">
+        <button class="swipe-close" id="swipeClose" type="button" aria-label="Close player">×</button>
+        <a href="/" class="swipe-mark" aria-label="BingeBox home"><img src="/assets/brand/mark.svg" alt="" /></a>
+      </div>
+      <div class="swipe-top-actions">
+        <button class="swipe-landscape hidden" id="swipeLandscape" type="button" aria-label="Switch to landscape" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6.5" width="17" height="11" rx="2"/><path d="M8 3.8 5.2 6.6 8 9.4M16 20.2l2.8-2.8-2.8-2.8"/></svg>
+        </button>
+        <button class="swipe-more" id="swipeMore" type="button" aria-label="More options">•••</button>
+      </div>
+    </div>
+
+    <section class="swipe-copy swipe-title-minimal" id="swipeEpisodeTrigger" role="button" tabindex="0" aria-label="Open episode list">
+      <h1 id="swipeTitle">BingeBox</h1>
+      <div class="swipe-kicker"><span id="swipeEpisode">EP 01</span><b id="swipeComplete" class="hidden">COMPLETE</b><small id="swipePosition" class="hidden">1 / 1</small></div>
+      <p id="swipeEpisodeTitle" class="hidden"></p>
+    </section>
+
+    <aside class="swipe-actions swipe-chrome" aria-label="Viewer actions">
+      <button id="swipeEpisodesAction" type="button" aria-label="Episodes"><span>☷</span><small>Episodes</small></button>
+      <button id="swipeFavorite" type="button" aria-pressed="false" aria-label="Add to My List"><span>＋</span><small>My List</small></button>
+      <button id="swipeReact" type="button" aria-expanded="false" aria-controls="reactionTray"><span>☺</span><small>React</small></button>
+      <button id="swipeShare" type="button" aria-label="Share this episode"><span>↗</span><small>Share</small></button>
+    </aside>
+
+    <div class="reaction-tray hidden" id="reactionTray" aria-label="Choose a reaction">
+      <button type="button" data-swipe-reaction="heart" aria-label="Love"><span>❤️</span><small data-swipe-count="heart">0</small></button>
+      <button type="button" data-swipe-reaction="shock" aria-label="Shocked"><span>😱</span><small data-swipe-count="shock">0</small></button>
+      <button type="button" data-swipe-reaction="laugh" aria-label="Funny"><span>😂</span><small data-swipe-count="laugh">0</small></button>
+      <button type="button" data-swipe-reaction="fire" aria-label="Fire"><span>🔥</span><small data-swipe-count="fire">0</small></button>
+    </div>
+
+    <div class="swipe-center-controls swipe-chrome" id="swipeCenterControls">
+      <button class="swipe-seek" id="swipeBack5" type="button" aria-label="Go back 5 seconds">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M18 12H9v-9"/><path d="M10 12a17 17 0 1 1-2 20"/><text x="24" y="30" text-anchor="middle">5</text></svg>
+      </button>
+      <button class="swipe-play" id="swipePlay" type="button" aria-label="Play or pause"><span>▶</span></button>
+      <button class="swipe-seek" id="swipeForward5" type="button" aria-label="Skip forward 5 seconds">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M30 12h9v-9"/><path d="M38 12a17 17 0 1 0 2 20"/><text x="24" y="30" text-anchor="middle">5</text></svg>
+      </button>
+    </div>
+    <div class="swipe-progress swipe-chrome" id="swipeProgress">
+      <span id="swipeCurrentTime">0:00</span>
+      <input id="swipeProgressRange" type="range" min="0" max="1000" value="0" step="1" aria-label="Video progress" />
+      <span id="swipeDuration">0:00</span>
+    </div>
+    <div class="swipe-hint hidden" id="swipeHint"><b>↑</b><span>Swipe for next episode</span></div>
+    <div class="swipe-next hidden" id="swipeNextCue" role="status" aria-live="polite"><div><span>NEXT EPISODE</span><strong id="swipeNextCount">5</strong></div><button id="swipeStay" type="button">Stay here</button></div>
+    <div class="swipe-toast" id="swipeToast" role="status" aria-live="polite"></div>
+  </main>
+
+  <dialog class="swipe-sheet" id="episodeSheet">
+    <section class="sheet-card"><div class="sheet-handle"></div><header><div><span>EPISODES</span><h2 id="sheetDramaTitle">Choose an episode</h2></div><button type="button" data-sheet-close="episodeSheet" aria-label="Close">×</button></header><div class="sheet-episodes" id="sheetEpisodes"></div></section>
+  </dialog>
+
+  <dialog class="swipe-sheet" id="moreSheet">
+    <section class="sheet-card compact"><div class="sheet-handle"></div><header><div><span>MORE</span><h2>Player</h2></div><button type="button" data-sheet-close="moreSheet" aria-label="Close">×</button></header><div class="more-actions"><div id="serverPicker" class="server-picker hidden"><div><strong>Playback server</strong><small>Try another server if playback has a problem.</small></div><div id="serverButtons" class="server-buttons"></div></div><button id="shuffleBtn" type="button"><span>✦</span><div><strong>Surprise me</strong><small>Jump somewhere unexpected</small></div></button><a id="swipeDonate" data-donate-open href="https://paymongo.page/l/support-bingebox" target="_blank" rel="noopener noreferrer"><span>♥</span><div><strong>Support BingeBox</strong><small>Help with hosting and development</small></div></a><button id="swipeReport" type="button"><span>!</span><div><strong>Report episode</strong><small>Playback, audio or episode issue</small></div></button><a href="/"><span>←</span><div><strong>Back to BingeBox</strong><small>Return to the catalog</small></div></a></div></section>
+  </dialog>
+
+  <dialog id="swipeReportDialog" class="swipe-report-dialog">
+    <form id="swipeReportForm" method="dialog"><header><div><span>HELP US FIX IT</span><h2>Report episode</h2></div><button type="button" id="closeSwipeReport" aria-label="Close">×</button></header><p id="swipeReportLabel"></p><label>What's wrong?<select id="swipeReportReason" required><option value="playback">Playback problem</option><option value="wrong_episode">Wrong / duplicate episode</option><option value="audio">Audio problem</option><option value="subtitles">Subtitle problem</option><option value="quality">Video quality</option><option value="other">Something else</option></select></label><label>Details<textarea id="swipeReportDetails" maxlength="1000" rows="4" placeholder="Tell us what happened…"></textarea></label><label>Email <span>optional</span><input id="swipeReportEmail" type="email" maxlength="254" placeholder="If you'd like a reply" /></label><div class="report-actions"><button id="cancelSwipeReport" type="button">Cancel</button><button class="report-submit" type="submit">Send report</button></div><p id="swipeReportStatus" role="status" aria-live="polite"></p></form>
+  </dialog>
+
+  <script src="/config.js?v=1900"></script>
+  <script src="/user.js?v=2390"></script>
+  <script src="/donate.js?v=2390"></script>
+  <script src="/pwa.js?v=1900" defer></script>
+  <script src="/push.js?v=1900" defer></script>
+  <script src="/watch.js?v=2470"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "66ddb66ae185406a855dfd9d61a72ad4"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

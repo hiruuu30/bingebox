@@ -1,0 +1,70 @@
+{
+  "id": "/",
+  "name": "BingeBox — Free Short Dramas",
+  "short_name": "BingeBox",
+  "description": "Big drama. One little box.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090909",
+  "theme_color": "#090909",
+  "icons": [
+    {
+      "src": "/assets/brand/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Swipe Mode",
+      "short_name": "Swipe",
+      "url": "/swipe",
+      "icons": [
+        {
+          "src": "/assets/brand/pwa-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Discover",
+      "short_name": "Discover",
+      "url": "/#discover",
+      "icons": [
+        {
+          "src": "/assets/brand/pwa-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "prefer_related_applications": false,
+  "categories": [
+    "entertainment",
+    "video"
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}

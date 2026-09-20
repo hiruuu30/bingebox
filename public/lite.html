@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#090909" />
+  <meta name="robots" content="noindex,follow" />
+  <title>BingeBox Lite — Fast Drama Catalog</title>
+  <meta name="description" content="A lightweight BingeBox catalog that loads 30 dramas per page." />
+  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/lite.css?v=2470" />
+  <script src="/config.js"></script>
+  <script src="/poster-fallback.js?v=2470" defer></script>
+  <script src="/lite.js?v=2470" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#liteMain">Skip to catalog</a>
+  <header class="lite-header">
+    <a class="lite-brand" href="/" aria-label="BingeBox home">
+      <img src="/assets/brand/mark.svg" alt="" width="36" height="36" />
+      <img src="/assets/brand/wordmark-hd.png" alt="BingeBox" width="154" height="22" />
+      <span>Lite</span>
+    </a>
+    <a class="full-link" href="/">Full site</a>
+  </header>
+
+  <main id="liteMain">
+    <section class="lite-intro" aria-labelledby="liteTitle">
+      <p class="eyebrow">FAST CATALOG</p>
+      <h1 id="liteTitle">All <em>drama.</em></h1>
+      <p class="lite-copy">Only 30 titles are requested at a time. No hero video, recommendations, account sync, or episode feed until you choose a drama.</p>
+      <form class="lite-search" id="liteSearchForm" role="search">
+        <label for="liteSearch">Search titles</label>
+        <div>
+          <input id="liteSearch" name="q" type="search" maxlength="80" autocomplete="off" placeholder="Search drama title" />
+          <button type="submit">Search</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="lite-catalog" aria-label="Drama catalog">
+      <div class="lite-catalog-head">
+        <span id="liteStatus">Loading catalog…</span>
+        <button class="clear-search hidden" id="liteClear" type="button">Clear search</button>
+      </div>
+      <div class="lite-grid" id="liteGrid" aria-live="polite" aria-busy="true">
+        <div class="lite-skeleton"></div><div class="lite-skeleton"></div><div class="lite-skeleton"></div>
+        <div class="lite-skeleton"></div><div class="lite-skeleton"></div><div class="lite-skeleton"></div>
+      </div>
+      <nav class="lite-pagination" id="litePagination" aria-label="Lite catalog pages">
+        <button type="button" id="litePrev">← Previous</button>
+        <span id="litePage">Page 1</span>
+        <button type="button" id="liteNext">Next →</button>
+      </nav>
+    </section>
+  </main>
+
+  <footer class="lite-footer"><span>BingeBox Lite</span><span>30 titles per page</span></footer>
+</body>
+</html>

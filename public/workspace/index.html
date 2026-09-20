@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090909" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Workspace</title>
+  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/workspace/admin.css?v=2470" />
+</head>
+<body>
+  <header class="admin-header">
+    <div class="workspace-mark" aria-label="Private workspace"><span></span><strong>Workspace</strong></div>
+    <div class="admin-header-actions">
+      <span id="sessionEmail" class="session-email"></span>
+      <button id="logoutBtn" class="ghost-btn hidden" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="loginView" class="login-view">
+      <div class="login-card">
+        <p class="kicker">PRIVATE ACCESS</p>
+        <h1>Workspace<br><em>sign in.</em></h1>
+        <p class="muted">Authorized access only.</p>
+        <form id="loginForm" class="stack">
+          <label>Email<input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+          <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••" /></label>
+          <button class="primary-btn" type="submit">Sign in</button>
+          <p id="loginStatus" class="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="dashboardView" class="dashboard hidden">
+      <nav class="workspace-nav" aria-label="Workspace sections">
+        <div class="workspace-nav-label">BINGEBOX</div>
+        <a href="#libraryWorkspace" data-workspace-nav="content"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v4H4zM14 15h6v4h-6z"/></svg></span><b>Content</b><small>Library & episodes</small></a>
+        <a href="#analyticsWorkspace" data-workspace-nav="analytics"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7"/></svg></span><b>Insights</b><small>Audience performance</small></a>
+        <a href="#homepageWorkspace" data-workspace-nav="homepage"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 8-7 8 7v7H4zM9 19v-5h6v5"/></svg></span><b>Homepage</b><small>Hero & discovery</small></a>
+        <a href="#systemWorkspace" data-workspace-nav="system"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a8 8 0 0 0-1.7-1L14.5 3h-5L9 6.1a8 8 0 0 0-1.7 1l-2.4-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a8 8 0 0 0 1.7 1l.4 3.1h5l.4-3.1a8 8 0 0 0 1.7-1l2.4 1 2-3.4-2.1-1.5a7 7 0 0 0 .1-1z"/></svg></span><b>System</b><small>Health & operations</small></a>
+      </nav>
+      <div class="dashboard-top">
+        <div>
+          <p class="kicker" id="workspaceEyebrow">CONTENT</p>
+          <h1 id="workspaceTitle">Content Library</h1>
+          <p class="muted" id="workspaceSubtitle">Manage titles, episodes and publishing.</p>
+        </div>
+        <button id="newDramaBtn" class="primary-btn" type="button">+ Add drama</button>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <section class="highlight-manager workspace-tab-panel" data-workspace-panel="homepage" id="homepageWorkspace" aria-labelledby="highlightManagerTitle">
+        <div class="highlight-manager-head">
+          <div><p class="kicker">HOMEPAGE</p><h2 id="highlightManagerTitle">Hero highlights</h2><p class="muted">Automatic mode always uses the current Top 3 Trending. Switch to Custom only when you want to pin specific titles.</p></div>
+          <label class="highlight-mode"><input id="heroManualMode" type="checkbox" /><span>Custom picks</span></label>
+        </div>
+        <div id="heroAutoPreview" class="hero-auto-preview">Loading current trending picks…</div>
+        <div id="heroManualFields" class="hero-manual-fields hidden">
+          <label><span>#1 Front highlight</span><select id="heroPick1"></select></label>
+          <label><span>#2 Middle highlight</span><select id="heroPick2"></select></label>
+          <label><span>#3 Back highlight</span><select id="heroPick3"></select></label>
+        </div>
+        <div class="highlight-manager-foot"><p id="heroHighlightStatus" class="status" aria-live="polite"></p><button id="saveHeroHighlightsBtn" class="primary-btn" type="button">Save highlights</button></div>
+      </section>
+
+      <details class="workspace-secondary analytics-workspace workspace-tab-panel" data-workspace-panel="analytics" id="analyticsWorkspace" open><summary>Insights</summary>
+      <section class="analytics-panel" aria-labelledby="analyticsTitle">
+        <div class="analytics-head">
+          <div><p class="kicker">AUDIENCE</p><div class="analytics-title-row"><h2 id="analyticsTitle">BingeBox analytics</h2><button class="analytics-info-btn" type="button" data-analytics-info="about" aria-label="About BingeBox analytics">i</button></div></div>
+          <div class="analytics-controls"><select id="analyticsDays"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select><button id="refreshAnalyticsBtn" class="ghost-btn" type="button">Refresh</button></div>
+        </div>
+        <div class="analytics-period-note" id="analyticsPeriodNote">Performance for the selected period</div>
+        <div class="analytics-cards" id="analyticsCards"><div class="empty">Loading insights…</div></div>
+        <section class="meta-performance-card">
+          <div class="meta-performance-head"><div><span>PERFORMANCE</span><strong id="analyticsGraphTitle">Views</strong></div><div class="metric-tabs" id="analyticsMetricTabs" role="tablist" aria-label="Graph metric"></div></div>
+          <div class="analytics-trends" id="analyticsTrends"></div>
+        </section>
+        <div class="analytics-insights-grid"><div class="analytics-top" id="analyticsTop"></div><div class="analytics-breakdown" id="analyticsBreakdown"></div></div>
+        <div class="analytics-funnel" id="analyticsFunnel"></div>
+      </section>
+      </details>
+
+
+
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system" id="systemWorkspace" open><summary>System health</summary>
+      <section class="ops-panel" aria-labelledby="opsTitle">
+        <div class="ops-head"><div><p class="kicker">OPERATIONS</p><h2 id="opsTitle">Storage &amp; live health</h2><p class="muted">Live checks for R2 storage, secure playback, push delivery and donation tracking.</p></div><button id="runOpsChecksBtn" class="ghost-btn" type="button">Run live checks</button></div>
+        <div class="ops-cards" id="opsCards"><div class="empty">Run the live checks after each production deploy.</div></div>
+        <div class="storage-meter"><div class="storage-meter-head"><span>R2 free storage allowance</span><strong id="storageMeterLabel">—</strong></div><div class="storage-meter-track"><i id="storageMeterFill"></i></div></div>
+        <div class="ops-detail-grid"><div><span>Video objects</span><strong id="storageVideoObjects">—</strong></div><div><span>Average video</span><strong id="storageAverageVideo">—</strong></div><div><span>Orphaned video files</span><strong id="storageOrphans">—</strong></div><div><span>Est. storage cost</span><strong id="storageCost">—</strong></div></div>
+        <div id="opsCheckList" class="ops-check-list"></div>
+        <section class="source-health" aria-labelledby="sourceHealthTitle">
+          <div class="source-health-head">
+            <div><p class="kicker">PLAYER COVERAGE</p><h3 id="sourceHealthTitle">Source health</h3><p class="muted">One-click broken-episode repair retests disabled stored sources, safely reactivates any source that is genuinely reusable, restores the playback fallback, and leaves truly dead sources disabled for fresh recapture.</p></div>
+            <div class="source-health-actions"><button id="fixBrokenEpisodesBtn" class="primary-btn" type="button">Fix all broken episodes</button><button id="fixAllSourcesBtn" class="ghost-btn" type="button">Fix all sources</button><button id="refreshSourceHealthBtn" class="ghost-btn" type="button">Refresh sources</button></div>
+          </div>
+          <p id="sourceRepairStatus" class="status source-repair-status" aria-live="polite"></p>
+          <div id="sourceHealthCards" class="source-health-cards"><div class="empty">Run live checks to review source coverage.</div></div>
+          <div id="sourceHealthAttention" class="source-health-attention"></div>
+        </section>
+      </section>
+      </details>
+
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Notifications & donations</summary>
+      <div class="operations-grid">
+        <section class="ops-subpanel" aria-labelledby="donationTrackingTitle">
+          <div class="ops-subhead"><div><p class="kicker">PAYMONGO</p><h2 id="donationTrackingTitle">Donation tracking</h2></div><button id="refreshDonationsBtn" class="ghost-btn" type="button">Refresh</button></div>
+          <div class="mini-stat-grid"><div><strong id="donationTotal">₱0</strong><span>30-day support</span></div><div><strong id="donationCount">0</strong><span>Payments</span></div><div><strong id="donationAllTime">₱0</strong><span>All time</span></div></div>
+          <div class="integration-state" id="donationWebhookState">Checking webhook…</div>
+          <div id="recentDonations" class="compact-list"><div class="empty">No tracked payments yet.</div></div>
+        </section>
+
+        <section class="ops-subpanel" aria-labelledby="pushTitle">
+          <div class="ops-subhead"><div><p class="kicker">PUSH</p><h2 id="pushTitle">Visitor notifications</h2></div><button id="refreshPushBtn" class="ghost-btn" type="button">Refresh</button></div>
+          <div class="push-admin-stats"><strong id="pushSubscriberCount">0</strong><span>subscribed devices</span></div>
+          <form id="pushBroadcastForm" class="push-broadcast-form">
+            <label>Notification title<input id="pushTitleInput" maxlength="90" placeholder="New episodes are live" required /></label>
+            <label>Message<textarea id="pushBodyInput" maxlength="220" rows="2" placeholder="A short, useful update." required></textarea></label>
+            <label>Open when tapped<input id="pushUrlInput" maxlength="300" value="/" placeholder="/watch?..." /></label>
+            <button class="primary-btn" type="submit">Send notification</button><p id="pushBroadcastStatus" class="status"></p>
+          </form>
+          <div id="pushHistory" class="compact-list"><div class="empty">No notifications sent yet.</div></div>
+        </section>
+      </div>
+      </details>
+
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Donation settings</summary>
+      <section class="site-settings-panel" aria-labelledby="donationSettingsTitle">
+        <div class="site-settings-head"><div><p class="kicker">SUPPORT</p><h2 id="donationSettingsTitle">Donation button</h2><p class="muted">Use an external HTTPS payment or donation page. BingeBox never handles card details directly.</p></div><button id="saveDonationSettingsBtn" class="primary-btn" type="button">Save</button></div>
+        <div class="site-settings-grid"><label>Button label<input id="donationLabel" maxlength="28" placeholder="Donate" /></label><label>Donation URL<input id="donationUrl" type="url" placeholder="https://…" /></label></div><p id="donationSettingsStatus" class="status"></p>
+      </section>
+      </details>
+
+      <div class="notice hidden legacy-control workspace-tab-panel" data-workspace-panel="content" id="r2Notice"><strong>Video uploads are not connected yet.</strong><span>Finish the Cloudflare R2 Worker setup, then paste the Worker URL into <code>config.js</code>.</span></div>
+      <section class="library-panel workspace-tab-panel" data-workspace-panel="content" id="libraryWorkspace" aria-labelledby="libraryTitle">
+        <div class="library-head">
+          <div><p class="kicker">LIBRARY</p><h2 id="libraryTitle">Dramas</h2><p class="muted" id="librarySummary">Loading titles…</p></div>
+          <div class="library-controls">
+            <label class="library-search"><span>Search</span><input id="dramaSearch" type="search" placeholder="Find a drama…" autocomplete="off" /></label>
+            <label><span>Status</span><select id="dramaStatusFilter"><option value="all">All</option><option value="published">Published</option><option value="draft">Draft</option><option value="scheduled">Scheduled</option><option value="complete">Complete</option><option value="r18">R18</option></select></label>
+            <label><span>Sort</span><select id="dramaSort"><option value="updated">Recently updated</option><option value="title">Title A–Z</option><option value="episodes">Most episodes</option><option value="status">Status</option></select></label>
+          </div>
+        </div>
+        <div id="dramaList" class="drama-list"></div>
+      </section>
+
+
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Requests & reports</summary>
+      <div class="moderation-grid">
+        <section class="moderation-panel"><div class="moderation-head"><div><p class="kicker">COMMUNITY POLL</p><h2>Upload requests</h2></div><button id="refreshRequestsBtn" class="ghost-btn" type="button">Refresh</button></div><div id="adminRequestList" class="moderation-list"><div class="empty">Loading requests…</div></div></section>
+        <section class="moderation-panel"><div class="moderation-head"><div><p class="kicker">EPISODE HEALTH</p><h2>Viewer reports</h2></div><button id="refreshReportsBtn" class="ghost-btn" type="button">Refresh</button></div><div id="adminReportList" class="moderation-list"><div class="empty">Loading reports…</div></div></section>
+      </div>
+      </details>
+
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Security & rights log</summary>
+      <section class="security-panel" aria-labelledby="securityPanelTitle">
+        <div class="security-panel-head"><div><p class="kicker">SECURITY &amp; RIGHTS</p><h2 id="securityPanelTitle">Protection status</h2></div><button id="refreshAuditBtn" class="ghost-btn" type="button">Refresh</button></div>
+        <div class="security-status-grid">
+          <div class="security-status-item"><span>Secure media gateway</span><strong id="secureMediaStatus">Checking…</strong></div>
+          <div class="security-status-item"><span>Publishing confirmation guard</span><strong class="ok">Active</strong></div>
+          <div class="security-status-item"><span>Publishing audit trail</span><strong class="ok">Active</strong></div>
+        </div>
+        <div id="auditList" class="audit-list"><div class="empty">Loading recent activity…</div></div>
+      </section>
+      </details>
+    </section>
+  </main>
+
+  <dialog id="analyticsInfoDialog" class="analytics-info-dialog">
+    <div class="analytics-info-shell">
+      <button id="closeAnalyticsInfo" class="icon-btn" type="button" aria-label="Close analytics information">×</button>
+      <p class="kicker">ANALYTICS GUIDE</p><h2 id="analyticsInfoTitle">About analytics</h2><div id="analyticsInfoBody"></div>
+    </div>
+  </dialog>
+
+  <dialog id="dramaDialog" class="editor-dialog">
+    <form id="dramaForm" method="dialog" class="editor-shell">
+      <div class="editor-head">
+        <div><p class="kicker">DRAMA DETAILS</p><h2 id="editorTitle">Add drama</h2></div>
+        <button class="icon-btn" value="cancel" type="button" id="closeEditor" aria-label="Close">×</button>
+      </div>
+      <input id="dramaId" type="hidden" />
+      <div class="form-grid">
+        <label>Title<input id="title" required placeholder="Drama title" /></label>
+        <label>Slug<input id="slug" required placeholder="drama-title" pattern="[a-z0-9-]+" /></label>
+        <label>Genre<select id="genre">
+  <option>romance</option>
+  <option>fantasy</option>
+  <option>action</option>
+  <option>comedy</option>
+  <option>drama</option>
+  <option>thriller</option>
+  <option>mystery</option>
+  <option>historical</option>
+  <option>revenge</option>
+  <option>family</option>
+  <option>werewolf</option>
+  <option>billionaire</option>
+  <option>mafia</option>
+  <option>anime</option>
+  <option>sci-fi</option>
+  <option>supernatural</option>
+  <option>crime</option>
+  <option>school</option>
+  <option>office</option>
+  <option>medical</option>
+  <option>other</option>
+</select></label>
+        <label>Sort order<input id="sortOrder" type="number" value="0" step="1" /></label>
+        <label>Publish at <span>optional</span><input id="dramaPublishAt" type="datetime-local" /></label>
+        <label class="span-2">Moods / tags<input id="mood" placeholder="romance, revenge, CEO" /></label>
+        <label class="span-2">Description<textarea id="description" rows="4" placeholder="Short hook for the drama"></textarea></label>
+        <label class="span-2">Poster URL<input id="posterUrl" placeholder="https://…" /></label>
+        <label class="upload-field span-2">Upload poster<input id="posterFile" type="file" accept="image/jpeg,image/png,image/webp" /><span id="posterUploadStatus"></span></label>
+        <div class="poster-preview-wrap span-2"><img id="posterPreview" class="poster-preview hidden" alt="Poster preview" /></div>
+
+        <section class="rights-panel permission-panel span-2" aria-labelledby="rightsPanelTitle">
+          <div class="rights-panel-head">
+            <div><p class="kicker">PUBLISHING PERMISSION</p><h3 id="rightsPanelTitle">Permission confirmation</h3></div>
+            <span id="rightsStateBadge" class="rights-state">Not confirmed</span>
+          </div>
+          <label class="permission-auto">
+            <input id="autoConfirmRights" type="checkbox" />
+            <span><strong>Auto-confirm permission in Workspace</strong><small>When enabled, new or unverified dramas open with publishing permission already confirmed. You can turn this off any time.</small></span>
+          </label>
+          <label class="permission-attest">
+            <input id="rightsAttestation" type="checkbox" />
+            <span><strong>I confirm BingeBox has permission to distribute this title.</strong><small>This confirmation applies to this drama and its episodes. Publishing remains blocked until it is checked.</small></span>
+          </label>
+          <details class="rights-advanced">
+            <summary>Advanced rights details <span>optional</span></summary>
+            <p class="rights-help">Optional private record-keeping. These details are not shown in the public catalog.</p>
+            <div class="rights-grid">
+              <label>Rights basis<select id="rightsBasis"><option value="other">Permission confirmed</option><option value="licensed">Licensed</option><option value="owned">Owned / commissioned</option><option value="public_domain">Public domain</option><option value="unverified">Not specified</option></select></label>
+              <label>Rights holder / licensor<input id="rightsHolder" placeholder="Optional" /></label>
+              <label>License / agreement reference<input id="rightsReference" placeholder="Optional contract or internal reference" /></label>
+              <label>Licensed territories<input id="rightsTerritories" placeholder="Optional" /></label>
+              <label>Rights expiry<input id="rightsExpiry" type="date" /></label>
+              <label class="span-2">Internal notes<textarea id="rightsNotes" rows="3" placeholder="Optional internal notes"></textarea></label>
+            </div>
+          </details>
+          <p id="rightsMessage" class="status"></p>
+        </section>
+      </div>
+      <div class="toggle-row">
+        <label class="switch-label legacy-featured-control hidden"><input id="featured" type="checkbox" /><span></span>Legacy featured flag</label>
+        <label class="switch-label"><input id="completeSeries" type="checkbox" /><span></span>Complete series</label>
+        <label class="switch-label r18-switch"><input id="r18Flag" type="checkbox" /><span></span>R18 / 18+</label>
+        <label class="switch-label"><input id="published" type="checkbox" /><span></span>Published</label>
+      </div>
+      <div class="r18-detector-row" id="r18DetectorRow">
+        <span id="r18DetectorStatus">R18 detector: no adult-content signal detected.</span>
+        <div class="r18-detector-actions">
+          <label class="r18-auto-toggle"><input id="autoR18Tagging" type="checkbox" checked /> Auto-tag R18</label>
+          <button id="scanR18Btn" class="ghost-btn" type="button">Scan metadata</button>
+        </div>
+      </div>
+      <div class="editor-actions">
+        <button class="danger-btn hidden" id="deleteDramaBtn" type="button">Delete drama</button><button class="ghost-btn hidden" id="takeOfflineBtn" type="button">Take title offline</button>
+        <div class="push"></div>
+        <button class="ghost-btn" id="cancelDramaBtn" type="button">Cancel</button>
+        <button class="primary-btn" type="submit">Save drama</button>
+      </div>
+      <p id="editorStatus" class="status"></p>
+    </form>
+  </dialog>
+
+  <dialog id="episodesDialog" class="editor-dialog episode-dialog">
+    <div class="editor-shell">
+      <div class="editor-head">
+        <div><p class="kicker">EPISODES</p><h2 id="episodesTitle">Episodes</h2></div>
+        <button class="icon-btn" type="button" id="closeEpisodes" aria-label="Close">×</button>
+      </div>
+      <div class="episode-mode-tabs" role="tablist" aria-label="Episode upload mode">
+        <button id="singleModeBtn" class="active" type="button" role="tab" aria-selected="true">External source</button>
+        <button id="bulkModeBtn" class="hidden" type="button" role="tab" aria-selected="false">Legacy upload</button>
+      </div>
+
+      <div id="episodeRightsNotice" class="rights-episode-notice hidden"></div>
+      <section id="singleEpisodePanel" class="episode-panel">
+        <div class="episode-create episode-source-create">
+          <label>Episode #<input id="episodeNumber" type="number" min="1" value="1" /></label>
+          <label>Title<input id="episodeTitle" placeholder="Optional episode title" /></label>
+          <details class="episode-advanced span-2"><summary>Source options</summary><div class="episode-advanced-grid">
+          <label>Provider<input id="episodeProvider" value="upnshare" placeholder="upnshare" /></label>
+          <label>Server label<input id="episodeServerLabel" value="Server 1" placeholder="Server 1" /></label>
+          <label>Player type<select id="episodeSourceType"><option value="embed" selected>Embedded player</option><option value="direct">Direct video URL</option></select></label>
+          </div></details>
+          <label class="span-2">Embed / video URL<input id="episodeSourceUrl" type="url" inputmode="url" placeholder="https://…" /></label>
+          <label class="upload-field hidden" aria-hidden="true">Legacy video file<input id="episodeFile" type="file" accept="video/mp4,video/webm,video/quicktime" tabindex="-1" /></label>
+          <button id="addEpisodeBtn" class="primary-btn" type="button">Add source</button>
+        </div>
+        <div class="source-help"><strong>No upload required.</strong><span>Paste the provider's HTTPS embed URL. Reuse an existing episode number to add Server 2, Server 3, and other fallbacks.</span></div>
+        <details class="quick-import" id="quickImport">
+          <summary>Import episodes</summary>
+          <div class="quick-import-body">
+            <div class="importer-health" id="importerHealth" data-state="idle">
+              <div class="importer-health-copy"><span class="importer-health-dot" aria-hidden="true"></span><div><strong id="importerHealthTitle">Importer not tested</strong><small id="importerHealthDetail">Test browser → Worker connectivity before the first import.</small></div></div>
+              <button id="importerHealthTest" class="ghost-btn" type="button">Test importer</button>
+            </div>
+            <label class="span-2">Watch / series URL<input id="seriesImportUrl" type="url" inputmode="url" placeholder="https://…" /></label>
+            <button id="seriesImportFetch" class="primary-btn" type="button">Fetch episodes</button>
+            <p id="seriesImportStatus" class="status"></p>
+            <div id="seriesImportDiagnostics" class="import-diagnostics hidden" aria-live="polite"></div>
+            <div id="quickImportPreview" class="quick-import-preview"></div>
+            <div class="import-actions">
+              <button id="seriesImportRetry" class="ghost-btn hidden" type="button">Retry failed episodes</button>
+              <button id="quickImportSave" class="primary-btn hidden" type="button">Import all</button>
+            </div>
+            <details class="import-fallback">
+              <summary>Paste player links instead</summary>
+              <p class="muted">Paste official embed/player URLs or iframe HTML. Ordinary drama/watch-page URLs are rejected.</p>
+              <textarea id="quickImportInput" rows="5" placeholder="Paste player URLs or iframe HTML"></textarea>
+              <div class="quick-import-row">
+                <label>Start episode<input id="quickImportStart" type="number" min="1" value="1" /></label>
+                <label>Provider override <input id="quickImportProvider" value="" placeholder="Auto-detect" /></label>
+                <button id="quickImportAnalyze" class="ghost-btn" type="button">Preview links</button>
+              </div>
+              <p id="quickImportStatus" class="status"></p>
+            </details>
+          </div>
+        </details>
+        <div id="uploadProgress" class="upload-progress hidden"><div></div><span>Saving…</span></div>
+        <p id="episodeStatus" class="status"></p>
+      </section>
+
+      <section id="bulkEpisodePanel" class="episode-panel hidden" hidden>
+        <label id="bulkDropzone" class="bulk-dropzone" for="bulkEpisodeFiles">
+          <input id="bulkEpisodeFiles" type="file" multiple accept="video/mp4,video/webm,video/quicktime" />
+          <span class="bulk-drop-icon">＋</span>
+          <strong>Select all episode videos</strong>
+          <small>or drag & drop them here · MP4, WebM or MOV · max 1 GB each</small>
+        </label>
+
+        <div class="bulk-options">
+          <label>Starting episode #<input id="bulkStartNumber" type="number" min="1" value="1" /></label>
+          <label class="switch-label bulk-publish"><input id="bulkPublish" type="checkbox" /><span></span>Publish after upload</label>
+          <label class="switch-label bulk-schedule-toggle"><input id="bulkSchedule" type="checkbox" /><span></span>Schedule releases</label>
+          <div class="bulk-schedule-fields hidden" id="bulkScheduleFields">
+            <label>First release<input id="bulkScheduleStart" type="datetime-local" /></label>
+            <label>Every <span>hours</span><input id="bulkScheduleInterval" type="number" min="1" step="1" value="24" /></label>
+          </div>
+          <p>Files are sorted naturally by filename (1, 2, 3 … 10) and uploaded one at a time for reliability.</p>
+        </div>
+
+        <div class="bulk-toolbar">
+          <div id="bulkSummary" class="bulk-summary">No files selected.</div>
+          <div class="bulk-toolbar-actions">
+            <button id="bulkClearBtn" class="ghost-btn" type="button">Clear</button>
+            <button id="bulkUploadBtn" class="primary-btn" type="button" disabled>Upload all</button>
+          </div>
+        </div>
+
+        <div id="bulkOverallProgress" class="upload-progress hidden"><div></div><span>Preparing…</span></div>
+        <p id="bulkStatus" class="status"></p>
+        <div id="bulkQueue" class="bulk-queue"></div>
+      </section>
+
+      <section class="episode-bulk-editor">
+        <div class="episode-bulk-head"><div><span>BULK METADATA</span><strong>Edit selected episodes</strong></div><label class="select-all-label"><input id="selectAllEpisodes" type="checkbox" /> Select all</label></div>
+        <div class="episode-bulk-grid">
+          <label>Action<select id="episodeBulkAction"><option value="publish">Publish now</option><option value="draft">Make draft</option><option value="schedule">Schedule releases</option><option value="rename">Rename pattern</option></select></label>
+          <label class="bulk-action-field hidden" data-bulk-field="schedule">First release<input id="episodeScheduleStart" type="datetime-local" /></label>
+          <label class="bulk-action-field hidden" data-bulk-field="schedule">Interval hours<input id="episodeScheduleInterval" type="number" min="1" value="24" /></label>
+          <label class="bulk-action-field hidden" data-bulk-field="rename">Title pattern<input id="episodeRenamePattern" value="Episode {n}" placeholder="Episode {n}" /></label>
+          <button id="applyEpisodeBulkBtn" class="primary-btn" type="button" disabled>Apply to selected</button>
+        </div>
+        <p id="episodeBulkStatus" class="status"></p>
+      </section>
+
+      <div class="episode-list-head"><span>Existing episodes</span><div class="episode-list-tools"><span id="episodeCountLabel"></span><button id="publishAllDraftsBtn" class="ghost-btn" type="button">Publish all drafts</button></div></div>
+      <div id="episodeList" class="episode-list"></div>
+    </div>
+  </dialog>
+
+  <script src="/config.js?v=2050"></script>
+  <script src="/poster-fallback.js?v=2470"></script>
+  <script src="/workspace/admin.js?v=2470"></script>
+</body>
+</html>
