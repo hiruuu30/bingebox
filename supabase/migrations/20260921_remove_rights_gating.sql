@@ -160,3 +160,92 @@ set verified=true,
     rights_basis=case when rights_basis='unverified' then 'other' else rights_basis end,
     rights_notes='Legacy compatibility record. Rights gating was removed from BingeBox on 2026-09-21.',
     updated_at=now();
+
+
+-- Remove attestation fields from recurring/server-fetch scheduling.
+create or replace function public.run_bingebox_sync_scheduler()
+returns jsonb
+language plpgsql
+security invoker
+set search_path=public
+as $$
+declare
+  t public.bingebox_sync_targets%rowtype;
+  j public.cloud_import_jobs%rowtype;
+  new_job_id uuid;
+  enqueued integer := 0;
+  reconciled integer := 0;
+  failures integer;
+  delay_minutes integer;
+  is_dramafren_403 boolean;
+begin
+  for t in
+    select * from public.bingebox_sync_targets
+    order by next_run_at asc,created_at asc
+  loop
+    if t.last_job_id is not null then
+      select * into j from public.cloud_import_jobs where id=t.last_job_id;
+      if found
+         and j.status in ('completed','completed_with_errors','failed','cancelled')
+         and t.last_status is distinct from j.status then
+        if j.status='completed' then
+          update public.bingebox_sync_targets
+             set consecutive_failures=0,last_status=j.status,last_error=null,
+                 last_success_at=coalesce(j.finished_at,now()),
+                 next_run_at=now()+make_interval(mins=>interval_minutes),updated_at=now()
+           where id=t.id;
+        else
+          failures:=t.consecutive_failures+1;
+          is_dramafren_403:=coalesce(j.last_error,'') ilike 'DramaFren returned HTTP 403%';
+          delay_minutes:=case
+            when is_dramafren_403 then greatest(60,t.interval_minutes)
+            else least(1440,t.interval_minutes*(2 ^ least(failures,3))::integer)
+          end;
+          update public.bingebox_sync_targets
+             set consecutive_failures=failures,last_status=j.status,last_error=j.last_error,
+                 next_run_at=now()+make_interval(mins=>delay_minutes),updated_at=now()
+           where id=t.id;
+        end if;
+        reconciled:=reconciled+1;
+        select * into t from public.bingebox_sync_targets where id=t.id;
+      end if;
+    end if;
+
+    if t.enabled and t.next_run_at<=now()
+       and not exists (
+         select 1 from public.cloud_import_jobs q
+          where q.source_url=t.source_url
+            and (q.mode is null or q.mode='server_fetch')
+            and q.status in ('pending','running')
+       ) then
+      insert into public.cloud_import_jobs(
+        source_url,status,auto_publish,source_urls,strict_mode,mode,seed_closed
+      )
+      values(t.source_url,'pending',false,'[]'::jsonb,true,'server_fetch',false)
+      returning id into new_job_id;
+
+      update public.bingebox_sync_targets
+         set last_job_id=new_job_id,last_status='pending',last_error=null,last_attempt_at=now(),
+             next_run_at=now()+make_interval(mins=>interval_minutes),updated_at=now()
+       where id=t.id;
+      enqueued:=enqueued+1;
+    end if;
+  end loop;
+  return jsonb_build_object('ok',true,'enqueued',enqueued,'reconciled',reconciled);
+end;
+$$;
+
+alter table public.cloud_import_jobs
+  drop column if exists rights_attested,
+  drop column if exists rights_attested_at;
+
+-- Rights-free Workspace uses this publication-only audit surface.
+create or replace view public.publication_audit_log
+with (security_invoker=true)
+as
+select *
+from public.rights_audit_log
+where entity_type in ('dramas','episodes');
+
+grant select on public.publication_audit_log to authenticated;
+revoke all on public.publication_audit_log from anon;
