@@ -14,6 +14,7 @@
       index=(next+slides.length)%slides.length;
       slides.forEach((s,i)=>{
         const on=i===index;
+        s.setAttribute('aria-hidden',String(!on));s.tabIndex=on?0:-1;
         s.classList.toggle('opacity-100',on);
         s.classList.toggle('opacity-0',!on);
         s.classList.toggle('z-1',on);
@@ -22,10 +23,15 @@
         if(on)s.removeAttribute('data-clone-hidden'); else s.setAttribute('data-clone-hidden','1');
       });
     };
+    const controls=qsa('button[aria-label^="Show "],button[aria-label^="Preview "]',hero);
+    controls.forEach((button,i)=>button.addEventListener('click',()=>show(i%slides.length)));
+    qs('button[aria-label="Previous banner thumbnails"]',hero)?.addEventListener('click',()=>show(index-1));
+    qs('button[aria-label="Next banner thumbnails"]',hero)?.addEventListener('click',()=>show(index+1));
     show(index);
-    let timer=setInterval(()=>show(index+1),6500);
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer=reduced?null:setInterval(()=>show(index+1),6500);
     hero.addEventListener('mouseenter',()=>clearInterval(timer));
-    hero.addEventListener('mouseleave',()=>{clearInterval(timer);timer=setInterval(()=>show(index+1),6500)});
+    hero.addEventListener('mouseleave',()=>{clearInterval(timer);timer=reduced?null:setInterval(()=>show(index+1),6500)});
   }
 
   function setupShelves(){
@@ -50,10 +56,12 @@
       };
       qs('.Slider_prevButton__5XAPR button',container)?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();x-=step()*4;apply()});
       qs('.Slider_nextButton__a5KCv button',container)?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();x+=step()*4;apply()});
-      let down=false,sx=0,start=0;
-      list.addEventListener('pointerdown',e=>{if(e.button!==0)return;down=true;sx=e.clientX;start=x;list.setPointerCapture?.(e.pointerId)});
-      list.addEventListener('pointermove',e=>{if(!down)return;x=Math.max(0,Math.min(maxX(),start+(sx-e.clientX)));list.style.transition='none';list.style.transform=`translate3d(${-x}px,0,0)`});
+      let down=false,dragged=false,sx=0,start=0;
+      list.addEventListener('pointerdown',e=>{if(e.button!==0)return;down=true;dragged=false;sx=e.clientX;start=x});
+      list.addEventListener('pointermove',e=>{if(!down)return;if(Math.abs(sx-e.clientX)<6&&!dragged)return;dragged=true;list.setPointerCapture?.(e.pointerId);x=Math.max(0,Math.min(maxX(),start+(sx-e.clientX)));list.style.transition='none';list.style.transform=`translate3d(${-x}px,0,0)`});
       const up=()=>{if(!down)return;down=false;apply()};
+      list.addEventListener('click',e=>{if(dragged){e.preventDefault();e.stopPropagation();dragged=false}},{capture:true});
+      list.addEventListener('lostpointercapture',up);list.addEventListener('pointerleave',up);
       list.addEventListener('pointerup',up);list.addEventListener('pointercancel',up);
       window.addEventListener('resize',apply,{passive:true});
       apply();
@@ -157,6 +165,7 @@
       const openNow=()=>{
         clearTimeout(openTimer);clearTimeout(closeTimer);
         if(activeController&&activeController.card!==card) activeController.close(true);
+        if(ui&&ui.data.slug!==card.dataset.bbSlug){ui.backdrop.remove();ui.foreground.remove();ui=null}
         ui=ui||buildHover(card); if(!ui)return;
 
         card.classList.add('rs-hover-active');

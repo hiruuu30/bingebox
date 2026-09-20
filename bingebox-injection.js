@@ -1,7 +1,7 @@
 (() => {
   const cfg=window.BINGEBOX_CONFIG||{};
   const qs=(s,r=document)=>r.querySelector(s), qsa=(s,r=document)=>[...r.querySelectorAll(s)];
-  let dramas=[];
+  let dramas=[], initialized=false, loading=false;
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const watch=d=>`/watch?drama=${encodeURIComponent(d.slug)}&ep=1`;
   const norm=s=>String(s||'').toLowerCase();
@@ -34,12 +34,14 @@
   }
 
   function setPicture(card,d){
+    qsa('.BookItem_poster__CsSCp > div:not(.BookItem_cover__qlmBl)',card).forEach(e=>e.remove());
     card.dataset.bbSlug=d.slug;card.dataset.bbDescription=d.description||'';
     const pic=qs('.BookItem_cover__qlmBl picture',card)||qs('picture',card), img=qs('[data-slider-poster="true"] img',card)||qs('img',card);
     if(pic)qsa('source',pic).forEach(s=>s.remove());
     if(img){img.src=d.poster;img.removeAttribute('srcset');img.alt=d.title;img.loading='lazy';img.decoding='async'}
     const h3=qs('.BookItem_bookMeta__dUiSZ h3',card);if(h3){let a=qs('a',h3);if(!a){a=document.createElement('a');h3.textContent='';h3.appendChild(a)}a.textContent=d.title;a.href=watch(d)}
     const m=qs('.BookItem_bookMeta__dUiSZ > div',card);if(m)m.textContent=meta(d);
+    qsa('a[href]',card).forEach(a=>a.href=watch(d));
     const expo=qs('.BookItem_expoItem__MBqy6',card);if(expo){expo.style.cursor='pointer';expo.onclick=()=>location.href=watch(d)}
   }
 
@@ -49,7 +51,7 @@
     const featured=dramas.filter(d=>d.featured);
     const fav=favSet();
     const unique=(items)=>items.filter((d,i,a)=>a.findIndex(x=>x.slug===d.slug)===i);
-    if(type==='originals')return unique(featured.length?featured:dramas).sort((a,b)=>Number(a.sortOrder||9999)-Number(b.sortOrder||9999));
+    if(type==='originals')return unique(featured.length?featured:dramas).sort((a,b)=>Number(a.sortOrder??9999)-Number(b.sortOrder??9999));
     if(type==='new')return fresh;
     if(type==='top')return [...dramas].sort((a,b)=>Number(b.episodes||0)-Number(a.episodes||0)||datev(b)-datev(a));
     if(type==='trending')return unique([...featured,...fresh]).sort((a,b)=>Number(b.featured)-Number(a.featured)||datev(b)-datev(a));
@@ -68,18 +70,19 @@
     const h=qs('.home_floorTitle__cIyIp h2',wrapper);
     if(h){
       const a=qs('a',h);
-      if(a){a.textContent=title;a.href=type==='mylist'?'#bb-my-list':'#';}
+      if(a){a.textContent=title;a.href=type==='mylist'?'#bb-my-list':'/lite';}
       else h.textContent=title;
     }
+    const viewAll=qs('.home_floorTitle__cIyIp > div',wrapper);if(viewAll){const a=document.createElement('a');a.href='/lite';a.textContent='View all ›';viewAll.replaceWith(a)}
     if(type==='mylist')wrapper.id='bb-my-list';
     if(type==='romance')wrapper.id='bb-categories';
     const cards=qsa('.BookItem_bookItem__sK4Qp',wrapper); const list=shelfItems(type);
-    cards.forEach((card,i)=>{const d=list[i];card.style.display=d?'':'none';if(d)setPicture(card,d)});
+    cards.forEach((card,i)=>{const d=list[i];(card.closest('.Slider_item__28DWA')||card).style.display=d?'':'none';if(d)setPicture(card,d)});
     let empty=qs('.bb-empty-shelf',wrapper);if(!list.length){if(!empty){empty=document.createElement('p');empty.className='bb-empty-shelf';empty.textContent=type==='mylist'?'Titles you save will appear here.':'No titles in this category yet.';wrapper.appendChild(empty)}}else empty?.remove();
   }
   function paintShelves(){
-    const wrappers=qsa('.home_main_content__GxekS > .Slider_sliderWrapper__66_q7');wrappers.slice(0,defs.length).forEach((w,i)=>paintShelf(w,defs[i][0],defs[i][1]));
-    const more=qs('.home_recommendFloor__OPMn1');if(more){const h=qs('.home_floorTitle__cIyIp h2',more);if(h)h.textContent='More Recommended';qsa('.BookItem_bookItem__sK4Qp',more).forEach((c,i)=>setPicture(c,dramas[(i+17)%dramas.length]))}
+    const wrappers=qsa('.home_main_content__GxekS > .Slider_sliderWrapper__66_q7');wrappers.slice(defs.length).forEach(w=>w.remove());wrappers.slice(0,defs.length).forEach((w,i)=>paintShelf(w,defs[i][0],defs[i][1]));
+    const more=qs('.home_recommendFloor__OPMn1');if(more){const h=qs('.home_floorTitle__cIyIp h2',more);if(h)h.textContent='More Recommended';qsa('.BookItem_bookItem__sK4Qp',more).forEach((c,i)=>{const d=dramas[i];c.style.display=d?'':'none';if(d)setPicture(c,d)})}
   }
 
   function heroSlides(){return qsa('.home_homeContainer__coYDC > section.relative.top-0 > div.absolute.inset-0.bg-black > a.absolute.inset-0')}
@@ -91,19 +94,34 @@
       const title=qs('h2',slide);if(title)title.textContent=d.title;const desc=qs('p',slide);if(desc)desc.textContent=d.description||'Binge-worthy short drama on BingeBox.';
       const spans=qsa('span.truncate.whitespace-nowrap',slide);if(spans[0])spans[0].textContent=i<3?'Trending':'BingeBox';if(spans[1])spans[1].textContent=d.genre||'Drama';
     });
+    const hero=qs('section[aria-label="Featured series"]');
+    ['Show','Preview'].forEach(prefix=>qsa('button[aria-label^="'+prefix+' "]',hero).forEach((btn,i)=>{
+      const d=pool[i%pool.length];btn.setAttribute('aria-label',prefix+' '+d.title);
+      qsa('source',btn).forEach(e=>e.remove());qsa('img',btn).forEach(img=>{img.src=d.poster;img.removeAttribute('srcset');img.alt=d.title});
+    }));
   }
 
   async function load(){
-    brand();setupSearch();
+    if(loading)return;loading=true;document.documentElement.classList.add('bb-pending');qs('.bb-data-error')?.remove();
+    if(!initialized){brand();setupSearch();initialized=true;
     qsa('[data-bb-scroll]').forEach(el=>el.addEventListener('click',()=>qs('#bb-categories')?.scrollIntoView({behavior:'smooth',block:'start'})));
+    }
+    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
     try{
       const base=String(cfg.supabaseUrl||'').replace(/\/$/,'');if(!base||!cfg.supabasePublishableKey)throw new Error('BingeBox backend config missing');
       const url=`${base}/rest/v1/dramas?published=eq.true&select=id,slug,title,genre,mood,description,poster_url,featured,sort_order,created_at,updated_at,is_complete,publish_at,is_r18,published_episode_stats:episodes(count)&episodes.published=eq.true&order=sort_order.asc,created_at.desc`;
-      const res=await fetch(url,{headers:{apikey:cfg.supabasePublishableKey,Accept:'application/json'}});if(!res.ok)throw new Error(`Catalog ${res.status}`);const rows=await res.json();
-      dramas=rows.map(d=>({id:d.id,slug:d.slug,title:d.title,genre:d.genre||'Drama',mood:d.mood||[],description:d.description||'',poster:d.poster_url||'/assets/brand/mark.svg',featured:!!d.featured,sortOrder:Number(d.sort_order||9999),episodes:Number(d.published_episode_stats?.[0]?.count||0),createdAt:d.created_at,updatedAt:d.updated_at,publishAt:d.publish_at,isComplete:!!d.is_complete,isR18:!!d.is_r18})).filter(d=>d.slug&&d.title);
-      if(!dramas.length)throw new Error('No published BingeBox titles');paintHero();paintShelves();
+      const res=await fetch(url,{signal:controller.signal,headers:{apikey:cfg.supabasePublishableKey,Accept:'application/json'}});if(!res.ok)throw new Error(`Catalog ${res.status}`);const rows=await res.json();
+      dramas=rows.map(d=>({id:d.id,slug:d.slug,title:d.title,genre:d.genre||'Drama',mood:d.mood||[],description:d.description||'',poster:d.poster_url||'/assets/brand/mark.svg',featured:!!d.featured,sortOrder:Number(d.sort_order??9999),episodes:Number(d.published_episode_stats?.[0]?.count||0),createdAt:d.created_at,updatedAt:d.updated_at,publishAt:d.publish_at,isComplete:!!d.is_complete,isR18:!!d.is_r18})).filter(d=>d.slug&&d.title);
+      if(!dramas.length)throw new Error('EMPTY_CATALOG');paintHero();paintShelves();document.documentElement.classList.remove('bb-catalog-unavailable');
       window.BINGEBOX_EXACT_DRAMAS=dramas;
-    }catch(err){console.error(err);const n=document.createElement('div');n.className='bb-data-error';n.textContent='BingeBox catalog could not load. Check your connection and refresh.';document.body.appendChild(n)}finally{document.documentElement.classList.remove('bb-pending');setTimeout(()=>qs('.bb-loading-note')?.remove(),250)}
+    }catch(err){
+      document.documentElement.classList.add('bb-catalog-unavailable');
+      const n=document.createElement('section');n.className='bb-data-error';n.setAttribute('role','status');
+      const message=document.createElement('p');message.textContent=err.message==='EMPTY_CATALOG'?'No published titles yet. Please check back soon.':'The catalog could not load. Please try again.';
+      const retry=document.createElement('button');retry.type='button';retry.textContent='Try again';retry.addEventListener('click',load);
+      n.append(message,retry);qs('main').prepend(n);
+    }finally{clearTimeout(timeout);loading=false;document.documentElement.classList.remove('bb-pending');qs('.bb-loading-note')?.remove()}
+
   }
   window.addEventListener('bb-exact-favorites-changed',()=>{if(dramas.length)paintShelves()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
