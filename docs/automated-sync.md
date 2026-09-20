@@ -139,13 +139,18 @@ The remaining backfill path is:
 4. each public MP4 range-validated independently;
 5. direct sources persisted.
 
-The worker cron is queue-gated and currently invokes up to 20 worker calls per minute while work exists. Each Edge invocation processes up to five queue jobs. When the queue is empty, the gate makes no worker calls.
+Backfill workers are split into independent queue-gated lanes:
+- `bingebox-dramafren-sync-episodes`: up to 20 Edge invocations per minute for title/change/episode-resolution jobs;
+- `bingebox-dramafren-sync-media`: up to 10 Edge invocations per minute for media-validation jobs.
+
+Each Edge invocation processes up to five jobs from its lane. When a lane has no work, its gate makes no worker calls. Episode discovery and media validation therefore proceed concurrently without allowing media backlog to block fresh episode discovery.
 
 At the latest production health check during backfill:
 - catalog ready: 3,029;
 - browse titles mapped: 3,003;
 - BingeBox dramas: 3,030;
-- BingeBox episode rows: 15,899 and increasing;
+- BingeBox episode rows: 32,024 and increasing;
+- active/unexpired `dramabox_web` direct sources: at least 110 and increasing;
 - queue failures: 0;
 - published catalog remains 3 dramas / 116 episodes until rights/publication requirements are satisfied.
 
