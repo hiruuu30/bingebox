@@ -607,19 +607,18 @@
     $('#stats').innerHTML=`<div class="stat"><strong>${total}</strong><span>Dramas</span></div><div class="stat"><strong>${episodes}</strong><span>Episodes</span></div><div class="stat"><strong>${live}</strong><span>Published</span></div>`;
   }
   function auditLabel(action=''){
-    return ({rights_created:'Rights record created',rights_updated:'Rights record updated',rights_deleted:'Rights record deleted',drama_published:'Drama published',drama_unpublished:'Drama taken offline',episode_published:'Episode published',episode_unpublished:'Episode unpublished'})[action] || action.replaceAll('_',' ');
+    return ({drama_published:'Drama published',drama_unpublished:'Drama taken offline',episode_published:'Episode published',episode_unpublished:'Episode unpublished'})[action] || action.replaceAll('_',' ');
   }
   function auditDetail(row){
     const d=row.details||{};
     if(row.entity_type==='episodes') return `Episode ${d.episode_number||'—'}${d.title?` · ${esc(d.title)}`:''}`;
     if(row.entity_type==='dramas') return esc(d.title||'Drama');
-    if(row.entity_type==='drama_rights') return `${esc(d.rights_basis||'permission')} · ${d.verified?'confirmed':'not confirmed'}${d.expires_on?` · expires ${esc(d.expires_on)}`:''}`;
     return row.entity_type||'record';
   }
   async function loadAuditLog(){
     const host=$('#auditList'); if(!host) return;
     try{
-      const rows=await api('/rest/v1/rights_audit_log?select=id,occurred_at,action,entity_type,details&order=occurred_at.desc&limit=12');
+      const rows=await api('/rest/v1/publication_audit_log?select=id,occurred_at,action,entity_type,details&order=occurred_at.desc&limit=12');
       host.innerHTML=rows?.length?rows.map(r=>`<div class="audit-row"><div><strong>${esc(auditLabel(r.action))}</strong><span>${auditDetail(r)}</span></div><time datetime="${esc(r.occurred_at)}">${new Date(r.occurred_at).toLocaleString()}</time></div>`).join(''):'<div class="empty">No publication changes recorded yet.</div>';
     }catch(err){host.innerHTML=`<div class="empty">${esc(err.message)}</div>`}
   }
