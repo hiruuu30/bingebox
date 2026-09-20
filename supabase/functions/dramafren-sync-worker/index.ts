@@ -141,22 +141,22 @@ async function fetchOfficial(bookId:string){
   if(!chapters.length)throw new Error("Official DramaBox page returned no chapters");
   return {info,chapters,final_url:r.url};
 }
-async function enqueueMedia(bookId:string,dramaId:string,ep:any,ch:any){
+async function enqueueMedia(bookId:string,dramaId:string,ep:any,ch:any,priority:number){
   const url=String(ch.mp4||"");
-  if(!ch.unlock||!validMedia(url))return false;
+  if(!ch.unlock||!validMedia(url))return null;
   const exp=expiry(url);
   const version=await sha(url);
-  const key=`bingebox:${SOURCE}:${bookId}:ep:${ep.episode_number}:resolve_media:${version}`;
-  const {error}=await db.from("sync_queue").upsert({
-    source_key:SOURCE,source_content_id:bookId,job_type:"resolve_media",idempotency_key:key,
+  return {
+    source_key:SOURCE,
+    source_content_id:bookId,
+    job_type:"resolve_media",
+    idempotency_key:`bingebox:${SOURCE}:${bookId}:ep:${ep.episode_number}:resolve_media:${version}`,
     payload:{
       drama_id:dramaId,episode_id:ep.id,episode_number:ep.episode_number,
       chapter_id:String(ch.id||""),url,expires_at:exp,referer:"https://www.dramabox.com/"
     },
-    priority:40,status:"pending",updated_at:N()
-  },{onConflict:"idempotency_key",ignoreDuplicates:true});
-  if(error)throw error;
-  return true;
+    priority,status:"pending",updated_at:N()
+  };
 }
 async function resolveEpisodes(job:any){
   const bookId=String(job.source_content_id);
@@ -164,38 +164,68 @@ async function resolveEpisodes(job:any){
   if(!d)throw new Error("Source mapping not ready; title job must complete first");
   const {info,chapters,final_url}=await fetchOfficial(bookId);
   const {data:rights}=await db.from("drama_rights").select("verified").eq("drama_id",d.id).maybeSingle();
-  let created=0,updated=0,mediaQueued=0,publicMedia=0;
+  const {data:existing,error:existingError}=await db.from("episodes")
+    .select("id,episode_number,video_key,video_url,published")
+    .eq("drama_id",d.id);
+  if(existingError)throw existingError;
+  const oldMap=new Map((existing||[]).map((e:any)=>[Number(e.episode_number),e]));
+  const upserts:any[]=[];
   for(let i=0;i<chapters.length;i++){
     const ch=chapters[i]||{};
     const n=Number.isInteger(Number(ch.index))?Number(ch.index)+1:i+1;
     if(!n||n<1)continue;
+    const old:any=oldMap.get(n);
     const durationMs=Number(ch.duration||0);
     const durationSeconds=durationMs>10000?Math.round(durationMs/1000):(durationMs||null);
-    const {data:old}=await db.from("episodes").select("id,video_key,published").eq("drama_id",d.id).eq("episode_number",n).maybeSingle();
-    let ep=old;
-    if(!ep){
-      const {data:newEp,error}=await db.from("episodes").insert({
-        drama_id:d.id,episode_number:n,title:String(ch.name||""),duration_seconds:durationSeconds,
-        video_key:null,video_url:null,published:false
-      }).select("id,episode_number,video_key,published").single();
-      if(error)throw error;
-      ep=newEp;created++;
-    }else{
-      await db.from("episodes").update({title:String(ch.name||""),duration_seconds:durationSeconds,updated_at:N()}).eq("id",ep.id);
-      updated++;
-    }
-    if(ep.video_key)continue;
+    upserts.push({
+      drama_id:d.id,episode_number:n,title:String(ch.name||""),
+      duration_seconds:durationSeconds,
+      video_key:old?.video_key||null,
+      video_url:old?.video_url||null,
+      published:!!old?.published,
+      updated_at:N()
+    });
+  }
+  const {data:eps,error:upsertError}=await db.from("episodes")
+    .upsert(upserts,{onConflict:"drama_id,episode_number"})
+    .select("id,episode_number,video_key,published");
+  if(upsertError)throw upsertError;
+  const epMap=new Map((eps||[]).map((e:any)=>[Number(e.episode_number),e]));
+  const mediaPriority=job.payload?.refresh?6:(job.payload?.backfill?220:40);
+  const mediaJobs:any[]=[];
+  let publicMedia=0;
+  for(let i=0;i<chapters.length;i++){
+    const ch=chapters[i]||{};
+    const n=Number.isInteger(Number(ch.index))?Number(ch.index)+1:i+1;
+    const ep:any=epMap.get(n);
+    if(!ep||ep.video_key)continue;
     if(ch.unlock&&validMedia(String(ch.mp4||""))){
       publicMedia++;
-      if(await enqueueMedia(bookId,d.id,{...ep,episode_number:n},ch))mediaQueued++;
+      const mj=await enqueueMedia(bookId,d.id,ep,ch,mediaPriority);
+      if(mj)mediaJobs.push(mj);
     }
   }
+  if(mediaJobs.length){
+    const {error:mediaError}=await db.from("sync_queue").upsert(mediaJobs,{onConflict:"idempotency_key",ignoreDuplicates:true});
+    if(mediaError)throw mediaError;
+  }
+  const c=await catalog(bookId);
   await db.from("dramafren_catalog_queue").update({
     chapter_count:chapters.length,matched_drama_id:d.id,matched_at:N(),updated_at:N(),
-    metadata:{...(await catalog(bookId)).metadata,official_web:{url:final_url,chapter_count:chapters.length,last_resolved_at:N(),public_media_count:publicMedia}}
+    metadata:{...(c.metadata||{}),official_web:{url:final_url,chapter_count:chapters.length,last_resolved_at:N(),public_media_count:publicMedia}}
   }).eq("book_id",bookId);
-  await db.from("content_source_map").update({last_seen_at:N(),metadata:{official_chapter_count:chapters.length,public_media_count:publicMedia,last_resolved_at:N()}}).eq("source_key",SOURCE).eq("source_content_id",bookId);
-  return {book_id:bookId,drama_id:d.id,title:info.bookName||d.title,chapters:chapters.length,episodes_created:created,episodes_updated:updated,public_media:publicMedia,media_jobs:mediaQueued,rights_verified:!!rights?.verified};
+  await db.from("content_source_map").update({
+    last_seen_at:N(),
+    metadata:{official_chapter_count:chapters.length,public_media_count:publicMedia,last_resolved_at:N()}
+  }).eq("source_key",SOURCE).eq("source_content_id",bookId);
+  const oldCount=(existing||[]).length;
+  return {
+    book_id:bookId,drama_id:d.id,title:info.bookName||d.title,chapters:chapters.length,
+    episodes_created:Math.max(0,(eps||[]).length-oldCount),
+    episodes_upserted:(eps||[]).length,
+    public_media:publicMedia,media_jobs:mediaJobs.length,
+    rights_verified:!!rights?.verified,media_priority:mediaPriority
+  };
 }
 async function verifyMedia(url:string,referer:string){
   const r=await fetch(url,{
