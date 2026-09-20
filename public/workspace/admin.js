@@ -5,12 +5,10 @@
   const base = (config.supabaseUrl || 'https://shffgnuprnycqblpwkrp.supabase.co').replace(/\/$/, '');
   const key = config.supabasePublishableKey || 'sb_publishable_PeopMn9aiDdzxqLvSkkR6w_PUw9BIJH';
   const storageKey = 'bingebox_admin_session';
-  const autoRightsKey = 'bingebox_auto_confirm_rights';
   const autoR18Key = 'bingebox_auto_r18_tagging';
   let session = null;
   let dramas = [];
   let activeDrama = null;
-  let rightsByDrama = {};
   let heroHighlightIds=[];
   let heroAutoIds=[];
 
@@ -98,14 +96,6 @@
 
   function saveSession(s){ session=s; localStorage.setItem(storageKey, JSON.stringify(s)); }
   function clearSession(){ session=null; localStorage.removeItem(storageKey); }
-  function autoRightsEnabled(){
-    const raw=localStorage.getItem(autoRightsKey);
-    return raw===null ? true : raw==='1';
-  }
-  function syncAutoRightsControl(){
-    const el=$('#autoConfirmRights');
-    if(el) el.checked=autoRightsEnabled();
-  }
   function autoR18Enabled(){
     const raw=localStorage.getItem(autoR18Key);
     return raw===null ? true : raw==='1';
@@ -141,7 +131,6 @@
   async function showDashboard(){
     $('#loginView').classList.add('hidden'); $('#dashboardView').classList.remove('hidden'); $('#logoutBtn').classList.remove('hidden'); $('#sessionEmail').textContent=session.user?.email||'';
     $('#r2Notice').classList.toggle('hidden', !!config.r2UploadEndpoint);
-    syncAutoRightsControl();
     syncAutoR18Control();
     initWorkspaceNavigation();
     await loadWorkspaceViewData(document.body.dataset.workspaceView||'content');
@@ -605,12 +594,8 @@
 
   async function loadDramas(){
     try{
-      const [dramaRows,rightsRows]=await Promise.all([
-        api('/rest/v1/dramas?select=*,episode_stats:episodes(count)&order=sort_order.asc,created_at.desc'),
-        api('/rest/v1/drama_rights?select=*')
-      ]);
+      const dramaRows=await api('/rest/v1/dramas?select=*,episode_stats:episodes(count)&order=sort_order.asc,created_at.desc');
       dramas=dramaRows;
-      rightsByDrama=Object.fromEntries((rightsRows||[]).map(r=>[r.drama_id,r]));
       const counts={};
       for(const d of dramas)counts[d.id]=Math.max(0,Number(d.episode_stats?.[0]?.count||0));
       dramaEpisodeCounts=counts;
@@ -635,7 +620,7 @@
     const host=$('#auditList'); if(!host) return;
     try{
       const rows=await api('/rest/v1/rights_audit_log?select=id,occurred_at,action,entity_type,details&order=occurred_at.desc&limit=12');
-      host.innerHTML=rows?.length?rows.map(r=>`<div class="audit-row"><div><strong>${esc(auditLabel(r.action))}</strong><span>${auditDetail(r)}</span></div><time datetime="${esc(r.occurred_at)}">${new Date(r.occurred_at).toLocaleString()}</time></div>`).join(''):'<div class="empty">No rights or publication changes recorded yet.</div>';
+      host.innerHTML=rows?.length?rows.map(r=>`<div class="audit-row"><div><strong>${esc(auditLabel(r.action))}</strong><span>${auditDetail(r)}</span></div><time datetime="${esc(r.occurred_at)}">${new Date(r.occurred_at).toLocaleString()}</time></div>`).join(''):'<div class="empty">No publication changes recorded yet.</div>';
     }catch(err){host.innerHTML=`<div class="empty">${esc(err.message)}</div>`}
   }
   async function checkSecureMedia(){
@@ -646,11 +631,7 @@
       if(res.ok&&data.ready){el.textContent='Ready';el.className='ok'}else{el.textContent='Needs setup';el.className='warn'}
     }catch{el.textContent='Needs setup';el.className='warn'}
   }
-  function rightsState(dramaId){
-    const r=rightsByDrama[dramaId];
-    const expired=!!(r?.expires_on && r.expires_on < new Date().toISOString().slice(0,10));
-    return {record:r,verified:!!r?.verified&&!expired,expired,label:expired?'Permission expired':r?.verified?'Permission confirmed':'Not confirmed'};
-  }
+  function rightsState(){ return {verified:true,expired:false,label:'Ready'}; }
   function localDateTimeValue(value){
     if(!value)return '';
     const d=new Date(value); if(Number.isNaN(d.getTime()))return '';
@@ -685,7 +666,7 @@
     const summary=$('#librarySummary');if(summary)summary.textContent=`${rows.length} shown · ${total} total · ${published} published · ${drafts} drafts`;
     const heroIds=heroHighlightIds.length?heroHighlightIds:heroAutoIds;
     $('#dramaList').innerHTML=rows.length?rows.map(d=>{
-      const rs=rightsState(d.id),scheduled=!!(d.published&&d.publish_at&&new Date(d.publish_at)>new Date());
+      const scheduled=!!(d.published&&d.publish_at&&new Date(d.publish_at)>new Date());
       const state=scheduled?`Scheduled ${new Date(d.publish_at).toLocaleDateString()}`:d.published?'Published':'Draft';
       const description=String(d.description||'').trim();
       const heroSlot=heroIds.indexOf(String(d.id));
@@ -694,7 +675,7 @@
         <div class="drama-main">
           <div class="drama-title-line"><h3>${esc(d.title)}</h3><span class="library-ep-count">${counts[d.id]||0} EP</span></div>
           ${description?`<p class="drama-row-description">${esc(description)}</p>`:''}
-          <div class="drama-meta"><span class="genre-chip">${esc(d.genre)}</span><span class="badge ${d.published?'live':''}">${esc(state)}</span><span class="badge rights-badge ${rs.verified?'verified':rs.expired?'expired':'unverified'}">${rs.label}</span>${d.is_complete?'<span class="badge complete">Complete</span>':''}${d.is_r18?'<span class="badge r18">R18</span>':''}${heroSlot>=0?`<span class="badge hero-slot">H${heroSlot+1}</span>`:''}</div>
+          <div class="drama-meta"><span class="genre-chip">${esc(d.genre)}</span><span class="badge ${d.published?'live':''}">${esc(state)}</span>${d.is_complete?'<span class="badge complete">Complete</span>':''}${d.is_r18?'<span class="badge r18">R18</span>':''}${heroSlot>=0?`<span class="badge hero-slot">H${heroSlot+1}</span>`:''}</div>
         </div>
         <div class="row-actions"><button class="ghost-btn" data-episodes="${d.id}">Episodes</button><button class="primary-btn compact-action" data-edit="${d.id}">Edit</button></div>
       </article>`;
@@ -771,42 +752,10 @@
     return result;
   }
 
-  function setRightsFields(d){
-    const r=d?rightsByDrama[d.id]||{}:{};
-    $('#rightsBasis').value=r.rights_basis||'unverified';
-    $('#rightsHolder').value=r.rights_holder||'';
-    $('#rightsReference').value=r.license_reference||'';
-    $('#rightsTerritories').value=r.territories||'';
-    $('#rightsExpiry').value=r.expires_on||'';
-    $('#rightsNotes').value=r.rights_notes||'';
-    const storedVerified=!!r.verified;
-    const autoConfirm=autoRightsEnabled();
-    $('#rightsAttestation').checked=storedVerified||autoConfirm;
-    syncAutoRightsControl();
-    const rs=d?rightsState(d.id):{verified:false,expired:false,label:'Unverified'};
-    const badge=$('#rightsStateBadge');
-    if(storedVerified){
-      badge.textContent=rs.label; badge.className=`rights-state ${rs.verified?'verified':rs.expired?'expired':'unverified'}`;
-    }else if(autoConfirm){
-      badge.textContent='Auto-confirm ready'; badge.className='rights-state unverified';
-    }else{
-      badge.textContent=rs.label; badge.className=`rights-state ${rs.verified?'verified':rs.expired?'expired':'unverified'}`;
-    }
-    if(d?.published&&!rs.verified&&!autoConfirm) status($('#rightsMessage'),'This title is live without a permission confirmation. Confirm permission or take it offline before making further publishing changes.','error');
-    else if(!storedVerified&&autoConfirm) status($('#rightsMessage'),'Auto-confirm is on. Saving this drama will record publishing permission confirmation.','');
-    else status($('#rightsMessage'),'');
-  }
   function openEditor(d=null){
-    activeDrama=d; $('#editorTitle').textContent=d?'Edit drama':'Add drama'; $('#dramaId').value=d?.id||''; $('#title').value=d?.title||''; $('#slug').value=d?.slug||''; $('#genre').value=d?.genre||'romance'; $('#sortOrder').value=d?.sort_order||0; $('#dramaPublishAt').value=localDateTimeValue(d?.publish_at); $('#mood').value=(d?.mood||[]).join(', '); $('#description').value=d?.description||''; $('#posterUrl').value=d?.poster_url||''; $('#featured').checked=!!d?.featured; $('#completeSeries').checked=!!d?.is_complete; $('#r18Flag').checked=!!d?.is_r18; $('#published').checked=!!d?.published; r18ManualTouched=false; $('#deleteDramaBtn').classList.toggle('hidden',!d); $('#takeOfflineBtn').classList.toggle('hidden',!d); $('#posterFile').value=''; $('#posterUploadStatus').textContent=''; const pp=$('#posterPreview'); if(d?.poster_url){pp.src=d.poster_url;pp.classList.remove('hidden')}else{pp.removeAttribute('src');pp.classList.add('hidden')} setRightsFields(d); status($('#editorStatus'),''); dlg.showModal(); setTimeout(()=>{syncAutoR18Control();renderR18Scan({apply:true});},0);
+    activeDrama=d; $('#editorTitle').textContent=d?'Edit drama':'Add drama'; $('#dramaId').value=d?.id||''; $('#title').value=d?.title||''; $('#slug').value=d?.slug||''; $('#genre').value=d?.genre||'romance'; $('#sortOrder').value=d?.sort_order||0; $('#dramaPublishAt').value=localDateTimeValue(d?.publish_at); $('#mood').value=(d?.mood||[]).join(', '); $('#description').value=d?.description||''; $('#posterUrl').value=d?.poster_url||''; $('#featured').checked=!!d?.featured; $('#completeSeries').checked=!!d?.is_complete; $('#r18Flag').checked=!!d?.is_r18; $('#published').checked=!!d?.published; r18ManualTouched=false; $('#deleteDramaBtn').classList.toggle('hidden',!d); $('#takeOfflineBtn').classList.toggle('hidden',!d); $('#posterFile').value=''; $('#posterUploadStatus').textContent=''; const pp=$('#posterPreview'); if(d?.poster_url){pp.src=d.poster_url;pp.classList.remove('hidden')}else{pp.removeAttribute('src');pp.classList.add('hidden')} status($('#editorStatus'),''); dlg.showModal(); setTimeout(()=>{syncAutoR18Control();renderR18Scan({apply:true});},0);
   }
   $('#newDramaBtn').addEventListener('click',()=>openEditor());
-  $('#autoConfirmRights')?.addEventListener('change',e=>{
-    localStorage.setItem(autoRightsKey,e.target.checked?'1':'0');
-    const stored=activeDrama ? !!rightsByDrama[activeDrama.id]?.verified : false;
-    if(!stored) $('#rightsAttestation').checked=e.target.checked;
-    if(!stored&&e.target.checked) status($('#rightsMessage'),'Auto-confirm is on. Saving this drama will record publishing permission confirmation.','');
-    else if(!stored&&!e.target.checked) status($('#rightsMessage'),'Auto-confirm is off. Confirm permission manually before publishing.','');
-  });
   $('#title').addEventListener('input',()=>{if(!activeDrama) $('#slug').value=slugify($('#title').value)});
   $('#r18Flag')?.addEventListener('change',()=>{r18ManualTouched=true;renderR18Scan()});
   $('#autoR18Tagging')?.addEventListener('change',e=>{
@@ -824,25 +773,6 @@
   $('#genre')?.addEventListener('change',()=>renderR18Scan({apply:true}));
   $('#closeEditor').addEventListener('click',()=>dlg.close()); $('#cancelDramaBtn').addEventListener('click',()=>dlg.close());
   document.addEventListener('click',e=>{const ed=e.target.closest('[data-edit]');if(ed)openEditor(dramas.find(d=>d.id===ed.dataset.edit)); const ep=e.target.closest('[data-episodes]');if(ep)openEpisodes(dramas.find(d=>d.id===ep.dataset.episodes));});
-
-  function collectRights(){
-    const confirmed=$('#rightsAttestation').checked;
-    const data={
-      rights_basis:$('#rightsBasis').value||'other',
-      rights_holder:$('#rightsHolder').value.trim()||null,
-      license_reference:$('#rightsReference').value.trim()||null,
-      territories:$('#rightsTerritories').value.trim()||null,
-      expires_on:$('#rightsExpiry').value||null,
-      rights_notes:$('#rightsNotes').value.trim()||null,
-      verified:confirmed
-    };
-    if(confirmed && data.rights_basis==='unverified') data.rights_basis='other';
-    if(confirmed && data.expires_on && data.expires_on < new Date().toISOString().slice(0,10)) throw new Error('The recorded permission expiry date has already passed.');
-    return data;
-  }
-  async function saveRights(dramaId,data){
-    await api('/rest/v1/drama_rights?on_conflict=drama_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({drama_id:dramaId,...data})});
-  }
 
   $('#dramaForm').addEventListener('submit',async e=>{
     e.preventDefault();status($('#editorStatus'),'Saving…');
@@ -863,12 +793,8 @@
       sort_order:Number($('#sortOrder').value)||0
     };
     try{
-      const rights=collectRights();
-      if(requestedPublish&&!rights.verified)throw new Error('Confirm that BingeBox has permission to distribute this title before publishing.');
-
       let savedDrama=null;
       if(activeDrama){
-        await saveRights(activeDrama.id,rights);
         const updated=await api(`/rest/v1/dramas?id=eq.${activeDrama.id}&select=*`,{
           method:'PATCH',
           headers:{Prefer:'return=representation'},
@@ -883,7 +809,6 @@
         });
         const d=created?.[0];
         if(!d?.id)throw new Error('Drama was created but its ID was not returned.');
-        await saveRights(d.id,rights);
         if(requestedPublish){
           const publishedRows=await api(`/rest/v1/dramas?id=eq.${d.id}&select=*`,{
             method:'PATCH',
@@ -909,7 +834,7 @@
 
       status(
         $('#editorStatus'),
-        `${rights.verified?'Saved. Publishing permission confirmed.':'Saved as draft.'}${pushNote}`,
+        `${savedDrama?.published?'Saved and published.':'Saved as draft.'}${pushNote}`,
         pushNote.includes('could not be sent')?'error':'success'
       );
       await loadDramas();await loadAuditLog();if(pushNote&&!pushNote.includes('could not be sent'))await loadPushAdmin();
@@ -980,11 +905,7 @@
     status($('#episodeStatus'),'');
     resetBulkQueue();
     setEpisodeMode('single');
-    const rs=rightsState(d.id);
-    const notice=$('#episodeRightsNotice');
-    notice.classList.toggle('hidden',rs.verified);
-    notice.textContent=rs.expired?'Publishing is blocked because the recorded permission has expired. Update Drama details.':'Publishing is blocked until you confirm BingeBox has permission to distribute this title.';
-    $('#bulkPublish').checked=false; $('#bulkPublish').disabled=!rs.verified; if($('#bulkSchedule')){$('#bulkSchedule').checked=false;$('#bulkScheduleFields')?.classList.add('hidden')} if($('#selectAllEpisodes'))$('#selectAllEpisodes').checked=false; if($('#episodeBulkStatus'))status($('#episodeBulkStatus'),'');
+    $('#bulkPublish').checked=false; $('#bulkPublish').disabled=false; if($('#bulkSchedule')){$('#bulkSchedule').checked=false;$('#bulkScheduleFields')?.classList.add('hidden')} if($('#selectAllEpisodes'))$('#selectAllEpisodes').checked=false; if($('#episodeBulkStatus'))status($('#episodeBulkStatus'),'');
     epDlg.showModal();
     await loadEpisodes();
   }
@@ -1014,7 +935,7 @@
   }
   function renderEpisodes(){
     $('#episodeCountLabel').textContent=`${currentEpisodes.length} total`;
-    const canPublish=rightsState(activeDrama.id).verified;
+    const canPublish=true;
     const drafts=currentEpisodes.filter(e=>!e.published).length; const allBtn=$('#publishAllDraftsBtn'); if(allBtn){allBtn.disabled=!drafts||!canPublish;allBtn.textContent=drafts?`Publish all drafts (${drafts})`:'All episodes published';}
     $('#episodeList').innerHTML=currentEpisodes.length?currentEpisodes.map(e=>{
       const future=e.published&&e.publish_at&&new Date(e.publish_at)>new Date();
