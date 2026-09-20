@@ -24,7 +24,7 @@ with dn as (
   from public.dramas d
 ),
 unique_dn as (
-  select k,min(id) as drama_id
+  select k,min(id::text)::uuid as drama_id
   from dn
   where k<>''
   group by k
