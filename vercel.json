@@ -148,12 +148,6 @@
       "status": 404
     }
   ],
-  "crons": [
-    {
-      "path": "/api/bingebox-sync",
-      "schedule": "*/10 * * * *"
-    }
-  ],
   "functions": {
     "api/bingebox-sync.js": {
       "maxDuration": 300
