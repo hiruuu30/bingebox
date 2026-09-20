@@ -141,23 +141,6 @@ async function fetchOfficial(bookId:string){
   if(!chapters.length)throw new Error("Official DramaBox page returned no chapters");
   return {info,chapters,final_url:r.url};
 }
-async function enqueueMedia(bookId:string,dramaId:string,ep:any,ch:any,priority:number){
-  const url=String(ch.mp4||"");
-  if(!ch.unlock||!validMedia(url))return null;
-  const exp=expiry(url);
-  const version=await sha(url);
-  return {
-    source_key:SOURCE,
-    source_content_id:bookId,
-    job_type:"resolve_media",
-    idempotency_key:`bingebox:${SOURCE}:${bookId}:ep:${ep.episode_number}:resolve_media:${version}`,
-    payload:{
-      drama_id:dramaId,episode_id:ep.id,episode_number:ep.episode_number,
-      chapter_id:String(ch.id||""),url,expires_at:exp,referer:"https://www.dramabox.com/"
-    },
-    priority,status:"pending",updated_at:N()
-  };
-}
 async function resolveEpisodes(job:any){
   const bookId=String(job.source_content_id);
   const d=await ensureDrama(bookId,false);
@@ -192,39 +175,41 @@ async function resolveEpisodes(job:any){
   if(upsertError)throw upsertError;
   const epMap=new Map((eps||[]).map((e:any)=>[Number(e.episode_number),e]));
   const mediaPriority=job.payload?.refresh?6:(job.payload?.backfill?220:40);
-  const mediaJobs:any[]=[];
-  let publicMedia=0;
+  const mediaItems:any[]=[];
   for(let i=0;i<chapters.length;i++){
     const ch=chapters[i]||{};
     const n=Number.isInteger(Number(ch.index))?Number(ch.index)+1:i+1;
     const ep:any=epMap.get(n);
-    if(!ep||ep.video_key)continue;
-    if(ch.unlock&&validMedia(String(ch.mp4||""))){
-      publicMedia++;
-      const mj=await enqueueMedia(bookId,d.id,ep,ch,mediaPriority);
-      if(mj)mediaJobs.push(mj);
-    }
+    const url=String(ch.mp4||"");
+    if(!ep||ep.video_key||!ch.unlock||!validMedia(url))continue;
+    mediaItems.push({
+      episode_id:ep.id,episode_number:n,chapter_id:String(ch.id||""),
+      url,expires_at:expiry(url),referer:"https://www.dramabox.com/"
+    });
   }
-  if(mediaJobs.length){
-    const {error:mediaError}=await db.from("sync_queue").upsert(mediaJobs,{onConflict:"idempotency_key",ignoreDuplicates:true});
+  if(mediaItems.length){
+    const version=await sha(mediaItems.map(x=>x.url).join("|"));
+    const {error:mediaError}=await db.from("sync_queue").upsert({
+      source_key:SOURCE,source_content_id:bookId,job_type:"resolve_media",
+      idempotency_key:`bingebox:${SOURCE}:${bookId}:resolve_media_batch:${version}`,
+      payload:{drama_id:d.id,items:mediaItems,backfill:!!job.payload?.backfill,refresh:!!job.payload?.refresh},
+      priority:mediaPriority,status:"pending",updated_at:N()
+    },{onConflict:"idempotency_key",ignoreDuplicates:true});
     if(mediaError)throw mediaError;
   }
   const c=await catalog(bookId);
   await db.from("dramafren_catalog_queue").update({
     chapter_count:chapters.length,matched_drama_id:d.id,matched_at:N(),updated_at:N(),
-    metadata:{...(c.metadata||{}),official_web:{url:final_url,chapter_count:chapters.length,last_resolved_at:N(),public_media_count:publicMedia}}
+    metadata:{...(c.metadata||{}),official_web:{url:final_url,chapter_count:chapters.length,last_resolved_at:N(),public_media_count:mediaItems.length}}
   }).eq("book_id",bookId);
   await db.from("content_source_map").update({
     last_seen_at:N(),
-    metadata:{official_chapter_count:chapters.length,public_media_count:publicMedia,last_resolved_at:N()}
+    metadata:{official_chapter_count:chapters.length,public_media_count:mediaItems.length,last_resolved_at:N()}
   }).eq("source_key",SOURCE).eq("source_content_id",bookId);
-  const oldCount=(existing||[]).length;
   return {
     book_id:bookId,drama_id:d.id,title:info.bookName||d.title,chapters:chapters.length,
-    episodes_created:Math.max(0,(eps||[]).length-oldCount),
-    episodes_upserted:(eps||[]).length,
-    public_media:publicMedia,media_jobs:mediaJobs.length,
-    rights_verified:!!rights?.verified,media_priority:mediaPriority
+    episodes_upserted:(eps||[]).length,public_media:mediaItems.length,
+    media_jobs:mediaItems.length?1:0,rights_verified:!!rights?.verified,media_priority:mediaPriority
   };
 }
 async function verifyMedia(url:string,referer:string){
@@ -238,8 +223,7 @@ async function verifyMedia(url:string,referer:string){
   try{await r.body?.cancel()}catch{}
   return {status:r.status,content_type:ct,content_range:r.headers.get("content-range")};
 }
-async function storeMedia(job:any){
-  const p=job.payload||{};
+async function storeOneMedia(p:any){
   const url=String(p.url||"");
   if(!validMedia(url))throw new Error("Rejected non-DramaBox direct media URL");
   const {data:ep,error:ee}=await db.from("episodes").select("id,drama_id,episode_number,video_key,published").eq("id",p.episode_id).maybeSingle();
@@ -247,7 +231,8 @@ async function storeMedia(job:any){
   if(!ep)throw new Error("Episode not found");
   if(ep.video_key)return {episode_id:ep.id,preserved_r2:true};
   const verified=await verifyMedia(url,String(p.referer||""));
-  const fp=await sha(new URL(url).hostname.toLowerCase()+new URL(url).pathname);
+  const u=new URL(url);
+  const fp=await sha(u.hostname.toLowerCase()+u.pathname);
   const {data:rows,error:se}=await db.from("episode_sources").select("*").eq("episode_id",ep.id).order("priority",{ascending:true});
   if(se)throw se;
   const list=rows||[];
@@ -285,6 +270,22 @@ async function storeMedia(job:any){
     await db.from("episodes").update({published:true,updated_at:N()}).eq("id",ep.id);
   }
   return {episode_id:ep.id,episode_number:ep.episode_number,source_id:sourceId,expires_at:exp,verified};
+}
+async function storeMedia(job:any){
+  const payload=job.payload||{};
+  const items=Array.isArray(payload.items)?payload.items:[payload];
+  const results:any[]=[];
+  const failures:any[]=[];
+  for(let i=0;i<items.length;i+=5){
+    const chunk=items.slice(i,i+5);
+    const settled=await Promise.allSettled(chunk.map((p:any)=>storeOneMedia(p)));
+    settled.forEach((s:any,idx:number)=>{
+      if(s.status==="fulfilled")results.push(s.value);
+      else failures.push({episode_number:chunk[idx]?.episode_number,error:s.reason?.message||String(s.reason)});
+    });
+  }
+  if(failures.length)throw new Error(`${failures.length} media item(s) failed: ${failures.slice(0,3).map(x=>`EP ${x.episode_number}: ${x.error}`).join("; ")}`);
+  return {validated:results.length,items:results};
 }
 async function complete(id:string,result:any){
   await db.from("sync_queue").update({status:"completed",payload:{...result,_completed:true},heartbeat_at:N(),lease_expires_at:null,completed_at:N(),updated_at:N(),last_error:null}).eq("id",id);
