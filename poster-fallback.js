@@ -18,9 +18,9 @@
       const u = new URL(raw, location.href);
       return (u.hostname === 'media.bingebox.bond' && u.pathname.startsWith('/posters/')) ||
         (u.hostname.endsWith('.supabase.co') && /\/storage\/v1\/object\/public\/bingebox-posters-repaired\//.test(u.pathname)) ||
-        img.closest?.('.poster-card,.bbx-hero-poster-wrap,.modal-poster,.search-mini,.history-row,.lite-card,.library-card');
+        img.closest?.('.poster-card,.rs-hero-poster-wrap,.modal-poster,.search-mini,.history-row,.lite-card,.library-card');
     } catch {
-      return !!img.closest?.('.poster-card,.bbx-hero-poster-wrap,.modal-poster,.search-mini,.history-row,.lite-card,.library-card');
+      return !!img.closest?.('.poster-card,.rs-hero-poster-wrap,.modal-poster,.search-mini,.history-row,.lite-card,.library-card');
     }
   }
 

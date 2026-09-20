@@ -1,0 +1,26 @@
+BingeBox v23.4
+
+ONE-CLICK SOURCE REPAIR
+
+Workspace > System health > Source health now includes “Fix all sources”.
+
+One click:
+- scans all external direct episode sources
+- normalizes every external source through the BingeBox media relay
+- syncs a v22.8-compatible episodes.video_url fallback so the currently-live v22.8 player can still resolve imported videos
+- detects auth_key signed-source expiry
+- disables already-expired signed links so the player does not keep selecting dead URLs
+- tries a safe unsigned recovery when the same CDN object is publicly reachable without auth_key
+- promotes the best remaining valid source into the episode fallback
+- reports titles/episodes that genuinely need a fresh import because the upstream token cannot be renewed from BingeBox backend
+- surfaces signed sources expiring within 48 hours
+
+BACKEND
+- Supabase Edge Function: source-repair v2 (ACTIVE, JWT + admin authorization, paginated for catalogs beyond 1,000 rows)
+- Existing external-media relay remains unchanged.
+- No Netlify deployment is required for the backend service itself.
+
+DEPLOYMENT STATE
+- Production website remains v22.8 until the user chooses to deploy.
+- v22.9 through v23.3 changes are preserved in this package.
+- v23.4 supersedes v23.3 as the next Netlify package.

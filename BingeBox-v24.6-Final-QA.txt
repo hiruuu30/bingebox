@@ -1,0 +1,55 @@
+BingeBox v24.6 — Final QA
+
+RESULT: 42/42 passed · 0 failed
+
+01. PASS — episode counts embedded in initial drama REST query
+02. PASS — initial drama model uses embedded episode count
+03. PASS — full episode inventory still reconciles count
+04. PASS — landscape button exists
+05. PASS — landscape button starts hidden
+06. PASS — landscape button shown only for detected landscape direct media
+07. PASS — landscape action requests fullscreen
+08. PASS — landscape action attempts orientation lock
+09. PASS — iOS native video fullscreen fallback preserved
+10. PASS — hold gesture bound to player shell
+11. PASS — hold excludes controls and interactive elements
+12. PASS — hold changes speed to 2x
+13. PASS — release contract forces normal 1x
+14. PASS — global pointerup releases hold
+15. PASS — pointercancel releases hold
+16. PASS — window blur releases hold
+17. PASS — pause releases hold
+18. PASS — visibility hide releases hold
+19. PASS — hero desktop title reduced
+20. PASS — hero mobile title reduced
+21. PASS — workspace has four real panels
+22. PASS — workspace view controller exists
+23. PASS — workspace hides inactive views
+24. PASS — workspace desktop fixed rail retained/refined
+25. PASS — workspace mobile tab adaptation exists
+26. PASS — workspace heading scale reduced
+27. PASS — watch cache refs bumped
+28. PASS — workspace cache refs bumped
+29. PASS — service worker version bumped
+30. PASS — service worker app/watch refs bumped
+31. PASS — JavaScript syntax — app.js
+32. PASS — JavaScript syntax — watch.js
+33. PASS — JavaScript syntax — workspace/admin.js
+34. PASS — JavaScript syntax — service-worker.js
+35. PASS — JavaScript syntax — poster-fallback.js
+36. PASS — CSS brace balance — styles.css
+37. PASS — CSS brace balance — watch.css
+38. PASS — CSS brace balance — workspace/admin.css
+39. PASS — No duplicate IDs — index.html
+40. PASS — No duplicate IDs — watch.html
+41. PASS — No duplicate IDs — workspace/index.html
+42. PASS — No duplicate IDs — lite.html
+
+BACKEND COUNT VALIDATION
+- Supabase production data was checked: published row counts match maximum published episode numbers for the catalog; no count/number gaps were found.
+- PostgREST embedded relation count query was verified live and returned the expected per-drama count.
+
+DEPLOYMENT
+- Netlify frontend deployment required.
+- No Supabase schema migration is required for v24.6.
+- Existing poster-proxy v2 backend remains unchanged.

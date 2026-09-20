@@ -1,0 +1,21 @@
+BingeBox v23.1 — Analytics Intelligence + Clean Library
+
+Analytics
+- Replaces bar-heavy analytics with real time-series line charts.
+- Adds daily audience/viewing trend and watch-time/completion trend.
+- Adds new vs returning viewer mix.
+- Adds browser, OS, language and timezone demographics (privacy-preserving technical demographics; no age/gender inference).
+- Adds most searched terms and zero-result search gaps.
+- Expands top content, acquisition, device, genre, playback quality and search analytics.
+- Frontend now records browser, OS, language, timezone and screen class with analytics events.
+
+Workspace library
+- Cleaner, denser drama rows.
+- Poster, title, short description, episode count and essential status badges.
+- Search titles.
+- Filter by published/draft/scheduled/complete/R18.
+- Sort by recent update/title/episode count/status.
+- Responsive mobile layout.
+
+Backend
+- get_bingebox_analytics RPC enhanced with daily_series and demographic/search breakdowns.

@@ -1,0 +1,9 @@
+BingeBox v22.5 — Expanded Workspace Genres
+
+Added Workspace genre options:
+Romance, Fantasy, Action, Comedy, Drama, Thriller, Mystery, Historical,
+Revenge, Family, Werewolf, Billionaire, Mafia, Anime, Sci-Fi,
+Supernatural, Crime, School, Office, Medical, Other.
+
+No public layout changes.
+All v22.4 analytics graphs and prior UI/playback fixes are preserved.

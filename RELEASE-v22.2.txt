@@ -1,0 +1,30 @@
+BingeBox v22.2 — Single-deploy UI + playback release
+
+Playback hotfix
+- Allows direct HTTPS media sources through Netlify CSP (`media-src https:`).
+- 15-second direct-source startup timeout.
+- Media-error handling with Retry.
+- Automatic next-server option when a fallback source exists.
+- Endless loading spinner is replaced by an actionable failure state.
+
+Catalog consistency
+- For You uses the same clean premium card format as All Drama.
+- New & Updated uses the same clean premium card format as All Drama.
+- COMPLETE, My List, resume/progress, title gradient and update badge remain cleanly layered.
+- Mobile remains a 3-column catalog.
+
+Player navigation
+- Left-edge swipe to the right behaves like iPhone back navigation.
+- Gesture tracks the finger, snaps back below threshold, and exits when committed.
+- Returns to the current drama’s information/detail card and episode list.
+
+Mobile bottom navigator
+- Swipe/Watch item removed.
+- Four items only: Home, Discover, Search, Me.
+- Selected item/icon turns BingeBox red.
+- Home is selected by default; clicks update active state.
+
+Preserved
+- v22.1 Source Health + cold-start ranking safeguards.
+- v22 advanced analytics, real Trending, For You, Watch History, New & Updated and improved title details.
+- Existing Workspace and extension import compatibility.

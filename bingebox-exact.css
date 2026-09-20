@@ -1,0 +1,19 @@
+
+/* BingeBox injection layer for the exact ReelShort source clone */
+html.bb-pending .home_homeContainer__coYDC{opacity:0}
+.home_homeContainer__coYDC{transition:opacity .18s ease}
+.bb-brand-lockup{height:100%;display:flex;align-items:center;gap:12px;text-decoration:none}
+.bb-brand-mark{width:38px;height:38px;display:block;flex:0 0 38px}
+.bb-brand-wordmark{width:122px;height:auto;display:block}
+.bb-support{height:40px!important;min-width:108px!important;padding:0 24px!important;border-radius:24px!important;background:#e52e2e!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;font-weight:500!important;text-decoration:none!important}
+.rs-source-backdrop,.rs-source-foreground{left:calc(-15px + var(--rs-edge-shift,0px))!important}
+/* BingeBox portrait art inside the source-shaped hero: ambient poster + sharp right poster. */
+.bb-hero-slide>picture>img,.bb-hero-slide>img:not(.bb-hero-poster){filter:blur(28px) brightness(.48) saturate(.9)!important;transform:scale(1.12)!important;object-fit:cover!important;opacity:.78!important}
+.bb-hero-poster{position:absolute!important;z-index:0!important;right:8vw!important;top:0!important;width:min(360px,29vw)!important;height:100%!important;object-fit:cover!important;object-position:center 18%!important;filter:none!important;transform:none!important;border-radius:0!important;opacity:.98!important;pointer-events:none!important;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%,#000 88%,transparent 100%),linear-gradient(0deg,transparent 0,#000 12%,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18%,#000 88%,transparent 100%),linear-gradient(0deg,transparent 0,#000 12%,#000 100%)}
+.bb-loading-note{position:fixed;left:50%;top:50%;z-index:9999;transform:translate(-50%,-50%);display:none;color:#fff;font:500 14px/1.4 "Noto Sans",sans-serif}
+html.bb-pending .bb-loading-note{display:block}
+/* Search overlay uses the cloned site's visual language but BingeBox live data. */
+.bb-search-overlay{position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.93);backdrop-filter:blur(18px);display:none;overflow:auto;padding:96px 6vw 60px;color:#fff}
+.bb-search-overlay.open{display:block}.bb-search-head{display:flex;align-items:center;gap:16px;max-width:900px;margin:0 auto 32px}.bb-search-input{flex:1;height:58px;border:1px solid rgba(255,255,255,.18);border-radius:29px;background:#181818;color:#fff;padding:0 24px;font:400 18px "Noto Sans",sans-serif;outline:none}.bb-search-close{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:#222;color:#fff;font-size:28px;cursor:pointer}.bb-search-results{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px 16px}.bb-search-card{color:#fff;text-decoration:none;min-width:0}.bb-search-card img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:16px;display:block}.bb-search-card strong{display:block;margin-top:10px;font-size:14px;font-weight:500;line-height:1.35}.bb-search-card small{display:block;margin-top:5px;color:rgba(255,255,255,.5);font-size:12px}
+.bb-data-error{position:fixed;left:50%;bottom:30px;z-index:5000;transform:translateX(-50%);background:#292929;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px 18px;color:#fff;font:400 13px "Noto Sans",sans-serif;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+@media(max-width:767px){.bb-brand-wordmark{display:none}.bb-search-results{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 10px}.bb-search-overlay{padding:80px 16px 40px}.bb-hero-poster{right:-2vw!important;width:52vw!important;opacity:.82!important}}

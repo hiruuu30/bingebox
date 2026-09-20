@@ -1,0 +1,17 @@
+BingeBox v22.8 — final tap + Trending refinement
+
+Player tap behavior
+- Tapping the video now immediately toggles all BingeBox player chrome.
+- If controls are visible: one tap hides play/pause, ±5, progress, title/copy, action/reaction controls and top chrome immediately.
+- If controls are hidden: one tap restores them.
+- Reaction tray closes whenever chrome is hidden.
+- Existing auto-hide timer, landscape mode, scrubbing and hold-for-2x remain intact.
+
+Public Trending
+- Trending now means most-played dramas in the recent rolling 72-hour window.
+- Primary ranking: watch_start play count.
+- Tie-breakers: qualified viewers, measured watch time, then title.
+- If there are no recent plays at all, the existing freshness fallback is used.
+- The richer engagement-weighted analytics remain available in Workspace Analytics and are not used to reorder the public Trending rail.
+
+Live backend migration was applied before this package was created.

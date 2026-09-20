@@ -1,0 +1,17 @@
+BingeBox v22.4 — Analytics Visualization Polish
+
+Analytics:
+- Viewing funnel is now a proportional horizontal-bar visualization with step conversion context.
+- Top title performance is now a ranked bar graph driven by the real Trending score.
+- Engagement signals get a compact visual bar chart.
+- Device and top-genre breakdowns now use proportional bars instead of plain number rows.
+- Referrers and top searches stay available under a compact More breakdowns disclosure.
+- Existing metric cards and all ⓘ explanations remain.
+- No fabricated time-series chart was added because the current analytics RPC returns aggregate rather than daily data.
+- No external chart library or additional network dependency.
+
+Preserved:
+- v22.3 mobile/desktop visual freeze fixes.
+- v22.2 playback fixes and external media CSP.
+- v22.1 Source Health and cold-start safeguards.
+- Existing importer, player controls, navigation and catalog behavior.

@@ -1,0 +1,25 @@
+BingeBox v23.6 — One-Click Broken Episode Recovery
+
+Built from the undeployed v23.5 package. Production remains v22.8 until Netlify deployment.
+
+NEW
+- Workspace > System health > Source health now has “Fix all broken episodes”.
+- One click asks the authenticated source-repair backend to find published episodes with no active direct source.
+- Disabled stored origins are re-probed safely.
+- Reusable origins are reactivated and the episode fallback URL is restored automatically.
+- Expired signed URLs are retried without auth_key only when the unsigned origin actually probes healthy.
+- Sources that still fail verification remain disabled and are reported as needing a fresh capture.
+- No blind reactivation of dead sources.
+
+BACKEND
+- source-repair Edge Function upgraded to v3 and is ACTIVE.
+- New admin-only action: fix-broken.
+- Existing fix-all action preserved.
+
+PRESERVED
+- All v23.5 mobile stability, hero chooser, player error reporting and auto-hide fixes.
+- v23.4 Fix all sources workflow.
+- v23.3 Auto R18.
+- v23.2 auto-rights and PayPal behavior.
+- v23.1 analytics.
+- v22.9 playback gestures and Trending.

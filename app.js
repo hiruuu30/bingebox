@@ -47,7 +47,6 @@
   const ALL_DRAMA_PAGE_SIZE = 30;
   let allDramaPage = 1;
   let allDramaFilter = 'all';
-  let allDramaExpanded = true;
 
   const watchUrl = (drama, ep = 1) => `/watch?drama=${encodeURIComponent(drama.id)}&ep=${encodeURIComponent(ep)}`;
   const requestedDrama = () => {
@@ -212,7 +211,9 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
   const resume = getResumeState(d);
   const duration = Number(resume?.ep?.duration_seconds || 0);
   const hasMeaningfulProgress = Boolean(resume && Number(resume.seconds || 0) > 5);
-  const pct = hasMeaningfulProgress && duration ? Math.max(2, Math.min(98, Math.round((resume.seconds / duration) * 100))) : 0;
+  const pct = hasMeaningfulProgress && duration
+    ? Math.max(2, Math.min(98, Math.round((resume.seconds / duration) * 100)))
+    : 0;
   const progressUI = pct ? `<span class="poster-progress" aria-hidden="true"><i style="width:${pct}%"></i></span>` : '';
   const resumeKind = resume?.freshNext || !hasMeaningfulProgress ? 'NEXT' : 'RESUME';
   const resumeEpLabel = resume ? String(resume.ep.episode_number).padStart(2,'0') : '';
@@ -220,18 +221,30 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
   const favorite = BBUser?.isFavorite?.(d.dbId,d.id);
   const statusBadge = d.discoveryLabel ? `<span class="poster-update-badge">${escapeHTML(d.discoveryLabel)}</span>` : (d.isComplete ? '<span class="poster-complete">COMPLETE</span>' : '');
   const favoriteButton = `<button class="poster-favorite ${favorite?'active':''}" type="button" data-favorite="${escapeHTML(d.id)}" aria-label="${favorite?'Remove from':'Add to'} My List" aria-pressed="${favorite?'true':'false'}">${favorite?'✓':'＋'}</button>`;
-  const description=escapeHTML((d.description||'').trim() || 'Watch this short drama on BingeBox.');
-  const watchHref=watchUrl(d, Math.max(1,Number(resume?.ep?.episode_number||1)));
-  return `<article class="poster-card bbx-book-card ${rank >= 0 ? `ranked-card` : ``} ${cleanPoster ? `clean-poster-card` : ``}" tabindex="0" role="button" data-open="${escapeHTML(d.id)}" aria-label="Open ${title}">
-    <div class="bbx-local-backdrop" aria-hidden="true"><div class="bbx-background-cover"><img src="${poster}" alt=""></div><div class="bbx-blur-mask"></div></div>
-    <div class="poster-visual"><img src="${poster}" alt="${title} poster" loading="${priority?'eager':'lazy'}" fetchpriority="${priority?'high':'auto'}" decoding="async" width="600" height="800" />
-      <div class="poster-badge-stack">${rank >= 0 ? `<span class="poster-trending-badge"><b>#${rank+1}</b><span>TRENDING NOW</span></span>` : ''}${d.isR18 ? '<span class="poster-r18">R18</span>' : ''}${statusBadge}</div>${favoriteButton}${progressUI}
+  return `<article class="poster-card rs-book-card ${rank >= 0 ? `ranked-card` : ``} ${cleanPoster ? `clean-poster-card` : ``}" tabindex="0" role="button" data-open="${escapeHTML(d.id)}" aria-label="Open ${title}">
+    <div class="rs-local-backdrop" aria-hidden="true"></div>
+    <div class="poster-visual">
+      <img src="${poster}" alt="${title} poster" loading="${priority?'eager':'lazy'}" fetchpriority="${priority?'high':'auto'}" decoding="async" width="600" height="800" />
+      <div class="poster-badge-stack">
+        ${rank >= 0 ? `<span class="poster-trending-badge"><b>#${rank+1}</b><span>TRENDING NOW</span></span>` : ''}
+        ${d.isR18 ? '<span class="poster-r18">R18</span>' : ''}
+        ${statusBadge}
+      </div>
+      ${favoriteButton}
+      ${progressUI}
     </div>
-    <div class="bbx-book-meta">${resumeUI}<h3>${title}</h3><p><span>${genre}</span><i>｜</i><span>${escapeHTML(epLabel)}</span></p></div>
-    <div class="bbx-local-foreground">
-      <div class="bbx-hover-cover"><img src="${poster}" alt=""></div>
-      <div class="bbx-hover-details"><strong>${title}</strong><span class="bbx-hover-meta">${genre} ｜ ${escapeHTML(epLabel)}</span><p>${description}</p>
-        <div class="bbx-hover-actions"><a class="bbx-hover-play" href="${watchHref}" data-hover-play="${escapeHTML(d.id)}" aria-label="Play ${title}">▶</a><button type="button" class="bbx-hover-icon ${favorite?'active':''}" data-favorite="${escapeHTML(d.id)}" aria-label="${favorite?'Remove from':'Add to'} My List">${favorite?'✓':'▮'}</button><button type="button" class="bbx-hover-icon" data-share="${escapeHTML(d.id)}" aria-label="Share ${title}">↗</button></div>
+    <div class="rs-book-meta">
+      ${resumeUI}
+      <h3>${title}</h3>
+      <p><span>${genre}</span><i>｜</i><span>${escapeHTML(epLabel)}</span></p>
+    </div>
+    <div class="rs-local-foreground" aria-hidden="true">
+      <div class="rs-hover-glass">
+        <div class="rs-hover-copy">
+          <strong>${title}</strong>
+          <span>${genre} ｜ ${escapeHTML(epLabel)}</span>
+        </div>
+        <div class="rs-hover-actions"><span class="rs-hover-play">▶</span><span class="rs-hover-add">${favorite?'✓':'＋'}</span></div>
       </div>
     </div>
   </article>`;
@@ -266,10 +279,10 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
 
   function heroSelection(){
     const ranked=trendingOrder();
-    if(!heroManualIds.length) return ranked.slice(0,8);
+    if(!heroManualIds.length) return ranked.slice(0,3);
     const manual=heroManualIds.map(id=>dramas.find(d=>String(d.dbId)===String(id)||d.id===id)).filter(Boolean);
     const used=new Set(manual.map(d=>String(d.dbId)));
-    return [...manual,...ranked.filter(d=>!used.has(String(d.dbId)))].slice(0,8);
+    return [...manual,...ranked.filter(d=>!used.has(String(d.dbId)))].slice(0,3);
   }
 
   async function loadTrending(){
@@ -303,18 +316,15 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
       grid.innerHTML = trending.map((d,i)=>`<div class="top10-item" data-rank="${i+1}"><span class="top10-rank" aria-hidden="true">${i+1}</span>${posterCard(d,-1,false,i<6)}</div>`).join('') || '<p class="empty-state">No dramas yet.</p>';
     }
     if (allDramaGrid) {
-      const items = allDramaFilter === '__favorites__'
-        ? dramas.filter(d => BBUser?.isFavorite?.(d.dbId,d.id))
-        : dramas.filter(d => allDramaFilter === 'all' || d.genre === allDramaFilter);
-      const pageSize = ALL_DRAMA_PAGE_SIZE;
-      const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+      const items = dramas.filter(d => allDramaFilter === 'all' || d.genre === allDramaFilter);
+      const totalPages = Math.max(1, Math.ceil(items.length / ALL_DRAMA_PAGE_SIZE));
       allDramaPage = Math.min(Math.max(1, allDramaPage), totalPages);
-      const start = (allDramaPage - 1) * pageSize;
-      const pageItems = items.slice(start, start + pageSize);
-      allDramaGrid.innerHTML = pageItems.map(d => posterCard(d, -1, true)).join('') || `<p class="empty-state">${allDramaFilter==='__favorites__'?'Your My List is empty. Save a drama and it will appear here.':'No dramas in this category yet.'}</p>`;
+      const start = (allDramaPage - 1) * ALL_DRAMA_PAGE_SIZE;
+      const pageItems = items.slice(start, start + ALL_DRAMA_PAGE_SIZE);
+      allDramaGrid.innerHTML = pageItems.map(d => posterCard(d, -1, true)).join('') || '<p class="empty-state">No dramas in this category yet.</p>';
       if (allDramaPagination) {
         const hasMultiplePages = totalPages > 1;
-        allDramaPagination.classList.toggle('hidden', !hasMultiplePages);
+        allDramaPagination.classList.toggle('hidden', !hasMultiplePages && items.length <= ALL_DRAMA_PAGE_SIZE);
         if (allDramaPageStatus) {
           const from = items.length ? start + 1 : 0;
           const to = Math.min(start + pageItems.length, items.length);
@@ -394,14 +404,14 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
     if(backdrop)backdrop.style.backgroundImage=`url("${String(heroImage||'').replace(/["\\]/g,'')}")`;
     if(poster){poster.loading='eager';poster.fetchPriority='high';poster.decoding='async';poster.width=720;poster.height=1080;poster.src=heroImage;poster.alt='';}
     if(title)title.textContent=featured.title;
-    if(meta)meta.innerHTML=`<span class="bbx-hero-pill bbx-hero-pill-hot">${trendingIds.includes(featured.dbId)?'Trending':'Featured'}</span><span class="bbx-hero-pill">${escapeHTML(featured.genre||'Drama')}</span>`;
+    if(meta)meta.innerHTML=`<span class="rs-hero-pill rs-hero-pill-hot">${trendingIds.includes(featured.dbId)?'Trending':'Featured'}</span><span class="rs-hero-pill">${escapeHTML(featured.genre||'Drama')}</span>`;
     if(desc)desc.textContent=featured.description||'Short drama, ready to binge.';
     const btn=$('#heroFeatureButton');
     if(btn){btn.disabled=!featured.episodes;btn.dataset.open=featured.id;$('span',btn).textContent=featured.episodes?'Watch now':'View drama';}
     const fav=$('#heroMyListButton');
     if(fav){const on=BBUser?.isFavorite?.(featured.dbId,featured.id);fav.textContent=on?'✓':'＋';fav.dataset.heroFavorite=featured.id;fav.setAttribute('aria-label',`${on?'Remove':'Add'} ${featured.title} ${on?'from':'to'} My List`);}
-    if(dots)dots.innerHTML=items.map((d,i)=>`<button type="button" class="bbx-hero-dot ${i===heroIndex?'active':''}" data-hero-index="${i}" role="tab" aria-selected="${i===heroIndex}" aria-label="Show ${escapeHTML(d.title)}"></button>`).join('');
-    if(thumbs)thumbs.innerHTML=items.map((d,i)=>`<button type="button" class="bbx-hero-thumb ${i===heroIndex?'active':''}" data-hero-index="${i}" aria-label="Show ${escapeHTML(d.title)}"><img src="${escapeHTML(optimizedPoster(d.poster,168,224,72))}" alt="" loading="${i<5?'eager':'lazy'}" decoding="async" /><span>${escapeHTML(d.title)}</span></button>`).join('');
+    if(dots)dots.innerHTML=items.map((d,i)=>`<button type="button" class="rs-hero-dot ${i===heroIndex?'active':''}" data-hero-index="${i}" role="tab" aria-selected="${i===heroIndex}" aria-label="Show ${escapeHTML(d.title)}"></button>`).join('');
+    if(thumbs)thumbs.innerHTML=items.map((d,i)=>`<button type="button" class="rs-hero-thumb ${i===heroIndex?'active':''}" data-hero-index="${i}" aria-label="Show ${escapeHTML(d.title)}"><img src="${escapeHTML(optimizedPoster(d.poster,168,224,72))}" alt="" loading="${i<5?'eager':'lazy'}" decoding="async" /><span>${escapeHTML(d.title)}</span></button>`).join('');
 
     stage.classList.remove('is-loading','hidden');stage.setAttribute('aria-busy','false');
     clearTimeout(heroTimer);
@@ -410,25 +420,13 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
 
   function renderGenreRows(){
     const host=$('#genreRows');if(!host)return;
-    const ranked=trendingOrder();
-    const hay=d=>`${d.title||''} ${d.genre||''} ${(d.mood||[]).join(' ')} ${d.description||''}`.toLowerCase();
-    const fill=(test,limit=12)=>{
-      const first=ranked.filter(test), out=[], seen=new Set();
-      for(const d of [...first,...ranked]){if(!d||seen.has(d.id))continue;seen.add(d.id);out.push(d);if(out.length>=limit)break;}
-      return out;
-    };
-    const shelves=[
-      ['Playing Dumb 🦊',d=>/comedy|funny|mistaken|secret|playful|fake|pretend/.test(hay(d))],
-      ['Romance & Her 🌹',d=>/romance|love|wife|bride|marriage|girlfriend|her\b/.test(hay(d))],
-      ['Heartwarming Love ✨',d=>/heart|family|healing|sweet|warm|love|romance/.test(hay(d))],
-      ['Dangerous Love 🔥',d=>/revenge|action|danger|crime|mafia|betray|blood|war/.test(hay(d))],
-      ['Alpha & King 👑',d=>/fantasy|alpha|king|royal|billionaire|ceo|heir|lord/.test(hay(d))],
-      ['BingeBox Picks 💕',d=>!!d.featured||trendingIds.includes(d.dbId)],
-      ['Fan Favorites 🎤',d=>trendingIds.includes(d.dbId)||Number(trendingMeta.get(d.dbId)?.score||0)>0]
-    ];
-    host.innerHTML=shelves.map(([label,test])=>{
-      const items=fill(test,12);
-      return `<section class="genre-row" aria-label="${escapeHTML(label)}"><header class="genre-row-head"><h2>${escapeHTML(label)}</h2><a href="#allDrama" class="bb-view-all" data-view-all>View all ›</a></header><div class="genre-row-track">${items.map(d=>posterCard(d,-1,true)).join('')}</div></section>`;
+    const counts=new Map();
+    dramas.forEach(d=>{const g=String(d.genre||'').trim();if(g)counts.set(g,(counts.get(g)||0)+1)});
+    const genres=[...counts.entries()].filter(([,n])=>n>=3).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,6).map(([g])=>g);
+    host.innerHTML=genres.map(g=>{
+      const items=dramas.filter(d=>d.genre===g).slice(0,12);
+      const label=g.charAt(0).toUpperCase()+g.slice(1);
+      return `<section class="genre-row" aria-label="${escapeHTML(label)}"><header class="genre-row-head"><h2>${escapeHTML(label)}</h2><button class="genre-view-all" type="button" data-genre-view="${escapeHTML(g)}">View all ›</button></header><div class="genre-row-track">${items.map(d=>posterCard(d,-1,true)).join('')}</div></section>`;
     }).join('');
   }
 
@@ -514,15 +512,37 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
   function renderContinueWatching() {
     const section = $('#continueWatching');
     const host = $('#continueCard');
-    if(section)section.classList.add('hidden');
-    if(host)host.innerHTML='';
+    if (!section || !host) return;
+    const candidates = dramas.map(getResumeState).filter(Boolean)
+      .sort((a,b) => b.at-a.at || Number(b.ep.episode_number)-Number(a.ep.episode_number));
+    const item = candidates[0];
+    const note=$('.continue-note',section);
+    if(note) note.textContent=BBUser?.getState?.().signedIn?'Synced to your BingeBox profile':'Saved on this device';
+    if (!item) { section.classList.add('hidden'); host.innerHTML=''; return; }
+    const duration = Number(item.ep.duration_seconds || 0);
+    const pct = duration ? Math.min(98, Math.round(item.seconds/duration*100)) : 0;
+    const action = item.seconds > 5 ? `Resume at ${formatClock(item.seconds)}` : `Continue episode ${item.ep.episode_number}`;
+    host.innerHTML = `<a class="continue-card" data-continue-drama="${escapeHTML(item.d.dbId)}" href="${watchUrl(item.d,item.ep.episode_number)}">
+      <img src="${escapeHTML(item.d.poster)}" alt="${escapeHTML(item.d.title)} poster" loading="lazy" decoding="async" />
+      <div class="continue-copy"><span>EP ${String(item.ep.episode_number).padStart(2,'0')} · ${escapeHTML(item.d.genre)}</span><h3>${escapeHTML(item.d.title)}</h3><p>${escapeHTML(item.ep.title || `Episode ${item.ep.episode_number}`)}</p><div class="continue-progress"><i style="width:${pct}%"></i></div><strong>${escapeHTML(action)} <b>→</b></strong></div>
+    </a>`;
+    section.classList.remove('hidden');
   }
 
   function renderMyList() {
     const section=$('#myListSection');
     const host=$('#myListGrid');
-    if(section)section.classList.add('hidden');
-    if(host)host.innerHTML='';
+    if(!section||!host) return;
+    const items=dramas.filter(d=>BBUser?.isFavorite?.(d.dbId,d.id));
+    if(!items.length){section.classList.add('hidden');host.innerHTML='';return;}
+    host.innerHTML=items.map(posterCard).join('');
+    const hint=$('#myListAccountHint');
+    if(hint){
+      const signed=BBUser?.getState?.().signedIn;
+      hint.textContent=signed?'Synced across devices':'Sign in to sync';
+      hint.classList.toggle('synced',!!signed);
+    }
+    section.classList.remove('hidden');
   }
 
   function historyEntries(){
@@ -561,19 +581,30 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
   }
 
   function renderForYou(){
-    const section=$('#forYouSection'),host=$('#forYouGrid');if(!section||!host)return;
-    const stamp=d=>Math.max(new Date(d.publishAt||0).getTime()||0,new Date(d.createdAt||0).getTime()||0,new Date(d.updatedAt||0).getTime()||0);
-    const items=[...dramas].sort((a,b)=>stamp(b)-stamp(a)).slice(0,12).map(d=>({...d,discoveryLabel:'NEW'}));
-    if(!items.length){section.classList.add('hidden');host.innerHTML='';return}
+    const section=$('#forYouSection'),host=$('#forYouGrid'),note=$('#forYouNote');if(!section||!host)return;
+    const history=historyEntries(),genreWeight=new Map(),moodWeight=new Map();
+    const favorites=dramas.filter(x=>BBUser?.isFavorite?.(x.dbId,x.id));
+    for(const x of history){genreWeight.set(x.d.genre,(genreWeight.get(x.d.genre)||0)+(x.completed?2:1));for(const m of x.d.mood||[])moodWeight.set(m,(moodWeight.get(m)||0)+1)}
+    for(const d of favorites){genreWeight.set(d.genre,(genreWeight.get(d.genre)||0)+2);for(const m of d.mood||[])moodWeight.set(m,(moodWeight.get(m)||0)+1.5)}
+    const evidence=history.length+favorites.length*1.5;
+    const confidence=Math.max(0,Math.min(1,evidence/5));
+    const items=[...dramas].sort((a,b)=>recommendationScore(b,history,genreWeight,moodWeight,confidence)-recommendationScore(a,history,genreWeight,moodWeight,confidence)).slice(0,6);
+    if(items.length<2){section.classList.add('hidden');host.innerHTML='';return}
+    if(note)note.textContent=confidence>=.75?'Based on what you watch and save':confidence>0?'A balanced mix while we learn your taste':'Popular and fresh picks while we learn your taste';
     host.innerHTML=items.map(d=>posterCard(d,-1,true)).join('');section.classList.remove('hidden');
   }
 
   function renderNewUpdated(){
     const section=$('#newUpdatedSection'),host=$('#newUpdatedGrid');if(!section||!host)return;
-    const ranked=trendingOrder(), preferred=dramas.filter(d=>d.featured), out=[], seen=new Set();
-    for(const d of [...preferred,...ranked]){if(!d||seen.has(d.id))continue;seen.add(d.id);out.push(d);if(out.length>=12)break;}
-    if(!out.length){section.classList.add('hidden');host.innerHTML='';return}
-    host.innerHTML=out.map(d=>posterCard(d,-1,true)).join('');section.classList.remove('hidden');
+    const now=Date.now();
+    const items=dramas.map(d=>{
+      const created=new Date(d.createdAt||0).getTime()||0,updated=Math.max(new Date(d.updatedAt||0).getTime()||0,new Date(d.latestEpisodeAt||0).getTime()||0);
+      const createdDays=(now-created)/86400000,updatedDays=(now-updated)/86400000;
+      let label='';if(created&&createdDays<=30)label='NEW';else if(d.latestEpisodeAt&&updatedDays<=21)label='NEW EPISODES';else if(updated&&updatedDays<=30)label='UPDATED';
+      return {d:{...d,discoveryLabel:label},stamp:Math.max(created,updated),label};
+    }).filter(x=>x.label).sort((a,b)=>b.stamp-a.stamp).slice(0,8).map(x=>x.d);
+    if(!items.length){section.classList.add('hidden');host.innerHTML='';return}
+    host.innerHTML=items.map(d=>posterCard(d,-1,true)).join('');section.classList.remove('hidden');
   }
 
   function observeCatalogImpressions(){
@@ -709,35 +740,13 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
   $('#heroMyListButton')?.addEventListener('click',async e=>{
     const id=e.currentTarget.dataset.heroFavorite,d=dramas.find(x=>x.id===id);if(!d)return;
     e.currentTarget.disabled=true;
-    try{const on=await BBUser.toggleFavorite(d.dbId,d.id);showToast(on?'Added to My List':'Removed from My List');renderMyList();renderGenreRows();renderForYou();renderNewUpdated();renderCatalog(allDramaFilter);renderHero(heroIndex);}catch(err){showToast(err.message||'Could not update My List.')}
+    try{const on=await BBUser.toggleFavorite(d.dbId,d.id);showToast(on?'Added to My List':'Removed from My List');renderMyList();renderHero(heroIndex);}catch(err){showToast(err.message||'Could not update My List.')}
     e.currentTarget.disabled=false;
   });
   $('#genreRows')?.addEventListener('click',e=>{
     const b=e.target.closest('[data-genre-view]');if(!b)return;
-    const g=b.dataset.genreView;allDramaExpanded=true;allDramaPage=1;const tab=$(`#filters [data-filter="${CSS.escape(g)}"]`);
+    const g=b.dataset.genreView;const tab=$(`#filters [data-filter="${CSS.escape(g)}"]`);
     if(tab){tab.click();$('#allDrama')?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth',block:'start'});}
-  });
-
-  document.addEventListener('click',e=>{
-    const a=e.target.closest('[data-view-all]');
-    if(!a)return;
-    e.preventDefault();
-    allDramaExpanded=true;allDramaPage=1;
-    const tab=$('#filters [data-filter="all"]');
-    if(tab)tab.click();
-    const target=$('#allDrama');
-    if(target){
-      const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-      target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
-    }
-  });
-
-  document.addEventListener('click',event=>{
-    const nav=event.target.closest?.('[data-my-list-nav]');if(!nav)return;
-    event.preventDefault();allDramaFilter='__favorites__';allDramaPage=1;allDramaExpanded=true;
-    $$('#filters [data-filter]').forEach(item=>{item.classList.remove('active');item.setAttribute('aria-selected','false')});
-    renderCatalog('__favorites__');
-    const target=$('#allDrama');if(target){const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});}
   });
 
   filters?.addEventListener('click', event => {
@@ -746,15 +755,12 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
     $$('[data-filter]', filters).forEach(item => { item.classList.remove('active'); item.setAttribute('aria-selected', 'false'); });
     button.classList.add('active');
     button.setAttribute('aria-selected', 'true');
-    allDramaExpanded = true;
     allDramaPage = 1;
     renderCatalog(button.dataset.filter);
   });
 
   const moveAllDramaPage = direction => {
-    const items = allDramaFilter === '__favorites__'
-      ? dramas.filter(d => BBUser?.isFavorite?.(d.dbId,d.id))
-      : dramas.filter(d => allDramaFilter === 'all' || d.genre === allDramaFilter);
+    const items = dramas.filter(d => allDramaFilter === 'all' || d.genre === allDramaFilter);
     const totalPages = Math.max(1, Math.ceil(items.length / ALL_DRAMA_PAGE_SIZE));
     const next = Math.min(totalPages, Math.max(1, allDramaPage + direction));
     if (next === allDramaPage) return;
@@ -776,14 +782,12 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
       const d=dramas.find(x=>x.id===fav.dataset.favorite);
       if(d){
         fav.disabled=true;
-        try{const on=await BBUser.toggleFavorite(d.dbId,d.id);showToast(on?'Added to My List':'Removed from My List');renderCatalog(allDramaFilter);renderMyList();renderGenreRows();renderForYou();renderNewUpdated();renderHero(heroIndex);}
+        try{const on=await BBUser.toggleFavorite(d.dbId,d.id);showToast(on?'Added to My List':'Removed from My List');renderCatalog($('#filters [data-filter].active')?.dataset.filter||'all');renderMyList();}
         catch(err){showToast(err.message||'Could not update My List.')}
         fav.disabled=false;
       }
       return;
     }
-    const share=event.target.closest('[data-share]');
-    if(share){event.preventDefault();event.stopPropagation();const d=dramas.find(x=>x.id===share.dataset.share);if(d){const url=new URL(watchUrl(d,1),location.origin).href;try{if(navigator.share)await navigator.share({title:d.title,text:`Watch ${d.title} on BingeBox`,url});else{await navigator.clipboard.writeText(url);showToast('Link copied');}}catch{}}return;}
     const cont=event.target.closest('[data-continue-drama]');if(cont)BBUser?.track?.('continue_resume',{dramaId:cont.dataset.continueDrama}).catch(()=>{});
     const opener = event.target.closest('[data-open]');
     if (opener?.dataset.open) {
@@ -937,7 +941,7 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
 
   $('#modalFavoriteBtn')?.addEventListener('click',async()=>{
     const d=dramas.find(x=>x.id===modal?.dataset.activeId); if(!d)return;
-    try{const on=await BBUser.toggleFavorite(d.dbId,d.id);showToast(on?'Added to My List':'Removed from My List');openDrama(d.id);renderCatalog(allDramaFilter);renderMyList();renderGenreRows();renderForYou();renderNewUpdated();renderHero(heroIndex);}
+    try{const on=await BBUser.toggleFavorite(d.dbId,d.id);showToast(on?'Added to My List':'Removed from My List');openDrama(d.id);renderCatalog($('#filters [data-filter].active')?.dataset.filter||'all');renderMyList();}
     catch(err){showToast(err.message||'Could not update My List.')}
   });
 
@@ -1040,26 +1044,26 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
   } else revealEls.forEach(el => el.classList.add('is-visible'));
 
 
-function enhanceBingeBoxRows(){
+function enhanceReelShortRows(){
   const tracks=$$('.poster-grid,.compact-grid,.discovery-grid,.genre-row-track');
   tracks.forEach(track=>{
-    let shell=track.closest('.bbx-row-shell');
+    let shell=track.closest('.rs-row-shell');
     if(!shell){
       shell=document.createElement('div');
-      shell.className='bbx-row-shell';
+      shell.className='rs-row-shell';
       track.parentNode.insertBefore(shell,track);
       shell.appendChild(track);
       const backdrop=document.createElement('div');
-      backdrop.className='bbx-row-hover-backdrop';
+      backdrop.className='rs-row-hover-backdrop';
       backdrop.setAttribute('aria-hidden','true');
       const foreground=document.createElement('div');
-      foreground.className='bbx-row-hover-foreground';
+      foreground.className='rs-row-hover-foreground';
       foreground.setAttribute('aria-hidden','true');
       const prev=document.createElement('button');
       const next=document.createElement('button');
       prev.type=next.type='button';
-      prev.className='bbx-row-arrow bbx-row-prev';
-      next.className='bbx-row-arrow bbx-row-next';
+      prev.className='rs-row-arrow rs-row-prev';
+      next.className='rs-row-arrow rs-row-next';
       prev.setAttribute('aria-label','Previous titles');
       next.setAttribute('aria-label','Next titles');
       prev.textContent='‹';next.textContent='›';
@@ -1070,7 +1074,7 @@ function enhanceBingeBoxRows(){
         prev.classList.toggle('is-disabled',track.scrollLeft<4);
         next.classList.toggle('is-disabled',max<=4||track.scrollLeft>=max-2);
       };
-      shell._bbxSync=sync;
+      shell._rsSync=sync;
       const move=dir=>track.scrollBy({left:dir*Math.max(480,track.clientWidth*.82),behavior:'smooth'});
       prev.addEventListener('click',()=>move(-1));
       next.addEventListener('click',()=>move(1));
@@ -1079,23 +1083,22 @@ function enhanceBingeBoxRows(){
     }
     // Dynamic catalog renders replace track children after the shell exists. Re-sync
     // arrows every enhancement pass so disabled states never stay stale.
-    requestAnimationFrame(()=>shell._bbxSync?.());
+    requestAnimationFrame(()=>shell._rsSync?.());
     $$('.poster-card',track).forEach(card=>{
-      if(card.dataset.bbxHoverBound)return;
-      card.dataset.bbxHoverBound='1';
+      if(card.dataset.rsHoverBound)return;
+      card.dataset.rsHoverBound='1';
       const activate=()=>{
         if(window.matchMedia?.('(hover:hover) and (pointer:fine)')?.matches===false)return;
         const shellRect=shell.getBoundingClientRect();
         const cardRect=card.getBoundingClientRect();
-        shell.style.setProperty('--bbx-hover-x',`${cardRect.left-shellRect.left+cardRect.width/2}px`);
-        shell.style.setProperty('--bbx-hover-y',`${cardRect.top-shellRect.top+cardRect.height*.43}px`);
+        shell.style.setProperty('--rs-hover-x',`${cardRect.left-shellRect.left+cardRect.width/2}px`);
+        shell.style.setProperty('--rs-hover-y',`${cardRect.top-shellRect.top+cardRect.height*.43}px`);
         shell.classList.add('is-hovering');
-        shell.closest('section,.genre-row')?.classList.add('bbx-hover-active');
         card.classList.add('is-hovered');
       };
       const deactivate=()=>{
         card.classList.remove('is-hovered');
-        if(!shell.querySelector('.poster-card.is-hovered')){shell.classList.remove('is-hovering');shell.closest('section,.genre-row')?.classList.remove('bbx-hover-active');}
+        if(!shell.querySelector('.poster-card.is-hovered'))shell.classList.remove('is-hovering');
       };
       card.addEventListener('pointerenter',activate);
       card.addEventListener('pointerleave',deactivate);
@@ -1104,17 +1107,9 @@ function enhanceBingeBoxRows(){
     });
   });
 }
-const bingeboxRowObserver=new MutationObserver(()=>requestAnimationFrame(enhanceBingeBoxRows));
-bingeboxRowObserver.observe(document.body,{subtree:true,childList:true});
-enhanceBingeBoxRows();
-
-
-  // v26.4 header + page controls
-  const languageBtn=$('#languageBtn'), languageMenu=$('#languageMenu');
-  languageBtn?.addEventListener('click',e=>{e.stopPropagation();const open=languageMenu?.hasAttribute('hidden');if(!languageMenu)return;if(open)languageMenu.removeAttribute('hidden');else languageMenu.setAttribute('hidden','');languageBtn.setAttribute('aria-expanded',String(open));});
-  document.addEventListener('click',e=>{if(languageMenu&&!e.target.closest('.language-wrap')){languageMenu.setAttribute('hidden','');languageBtn?.setAttribute('aria-expanded','false');}});
-  $('#historyBtn')?.addEventListener('click',()=>{renderAccount();accountDialog?.showModal?.();setTimeout(()=>$('#accountHistoryList')?.closest('details')?.setAttribute('open',''),0);});
-  $('#scrollTopBtn')?.addEventListener('click',()=>window.scrollTo({top:0,behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'}));
+const reelRowObserver=new MutationObserver(()=>requestAnimationFrame(enhanceReelShortRows));
+reelRowObserver.observe(document.body,{subtree:true,childList:true});
+enhanceReelShortRows();
 
   loadCatalog();
   function setMobileTab(name){

@@ -1,0 +1,24 @@
+BingeBox v22.6 — FINAL R18 Classification Release
+
+Database
+- Adds public.dramas.is_r18 boolean, default false.
+
+Workspace
+- Manual R18 / 18+ toggle on every drama.
+- Metadata detector analyzes title, description, genre and mood/tags.
+- Strong adult-content signals can pre-check R18 for new titles.
+- Manual changes always take priority.
+- Existing titles are never silently rewritten; edit/save remains explicit.
+- Workspace content list shows an R18 badge.
+
+Public catalog
+- R18 badge appears on catalog cards.
+- R18 badge appears in the title detail panel.
+- Badge stack prevents collisions with COMPLETE / NEW / UPDATED badges.
+
+Detector design
+- Strong signals include explicit 18+/R18/NSFW labels and explicit sexual/nudity/adult-content wording.
+- Romance, Anime, violence, or ordinary mature themes alone do not trigger R18.
+- Detector is advisory; the admin flag remains authoritative.
+
+All v22.5 genres, v22.4 analytics graphs, v22.3 visual fixes, v22.2 playback fixes, Source Health, Trending safeguards and importer architecture are preserved.

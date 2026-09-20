@@ -1,0 +1,39 @@
+BingeBox v23.7 — 30-Title Catalog Pagination + Lite Mode
+=========================================================
+
+Built directly from v23.6. No features from v23.6 were removed.
+
+ALL DRAMA
+- All Drama now renders a maximum of 30 titles per page.
+- Previous / Next pagination appears automatically once a filtered catalog exceeds 30 titles.
+- Genre changes reset safely to page 1.
+- Current filtering, favorites, progress, badges, and modal behavior are preserved.
+- Desktop remains 5 columns (30 = 6 rows); mobile remains 3 columns (30 = 10 rows).
+
+NEW LITE PAGE
+- New /lite route and lite.html page.
+- Lite requests only 30 drama records at a time directly from Supabase.
+- No hero video, personalized recommendation sections, account sync, community poll, episode inventory, or full-site animation bundle is loaded on Lite.
+- Includes server-side title search, Previous / Next paging, lazy poster loading, Complete/R18 labels, and direct Watch links.
+- Lite page is marked noindex to avoid duplicate search-index content.
+- Lite is linked from desktop navigation, mobile menu, and All Drama.
+
+CATALOG / PLAYER SCALE FIXES
+- Homepage episode inventory now paginates Supabase REST reads beyond the default 1,000-row response ceiling.
+- Watch page now loads only the requested drama's episodes for normal drama links instead of the entire episode catalog.
+- Random Watch still supports the full library and paginates it safely.
+- Active episode_sources are fetched in bounded ID chunks and paginated, avoiding one oversized source request.
+
+SOURCE HEALTH UI
+- Workspace v23.7 understands source-repair v4 deep-scan fields.
+- “Fix all broken episodes” can now report active sources tested, dead active sources disabled, and inconclusive probes.
+- Production source-repair v4 remains an already-active Supabase backend change; Netlify deployment does not redeploy it.
+
+CACHE / ROUTING
+- Frontend cache references bumped to ?v=2370 where changed.
+- Service worker cache bumped to bingebox-shell-v23.7.
+- /lite routes internally to /lite.html.
+
+DEPLOYMENT
+- Netlify frontend package only.
+- Supabase source-repair v4 is already ACTIVE in production.

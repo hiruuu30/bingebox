@@ -1,0 +1,10 @@
+BingeBox v22.1
+
+Final pre-deploy additions:
+- Compact Source Health inside Workspace > System health.
+- Published episode source coverage, missing/disabled-source warnings, fallback coverage, and recent playback error/server-switch signals.
+- Cold-start protection for Trending so very small samples do not dominate rankings.
+- Confidence-aware For You recommendations that blend toward fresh/popular discovery until enough personal history exists.
+
+No additional Supabase migration is required for v22.1.
+All v22.0 features and v21.9 importer compatibility are preserved.

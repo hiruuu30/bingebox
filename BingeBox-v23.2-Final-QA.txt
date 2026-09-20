@@ -1,0 +1,23 @@
+BingeBox v23.2 Final QA
+
+[PASS] PayPal form uses hosted button endpoint
+[PASS] PayPal form opens new tab
+[PASS] PayPal hosted button ID preserved
+[PASS] Embedded PayPal SDK loader removed
+[PASS] PayMongo new-tab link preserved
+[PASS] Auto-confirm permission toggle present
+[PASS] Auto-confirm defaults ON
+[PASS] Auto-confirm preference persists
+[PASS] Unverified titles auto-check attestation
+[PASS] Rights still saved through drama_rights
+[PASS] Manual toggle can turn auto-confirm off
+[PASS] v23.2 cache bump
+[PASS] v23.1 analytics preserved
+[PASS] Clean library preserved
+[PASS] JS syntax: donate.js
+[PASS] JS syntax: admin.js
+[PASS] JS syntax: app.js
+[PASS] JS syntax: watch.js
+[PASS] ZIP integrity
+
+RESULT: 19/19 passed, 0 failed.

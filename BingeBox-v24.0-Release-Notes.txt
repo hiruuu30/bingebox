@@ -1,0 +1,12 @@
+BingeBox v24.0 — Instant Poster Paint + Image CDN
+================================================
+
+- Catalog now paints as soon as drama rows arrive; it no longer waits for the full episode inventory pagination before showing posters.
+- BingeBox poster URLs on media.bingebox.bond are served through Netlify Image CDN as 390x585 WebP card derivatives.
+- Hero uses a 720x1080 WebP derivative.
+- Netlify edge caches transformed derivatives.
+- Hero and first six Trending posters are eager/high-priority; below-fold posters remain lazy.
+- Added media.bingebox.bond preconnect + DNS prefetch.
+- Added explicit image dimensions to reduce layout work/shifts.
+- Episode inventory, user state, trending analytics, recommendations and other secondary startup work hydrate after first catalog paint.
+- Cache refs bumped to v2400 and service worker to bingebox-shell-v24.0.

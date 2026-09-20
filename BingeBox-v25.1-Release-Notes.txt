@@ -1,0 +1,34 @@
+BingeBox v25.1 — ReelShort Source Reconstruction
+
+This revision replaces the v25.0 interpretation pass with a source-driven reconstruction based on the supplied ReelShort full-page JSON capture.
+
+HOME / HERO
+- Hero geometry rebuilt around the captured 480px desktop hero.
+- Content aligned at 6vw from the left and 8px from the hero bottom.
+- Three separate cinematic fades restored: 170px top fade, 40% bottom fade, and 50% left fade.
+- BingeBox portrait posters are no longer stretched across the hero. The sharp 3:4 artwork stays constrained on the right and is blended into an ambient blurred layer with gradients.
+- ReelShort-style glass metadata pills restored.
+- 220x56 pill Watch CTA on desktop.
+- Hero thumbnail rail uses 84x112 cards, 12px gaps, 8px radii, active 1.05 image scale + dark overlay.
+
+SHELVES / CARDS
+- Shelf geometry follows the captured 222.4x296.6 poster footprint and 16px radius.
+- Added source-architecture row layers: global hover backdrop + global hover foreground.
+- Added source-architecture card layers: local backdrop + local foreground.
+- Hovered cards now float above the row, neighbors soften/dim, and the card gains a true blurred glass body and glass lower information/action surface.
+- Hover expansion is overlay-based and does not reflow the shelf.
+- ReelShort-style title and metadata typography remain below posters at rest.
+- Row arrow behavior and shelf overflow retained.
+
+PRESERVED BINGEBOX FEATURES
+- Netflix-style Top 10 numbering retained.
+- v24.7 low-egress lazy episode/source loading retained.
+- Current BingeBox player retained byte-for-byte from v25.0/v24.7.
+- Hold-to-2x and landscape player behavior retained.
+- Workspace retained byte-for-byte from v25.0/v24.7.
+- BingeBox branding, data, posters and Supabase architecture retained.
+- No ReelShort logos, poster media or video content included.
+
+CACHE
+- Frontend asset references bumped to v2510.
+- Service worker cache bumped to bingebox-shell-v25.1.

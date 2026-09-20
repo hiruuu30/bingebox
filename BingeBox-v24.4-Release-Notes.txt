@@ -1,0 +1,20 @@
+BingeBox v24.4 — Poster Reliability Recovery
+===========================================
+
+Built directly from v24.3 Mobile Poster + Top 10 Hotfix.
+
+FIXED
+- Netlify Content-Security-Policy now permits repaired public poster objects served from the BingeBox Supabase project.
+- Added a global poster error recovery layer for Home, Lite, hero/modal/search/history cards, and Workspace thumbnails.
+- If a media.bingebox.bond poster fails in the browser, the image retries once through the production Supabase poster-proxy Edge Function.
+- poster-proxy is host/path restricted to HTTPS media.bingebox.bond /posters/* objects and re-sniffs the actual image bytes before returning a safe MIME type.
+- If both the canonical poster and proxy fail, the UI falls back to the BingeBox brand mark instead of showing a broken-image icon.
+- Service worker/cache references bumped to v24.4 so an older v24.3 shell cannot keep the broken poster behavior after deployment.
+
+BACKEND
+- Supabase poster-proxy Edge Function v1 is already ACTIVE in production.
+- The previously malformed Little Red Hood poster is already repaired in Supabase Storage as image/jpeg.
+
+DEPLOYMENT
+- Deploy this ZIP to the existing Netlify BingeBox site.
+- No additional Supabase deployment is required.

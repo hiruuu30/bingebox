@@ -1,0 +1,11 @@
+BingeBox v22.0 — Analytics + Personalized Discovery
+
+- Advanced admin analytics with per-metric info buttons and About Analytics guide.
+- Real Trending is driven by rolling 72-hour engagement analytics.
+- Native/direct playback now tracks qualified views, measured watch time, milestones, shares, server switches, and player errors.
+- Personalized For You rail using watch history, My List, genre/mood affinity, freshness and trending.
+- Compact New & Updated rail with NEW / NEW EPISODES / UPDATED badges.
+- Watch History inside the signed-in account panel.
+- Richer drama detail modal with ambient art, total runtime, freshness, episode progress and watched states.
+- Homepage remains intentionally light: Continue Watching → Trending → For You → New & Updated → All Drama.
+- Existing v21.9 importer diagnostics, CSP fix and premium catalog are preserved.

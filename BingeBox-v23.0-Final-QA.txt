@@ -1,0 +1,35 @@
+BingeBox v23.0 QA — International SEO + Support
+
+Passed: 30/30
+Failed: 0
+
+[PASS] PayPal hosted button ID included
+[PASS] PayPal client ID included
+[PASS] PayMongo support URL included
+[PASS] PayPal lazy loading implemented
+[PASS] No PayPal secret embedded
+[PASS] Support dialog offers PayPal
+[PASS] Support dialog offers PayMongo
+[PASS] Donation privacy note present
+[PASS] SEO title updated
+[PASS] SEO market description includes US
+[PASS] Organization structured data
+[PASS] United States areaServed
+[PASS] Australia areaServed
+[PASS] Canada areaServed
+[PASS] Philippines areaServed
+[PASS] OpenGraph US locale
+[PASS] OpenGraph AU locale
+[PASS] OpenGraph CA locale
+[PASS] OpenGraph PH locale
+[PASS] Dynamic drama SEO helper
+[PASS] TVSeries structured data
+[PASS] Drama canonical updated
+[PASS] Drama share URL updated
+[PASS] Home SEO restored on close
+[PASS] PayPal CSP script allowed
+[PASS] PayPal CSP connect allowed
+[PASS] COOP popup compatibility
+[PASS] Donation cache v2300
+[PASS] Service worker v23 cache
+[PASS] Release notes present

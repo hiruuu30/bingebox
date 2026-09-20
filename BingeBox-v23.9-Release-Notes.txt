@@ -1,0 +1,30 @@
+BingeBox v23.9 — Clean Premium Catalog Redesign
+
+DESIGN DIRECTION
+- Reworked the homepage around the clean, catalog-first information architecture common to premium short-drama streaming services.
+- No ReelShort assets, logos, code, or proprietary copy are included. BingeBox branding and product behavior remain original.
+
+HOMEPAGE
+- Replaced the oversized editorial hero with a focused 5-item featured carousel.
+- Hero includes title, genre, episode count, concise description, Watch now, and My List.
+- Desktop uses cinematic artwork + poster composition; mobile becomes artwork-first with compact bottom copy.
+- Removed homepage ticker, brand statement panel, partnership promo, and request/voting block.
+- Simplified desktop and mobile navigation around Home, Browse, My List, Search/Profile.
+
+CATALOG
+- Trending is now presented as a compact Top 10 shelf.
+- New & Updated is labeled New Release and retains freshness logic.
+- Added up to six automatic genre shelves, ordered by catalog depth.
+- Each genre shelf shows a compact horizontal row and View all action.
+- All Drama remains the complete 30-title paginated catalog with compact genre filters.
+- Poster cards are smaller, cleaner, denser, and optimized for scanning.
+
+PERFORMANCE / PRODUCT
+- Removed the initial community-poll fetch from the homepage because that module is no longer in the primary browsing flow.
+- Preserves v23.8 player reliability, iOS handling, stale-load cancellation, source failover, and v23.7 catalog/source pagination.
+- Service-worker shell bumped to v23.9 and homepage assets to v2390.
+
+DEPLOYMENT
+- Netlify frontend package only.
+- No Supabase migration required.
+- No Cloudflare change required.

@@ -1,0 +1,34 @@
+BingeBox v23.4 — One-Click Source Repair Final QA
+
+RESULT: 30/30 passed · 0 failed
+
+01. PASS — Fix all sources button exists
+02. PASS — Repair status region exists
+03. PASS — Workspace invokes source-repair
+04. PASS — One-click repair has no extra confirmation gate
+05. PASS — Source inventory pagination exists
+06. PASS — Expiry parser reads auth_key
+07. PASS — 48-hour expiry warning exists
+08. PASS — Expired sources are surfaced
+09. PASS — Unresolved fresh-import result is surfaced
+10. PASS — Backend update errors are surfaced
+11. PASS — Source-health query includes origin URL
+12. PASS — v22.8 fallback documented
+13. PASS — Production remains v22.8 documented
+14. PASS — v22.9-v23.3 preserved
+15. PASS — Auto-confirm rights preserved
+16. PASS — Auto R18 preserved
+17. PASS — Line analytics preserved
+18. PASS — PayPal new-tab preserved
+19. PASS — Workspace refs bumped to 2340
+20. PASS — Main refs bumped to 2340
+21. PASS — Service worker bumped to v23.4
+22. PASS — No stale 2330 refs remain
+23. PASS — JS syntax: workspace/admin.js
+24. PASS — JS syntax: app.js
+25. PASS — JS syntax: watch.js
+26. PASS — JS syntax: donate.js
+27. PASS — JS syntax: user.js
+28. PASS — JS syntax: push.js
+29. PASS — JS syntax: pwa.js
+30. PASS — JS syntax: service-worker.js

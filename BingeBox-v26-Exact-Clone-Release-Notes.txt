@@ -1,0 +1,30 @@
+BingeBox v26 — ReelShort Exact Homepage Integration
+==================================================
+
+HOME
+- Source-faithful ReelShort homepage clone retained as the visual shell.
+- BingeBox branding, logo, navigation and support destination injected.
+- Published BingeBox catalog is loaded live from the existing Supabase project.
+- Hero and all shelves are repopulated with BingeBox titles/posters/metadata.
+- Cards link to the existing BingeBox watch route.
+- Search works against the loaded BingeBox catalog.
+- My List uses local favorite state and repaints live.
+
+HOVER / LAYERING
+- ReelShort glass-card recipe retained: #292929 base, 1px 10% white border, 24px radius, blurred poster background at 47px / 1.08 scale, 30% black mask.
+- Active shelf is elevated as a complete stacking context, so the hover panel remains above following shelves.
+- Slider/card overflow is visible while hovered.
+- Hover panel height follows its content, including two-line titles.
+- Edge clamping prevents the expanded card from being cut off at the viewport sides.
+- Play, Save and Share are one synchronized action row.
+
+BINGEBOX PRESERVED
+- Existing watch/player implementation and watch assets.
+- Workspace/admin files.
+- Lite catalog page.
+- PWA manifest/service worker.
+- Existing BingeBox backend configuration.
+- Legal/offline/support assets and current brand assets.
+
+DEPLOY
+- Netlify-ready package. Upload the ZIP contents as the site package.

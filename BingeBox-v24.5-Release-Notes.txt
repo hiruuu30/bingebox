@@ -1,0 +1,16 @@
+BingeBox v24.5 — Resume Badge Reliability Fix
+
+Built directly from deployed v24.4.
+
+FIXED
+- RESUME now appears only when meaningful playback exists (>5 seconds).
+- Zero-second player opens no longer create a fake 2% progress bar or phantom RESUME state.
+- Completing an episode explicitly marks the local last-watch record complete.
+- A completed episode with another available episode now shows NEXT · EP XX instead of incorrectly saying RESUME.
+- Completed final episodes no longer leave stale resume badges.
+- Resume/Next badge styling is now a compact premium pill with better contrast on desktop and mobile.
+- Existing poster reliability fallback, Top 10, analytics, catalog, player and workspace behavior are preserved.
+
+DEPLOYMENT
+- Netlify frontend package only.
+- No Supabase/Cloudflare changes are required for this v24.5 UI/state fix.

@@ -1,0 +1,13 @@
+BingeBox v24.1 — Workspace + Insights + Interaction
+
+- Trending redesigned as Netflix-style Top 10 with large outlined rank numerals beside poster cards.
+- Hero carousel supports horizontal finger/pointer swipes while preserving vertical page scrolling and buttons/dots.
+- Workspace gains a persistent section rail for Insights, Content, Homepage and System on desktop; compact horizontal navigation on mobile.
+- Analytics reworked around a Meta Business Suite-inspired hierarchy: four primary result cards, selected-period comparison, one large interactive performance graph, top content, audience breakdowns and viewing funnel.
+- Graph metric can be switched between Viewers, Episode starts, Qualified views, Watch minutes and Completions.
+- Additive metrics compare the selected period with the preceding equal period. Unique viewer comparison is intentionally not fabricated because distinct-user counts cannot be derived by subtraction.
+- Watch-time measurement now sends actual active-playback deltas instead of fixed 30-second heartbeats and flushes measured time on pause, backgrounding and page exit.
+- Existing privacy-preserving visitor de-duplication, qualified-view threshold, catalog impressions and playback analytics remain in place.
+- Frontend cache references bumped to v2410; service worker cache bingebox-shell-v24.1.
+
+Note: No production database function was modified in this package. The current analytics RPC remains the backend source of truth; frontend tracking and presentation accuracy were improved.

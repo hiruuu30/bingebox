@@ -1,0 +1,31 @@
+BingeBox v24.5 — Resume Badge Reliability Final QA
+
+RESULT: 18/18 passed · 0 failed
+
+01. PASS — meaningful progress threshold >5s
+02. PASS — zero-second progress bar eliminated
+03. PASS — NEXT label exists
+04. PASS — local completion helper exists
+05. PASS — completed local record advances to next
+06. PASS — completed final returns null
+07. PASS — cloud zero-second rows ignored
+08. PASS — generic save preserves completed state
+09. PASS — complete writes lastwatch completed true
+10. PASS — premium catalog badge CSS
+11. PASS — index app cache bust 2450
+12. PASS — index style cache bust 2450
+13. PASS — service worker v24.5
+14. PASS — service worker app ref 2450
+15. PASS — service worker watch ref 2450
+16. PASS — poster fallback preserved
+17. PASS — Top 10 preserved
+18. PASS — CSS brace count balanced
+
+PRESERVED
+- v24.4 poster reliability fallback and Supabase poster-proxy integration.
+- v24.3 mobile poster + Trending Top 10 hotfix.
+- Existing analytics, My List, Continue Watching, player, workspace and catalog behavior.
+
+DEPLOYMENT
+- Deploy this ZIP to Netlify over v24.4.
+- No Supabase or Cloudflare deployment is required for this frontend/state fix.

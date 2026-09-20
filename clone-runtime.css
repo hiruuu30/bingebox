@@ -1,0 +1,237 @@
+html,body{background:#000;margin:0;min-height:100%}
+html{scroll-behavior:auto}
+body{overflow-x:hidden}
+.Slider_pageButtonHit__O3oNF{width:56px!important;height:56px!important;border-radius:50%!important}
+[data-clone-hidden="1"]{pointer-events:none!important;opacity:0!important}
+
+/* Keep the horizontal shelf clipped left/right but allow the ReelShort hover card
+   to grow above/below the row exactly like the captured site. */
+.Slider_sliderWrapper__66_q7,
+.Slider_slider__g_dkb,
+.Slider_sliderList__o0xyY{overflow:visible!important}
+.Slider_sliderContainer__2F8gq{overflow-x:clip!important;overflow-y:visible!important}
+.Slider_item__28DWA{overflow:visible!important}
+.BookItem_bookItem__sK4Qp{position:relative;overflow:visible!important}
+.BookItem_localBackdropRoot__AEL70,
+.BookItem_localForegroundRoot___bhVT{overflow:visible!important;pointer-events:none}
+.Slider_item__28DWA.rs-hover-item-active{position:relative;z-index:80!important}
+.BookItem_bookItem__sK4Qp.rs-hover-active{z-index:80!important}
+
+/* ==============================
+   REELSHORT HOVER CARD — COMPLETE
+   Source rules + geometry measured from the supplied original screenshot.
+   ============================== */
+
+/* Source architecture: backdrop and foreground live in ReelShort's two local roots. */
+.rs-source-backdrop,
+.rs-source-foreground{
+  position:absolute;
+  left:-15px;
+  top:-28px;
+  width:calc(100% + 30px);
+  box-sizing:border-box;
+  pointer-events:none;
+}
+
+/* Exact source cardBackdrop recipe. Height is content-driven; 504px is the
+   one-line-title target seen in the reference, while two-line titles naturally grow. */
+.rs-source-backdrop{
+  min-height:504px;
+  overflow:hidden;
+  color:#fff;
+  background:#292929;
+  border:1px solid hsla(0,0%,100%,.1);
+  border-radius:24px;
+  opacity:0;
+  z-index:1;
+  transition:opacity .4s ease-out;
+  will-change:opacity;
+}
+.rs-hover-active .rs-source-backdrop.rs-open{opacity:1}
+
+/* ReelShort's 'glass': the poster duplicated behind the panel, enlarged and
+   blurred by 47px, followed by the 30% black mask. */
+.rs-source-background-cover{
+  position:absolute;
+  inset:-48px;
+  overflow:hidden;
+  filter:blur(47px);
+  -webkit-filter:blur(47px);
+  transform:scale(1.08);
+  -webkit-transform:scale(1.08);
+}
+.rs-source-background-cover img{
+  width:100%;height:100%;display:block;object-fit:cover;object-position:center;
+}
+.rs-source-blur-mask{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.3);
+}
+
+/* Foreground owns the sharp expanded poster + all text/actions. */
+.rs-source-foreground{
+  min-height:504px;
+  z-index:3;
+  opacity:0;
+  transition:opacity .3s ease-out;
+  will-change:opacity;
+}
+.rs-hover-active .rs-source-foreground.rs-open{opacity:1;pointer-events:auto}
+
+/* At 222.422px normal card width, the outer panel is 252.422px and this cover
+   becomes 238.422px wide — matching the reference. */
+.rs-source-foreground-cover{
+  position:relative;
+  margin:7px 7px 0;
+  width:calc(100% - 14px);
+  aspect-ratio:3/4;
+  overflow:hidden;
+  cursor:pointer;
+  border-radius:16px;
+  opacity:1;
+  transform:scale(var(--rs-hover-cover-start-scale,.933));
+  -webkit-transform:scale(var(--rs-hover-cover-start-scale,.933));
+  transform-origin:bottom center;
+  -webkit-transform-origin:bottom center;
+  transition:transform .3s ease-out;
+  will-change:transform;
+  background:#000;
+}
+.rs-source-foreground.rs-open .rs-source-foreground-cover{
+  transform:scale(1);
+  -webkit-transform:scale(1);
+}
+.rs-source-foreground-cover img{
+  display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+}
+
+/* Details positions reproduce the screenshot: 15px outer inset, 14px title,
+   12px metadata, 2-line description, then the complete action row. */
+.rs-source-details{
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
+  margin:15px 15px 15px;
+  color:#fff;
+  white-space:normal;
+  gap:16px;
+  opacity:0;
+  transition:opacity .3s ease-out;
+  will-change:opacity;
+}
+.rs-source-foreground.rs-open .rs-source-details{opacity:1}
+.rs-hover-title{
+  margin:0;
+  min-height:19px;
+  color:rgba(255,255,255,.9);
+  font-family:"Noto Sans",sans-serif;
+  font-size:14px;
+  font-weight:400;
+  line-height:19px;
+  display:-webkit-box;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+.rs-hover-meta{
+  margin-top:7px;
+  min-height:17px;
+  overflow:hidden;
+  color:rgba(255,255,255,.7);
+  font-family:"Noto Sans",sans-serif;
+  font-size:12px;
+  font-weight:400;
+  line-height:17px;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.rs-hover-description{
+  display:-webkit-box;
+  width:100%;
+  height:36px;
+  margin:8px 0 0;
+  overflow:hidden;
+  color:hsla(0,0%,100%,.5);
+  font-family:"Noto Sans",sans-serif;
+  font-size:14px;
+  font-weight:400;
+  line-height:18px;
+  text-overflow:ellipsis;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+
+/* All three controls are one action group and reveal at the SAME time.
+   No stagger, no per-button entrance animation. */
+.rs-hover-actions{
+  width:100%;
+  height:48px;
+  margin-top:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:none;
+  opacity:1;
+  transform:none;
+  transition:none;
+}
+.rs-hover-action{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  cursor:pointer;
+  border-radius:24px;
+  opacity:1;
+  transform:none;
+  animation:none!important;
+  transition:background-color .16s ease-out,border-color .16s ease-out,color .16s ease-out;
+}
+.rs-hover-play{
+  color:#000;
+  background:#fff;
+  border:0;
+}
+.rs-hover-play:hover{color:#fff;background:#e52e2e}
+.rs-hover-secondary{
+  color:hsla(0,0%,100%,.9);
+  background:hsla(0,0%,100%,.1);
+  border:1px solid hsla(0,0%,100%,.15);
+}
+.rs-hover-secondary:hover{background:hsla(0,0%,100%,.2);border-color:hsla(0,0%,100%,.9)}
+.rs-hover-secondary.rs-collected{color:#ffb423}
+.rs-hover-action svg{width:20px;height:20px;display:block;pointer-events:none}
+
+/* Hide normal poster/text only after the replacement foreground is live,
+   preventing the blank flash seen in earlier versions. */
+.BookItem_bookItem__sK4Qp.rs-hover-active > .BookItem_poster__CsSCp,
+.BookItem_bookItem__sK4Qp.rs-hover-active > .BookItem_bookMeta__dUiSZ{
+  visibility:hidden!important;
+}
+
+/* The injected hover UI is desktop/pointer behavior only, matching ReelShort. */
+@media (hover:none),(max-width:767px){
+  .rs-source-backdrop,.rs-source-foreground{display:none!important}
+  .BookItem_bookItem__sK4Qp.rs-hover-active > .BookItem_poster__CsSCp,
+  .BookItem_bookItem__sK4Qp.rs-hover-active > .BookItem_bookMeta__dUiSZ{visibility:visible!important}
+}
+
+/* v6 — active hover shelf must escape every later shelf stacking context. */
+.home_main_content__GxekS{position:relative!important;isolation:isolate!important}
+.Slider_sliderWrapper__66_q7{position:relative!important;z-index:1!important}
+.Slider_sliderWrapper__66_q7.rs-hover-shelf-active{z-index:900!important}
+.Slider_sliderWrapper__66_q7.rs-hover-shelf-active .Slider_slider__g_dkb,
+.Slider_sliderWrapper__66_q7.rs-hover-shelf-active .Slider_sliderContainer__2F8gq,
+.Slider_sliderWrapper__66_q7.rs-hover-shelf-active .Slider_sliderList__o0xyY{position:relative!important;z-index:900!important;overflow:visible!important}
+.Slider_sliderWrapper__66_q7.rs-hover-shelf-active .Slider_item__28DWA.rs-hover-item-active{z-index:950!important}
+.BookItem_bookItem__sK4Qp.rs-hover-active{z-index:960!important}
+.rs-source-backdrop,.rs-source-foreground{z-index:970!important}
+.rs-source-details{gap:16px!important}
+.rs-hover-actions{margin-top:0!important}

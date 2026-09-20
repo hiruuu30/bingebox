@@ -1,0 +1,21 @@
+BingeBox v24.0 — Instant Poster Paint Final QA
+==============================================
+RESULT: PASS
+
+PASS — Homepage paints drama posters before full episode inventory hydration
+PASS — Existing paginated episode inventory preserved
+PASS — Netlify Image CDN card transform enabled (390x585 WebP)
+PASS — Hero Image CDN transform enabled (720x1080 WebP)
+PASS — media.bingebox.bond remote source allowlisted
+PASS — Hero image eager + high fetch priority
+PASS — First six Trending posters eager + high fetch priority
+PASS — Below-fold posters remain lazy
+PASS — Explicit card and hero image dimensions
+PASS — media origin preconnect + DNS prefetch
+PASS — v2400 frontend cache references
+PASS — service worker bingebox-shell-v24.0
+PASS — JavaScript syntax
+PASS — CSS braces
+PASS — netlify.toml parse
+
+Note: live bingebox.bond could not be fetched from the build container because DNS resolution is unavailable there. The package is based on the deployed v23.9 source package supplied in this conversation.

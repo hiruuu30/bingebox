@@ -1,0 +1,841 @@
+{
+  "source": "https://www.reelshort.com/",
+  "primary_capture": {
+    "type": "full-page",
+    "url": "https://www.reelshort.com/",
+    "host": "www.reelshort.com",
+    "title": "ReelShort: Every Second Is Drama",
+    "capturedAt": "2026-09-11T13:25:15.669Z",
+    "viewport": {
+      "width": 1358,
+      "height": 636,
+      "scrollX": 0,
+      "scrollY": 7880
+    }
+  },
+  "captured_body_nodes_annotated": 2605,
+  "computed_style_rules": 2605,
+  "captures": [
+    {
+      "file": "www.reelshort.com-2026-09-11T13-27-17-688Z.json",
+      "meta": {
+        "type": "style-system",
+        "url": "https://www.reelshort.com/",
+        "host": "www.reelshort.com",
+        "title": "ReelShort: Every Second Is Drama",
+        "capturedAt": "2026-09-11T13:25:42.675Z",
+        "viewport": {
+          "width": 1358,
+          "height": 636,
+          "scrollX": 0,
+          "scrollY": 7071
+        }
+      },
+      "target": null,
+      "assets_count": 367,
+      "nodes_count": 0
+    },
+    {
+      "file": "www.reelshort.com-2026-09-11T13-27-12-461Z.json",
+      "meta": {
+        "type": "section",
+        "url": "https://www.reelshort.com/",
+        "host": "www.reelshort.com",
+        "title": "ReelShort: Every Second Is Drama",
+        "capturedAt": "2026-09-11T13:25:33.893Z",
+        "viewport": {
+          "width": 1358,
+          "height": 636,
+          "scrollX": 0,
+          "scrollY": 7071
+        }
+      },
+      "target": {
+        "path": "div#__next > div.min-h-screen.flex:nth-of-type(1) > main.flex-1 > div.home_homeContainer__coYDC:nth-of-type(3) > div.home_main_content__GxekS > div.mb-108px:nth-of-type(11) > section.home_recommendFloor__OPMn1 > div.home_recommendGrid__RUlrd:nth-of-type(2) > div.text-white.BookItem_bookItem__sK4Qp:nth-of-type(24) > div.BookItem_localBackdropRoot__AEL70:nth-of-type(1) > div.HoverCard_cardBackdrop__RXJ06.HoverCard_active__sKYGl > div.HoverCard_blurMask__2ICqP:nth-of-type(2)",
+        "tag": "div",
+        "rect": {
+          "x": 784.6875,
+          "y": 105.609375,
+          "width": 252.4375,
+          "height": 520.90625,
+          "top": 105.609375,
+          "right": 1037.125,
+          "bottom": 626.515625,
+          "left": 784.6875
+        }
+      },
+      "assets_count": 0,
+      "nodes_count": 1
+    },
+    {
+      "file": "www.reelshort.com-2026-09-11T13-26-55-637Z.json",
+      "meta": {
+        "type": "full-page",
+        "url": "https://www.reelshort.com/",
+        "host": "www.reelshort.com",
+        "title": "ReelShort: Every Second Is Drama",
+        "capturedAt": "2026-09-11T13:25:15.669Z",
+        "viewport": {
+          "width": 1358,
+          "height": 636,
+          "scrollX": 0,
+          "scrollY": 7880
+        }
+      },
+      "target": {
+        "path": "",
+        "tag": "html",
+        "rect": {
+          "x": 0,
+          "y": -7880,
+          "width": 1343,
+          "height": 8516.09375,
+          "top": -7880,
+          "right": 1343,
+          "bottom": 636.09375,
+          "left": 0
+        }
+      },
+      "assets_count": 367,
+      "nodes_count": 2778
+    },
+    {
+      "file": "www.reelshort.com-2026-09-11T13-27-33-239Z.json",
+      "meta": {
+        "type": "section",
+        "url": "https://www.reelshort.com/",
+        "host": "www.reelshort.com",
+        "title": "ReelShort: Every Second Is Drama",
+        "capturedAt": "2026-09-11T13:26:15.556Z",
+        "viewport": {
+          "width": 1358,
+          "height": 636,
+          "scrollX": 0,
+          "scrollY": 0
+        }
+      },
+      "target": {
+        "path": "div#__next > div.min-h-screen.flex:nth-of-type(1) > main.flex-1 > div.home_homeContainer__coYDC:nth-of-type(3) > section.relative.top-0 > div.absolute.inset-0:nth-of-type(2) > a.absolute.inset-0:nth-of-type(7) > div.absolute.inset-x-0:nth-of-type(3)",
+        "tag": "div",
+        "rect": {
+          "x": 0,
+          "y": 280,
+          "width": 1343,
+          "height": 192,
+          "top": 280,
+          "right": 1343,
+          "bottom": 472,
+          "left": 0
+        }
+      },
+      "assets_count": 0,
+      "nodes_count": 1
+    },
+    {
+      "file": "www.reelshort.com-2026-09-11T13-27-28-015Z.json",
+      "meta": {
+        "type": "section",
+        "url": "https://www.reelshort.com/",
+        "host": "www.reelshort.com",
+        "title": "ReelShort: Every Second Is Drama",
+        "capturedAt": "2026-09-11T13:26:00.083Z",
+        "viewport": {
+          "width": 1358,
+          "height": 636,
+          "scrollX": 0,
+          "scrollY": 600
+        }
+      },
+      "target": {
+        "path": "div#__next > div.min-h-screen.flex:nth-of-type(1) > main.flex-1 > div.home_homeContainer__coYDC:nth-of-type(3) > div.home_main_content__GxekS > div.Slider_sliderWrapper__66_q7:nth-of-type(1) > div.Slider_slider__g_dkb.home_floor__yv9HP > div.Slider_sliderContainer__2F8gq:nth-of-type(2) > div.Slider_pageButtons__jvO9V.Slider_nextButton__a5KCv:nth-of-type(2) > button.Slider_pageButtonHit__O3oNF",
+        "tag": "button",
+        "rect": {
+          "x": 1275.75,
+          "y": 113.28125,
+          "width": 56,
+          "height": 56,
+          "top": 113.28125,
+          "right": 1331.75,
+          "bottom": 169.28125,
+          "left": 1275.75
+        }
+      },
+      "assets_count": 0,
+      "nodes_count": 1
+    }
+  ],
+  "tokens": {
+    "colors": [
+      [
+        "rgb(255, 255, 255)",
+        2358
+      ],
+      [
+        "rgba(0, 0, 0, 0)",
+        1838
+      ],
+      [
+        "rgb(0, 0, 0)",
+        832
+      ],
+      [
+        "rgba(255, 255, 255, 0.8)",
+        584
+      ],
+      [
+        "rgba(255, 255, 255, 0.5)",
+        352
+      ],
+      [
+        "rgb(229, 46, 46)",
+        39
+      ],
+      [
+        "rgba(255, 255, 255, 0.9)",
+        34
+      ],
+      [
+        "rgba(255, 255, 255, 0.7)",
+        16
+      ],
+      [
+        "rgb(224, 224, 224)",
+        14
+      ],
+      [
+        "rgba(255, 255, 255, 0.15)",
+        11
+      ],
+      [
+        "rgba(255, 255, 255, 0.95)",
+        6
+      ],
+      [
+        "rgba(0, 0, 0, 0.88)",
+        6
+      ],
+      [
+        "rgba(255, 255, 255, 0.1)",
+        2
+      ],
+      [
+        "rgb(231, 56, 87)",
+        2
+      ],
+      [
+        "rgb(51, 51, 51)",
+        2
+      ],
+      [
+        "rgba(0, 0, 0, 0.8)",
+        1
+      ],
+      [
+        "rgba(0, 0, 0, 0.4)",
+        1
+      ],
+      [
+        "rgba(255, 255, 255, 0.05)",
+        1
+      ]
+    ],
+    "typography": [
+      [
+        "\"Noto Sans\"|14px|400|normal",
+        1407
+      ],
+      [
+        "\"Noto Sans\"|0px|400|normal",
+        260
+      ],
+      [
+        "\"Noto Sans\"|12px|400|normal",
+        131
+      ],
+      [
+        "\"Noto Sans\"|13.3333px|400|normal",
+        52
+      ],
+      [
+        "\"Noto Sans\"|16px|400|normal",
+        31
+      ],
+      [
+        "\"Noto Sans\"|12px|500|16px",
+        28
+      ],
+      [
+        "\"Noto Sans\"|14px|400|0px",
+        25
+      ],
+      [
+        "\"Noto Sans\"|24px|700|normal",
+        21
+      ],
+      [
+        "\"Noto Sans\"|18px|700|normal",
+        16
+      ],
+      [
+        "\"Noto Sans\"|20px|700|20px",
+        16
+      ],
+      [
+        "\"Noto Sans\", sans-serif|82.1248px|900|normal",
+        10
+      ],
+      [
+        "\"Noto Sans\"|32px|700|normal",
+        8
+      ],
+      [
+        "\"Noto Sans\"|20px|700|0px",
+        8
+      ],
+      [
+        "\"Noto Sans\"|18px|500|normal",
+        6
+      ],
+      [
+        "\"Noto Sans\"|14px|500|normal",
+        4
+      ],
+      [
+        "\"Noto Sans\"|14px|400|22px",
+        3
+      ],
+      [
+        "\"Noto Sans\"|18px|400|18px",
+        3
+      ],
+      [
+        "\"Noto Sans\"|11px|400|normal",
+        1
+      ],
+      [
+        "\"Noto Sans\"|18px|400|0px",
+        1
+      ],
+      [
+        "\"Noto Sans\"|14px|700|normal",
+        1
+      ],
+      [
+        "\"Noto Sans\"|12px|700|normal",
+        1
+      ]
+    ],
+    "spacing": [
+      [
+        "0px",
+        15395
+      ],
+      [
+        "8.4875px",
+        220
+      ],
+      [
+        "8px",
+        205
+      ],
+      [
+        "12px",
+        177
+      ],
+      [
+        "30px",
+        100
+      ],
+      [
+        "2px",
+        58
+      ],
+      [
+        "5px",
+        32
+      ],
+      [
+        "72.9925px",
+        30
+      ],
+      [
+        "24px",
+        15
+      ],
+      [
+        "42px",
+        10
+      ],
+      [
+        "20px",
+        8
+      ],
+      [
+        "16px",
+        8
+      ],
+      [
+        "81.48px",
+        6
+      ],
+      [
+        "4px",
+        5
+      ],
+      [
+        "48px",
+        3
+      ],
+      [
+        "27.16px",
+        2
+      ],
+      [
+        "64px",
+        2
+      ],
+      [
+        "40px",
+        2
+      ],
+      [
+        "8.875px",
+        2
+      ],
+      [
+        "32px",
+        1
+      ],
+      [
+        "447.656px",
+        1
+      ],
+      [
+        "108px",
+        1
+      ]
+    ],
+    "radii": [
+      [
+        "0px",
+        1816
+      ],
+      [
+        "16px",
+        130
+      ],
+      [
+        "10px",
+        28
+      ],
+      [
+        "8px",
+        18
+      ],
+      [
+        "20px",
+        16
+      ],
+      [
+        "50%",
+        12
+      ],
+      [
+        "28px",
+        8
+      ],
+      [
+        "9999px",
+        3
+      ],
+      [
+        "32px",
+        1
+      ],
+      [
+        "6.8px",
+        1
+      ]
+    ],
+    "shadows": [
+      [
+        "rgba(0, 0, 0, 0.08) 0px 6px 16px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px -4px, rgba(0, 0, 0, 0.05) 0px 9px 28px 8px",
+        1
+      ]
+    ],
+    "viewport": {
+      "width": 1358,
+      "height": 636,
+      "devicePixelRatio": 1
+    }
+  },
+  "assets": [
+    "https://v-img.crazymaplestudios.com/",
+    "https://www.reelshort.com/",
+    "https://www.reelshort.com/pt",
+    "https://www.reelshort.com/es",
+    "https://www.reelshort.com/de",
+    "https://www.reelshort.com/fr",
+    "https://www.reelshort.com/ja",
+    "https://www.reelshort.com/ko",
+    "https://www.reelshort.com/th",
+    "https://www.reelshort.com/ru",
+    "https://www.reelshort.com/id",
+    "https://www.reelshort.com/zh-TW",
+    "https://www.reelshort.com/ar",
+    "https://www.reelshort.com/pl",
+    "https://www.reelshort.com/it",
+    "https://www.reelshort.com/tr",
+    "https://www.reelshort.com/ro",
+    "https://www.reelshort.com/cs",
+    "https://www.reelshort.com/bg",
+    "https://www.reelshort.com/vi",
+    "https://www.reelshort.com/_next/static/media/icon_head.739421aa.png",
+    "https://v-mps.crazymaplestudios.com/images/211d3420-d721-11f0-84ad-6b5693b490dc.png",
+    "https://fonts.gstatic.com/",
+    "https://www.reelshort.com/_next/static/css/a3c92c8d62c435cb.css",
+    "https://www.reelshort.com/_next/static/css/cde53e8c6ffefe50.css",
+    "https://www.reelshort.com/_next/static/css/06e329a9316aebcb.css",
+    "https://www.reelshort.com/_next/static/css/72e69ba6d5443b89.css",
+    "https://www.reelshort.com/_next/static/css/17e5971710828857.css",
+    "https://www.reelshort.com/_next/static/css/f971bd94beb2c90e.css",
+    "https://www.reelshort.com/_next/static/css/f67002c79a8a14a4.css",
+    "https://www.reelshort.com/_next/static/css/0a1aa09fc6b72294.css",
+    "https://www.reelshort.com/_next/static/css/966130cd926f9e7c.css",
+    "https://www.reelshort.com/_next/static/css/2cce9a0f22519327.css",
+    "https://www.reelshort.com/_next/static/css/812909e2b9ad79d0.css",
+    "https://www.reelshort.com/_next/static/css/52aaa095fe61501a.css",
+    "https://www.reelshort.com/_next/static/chunks/5547-1c9a73b6dcf70f6f.js",
+    "https://www.reelshort.com/_next/static/chunks/pages/shelf/%5B...slug%5D-776a3894ff1fd88f.js",
+    "https://www.reelshort.com/_next/static/chunks/pages/dashboard-b33fa21b87406419.js",
+    "https://www.reelshort.com/_next/static/chunks/5421-d84ac77fdbd40356.js",
+    "https://www.reelshort.com/_next/static/chunks/5224-f6c61ae719fbf9f8.js",
+    "https://www.reelshort.com/_next/static/chunks/10-64eebc70a2851b6b.js",
+    "https://www.reelshort.com/_next/static/chunks/4367-9ec0b131b4aef1e1.js",
+    "https://www.reelshort.com/_next/static/chunks/pages/shopping-09d337be7f7fe9b4.js",
+    "https://accounts.google.com/gsi/style",
+    "https://www.reelshort.com/_next/static/css/eb865f49b85a0532.css",
+    "https://www.reelshort.com/_next/static/css/e287fe83b6ac1f2f.css",
+    "https://www.reelshort.com/_next/static/chunks/1083-2df200b640ffbfa1.js",
+    "https://www.reelshort.com/_next/static/chunks/4334-561ed27db03a17f1.js",
+    "https://www.reelshort.com/_next/static/chunks/6810-8ff058d31e6285b5.js",
+    "https://www.reelshort.com/_next/static/chunks/pages/episodes/%5Bslug%5D-9f38cef6b9f46d37.js",
+    "https://www.reelshort.com/_next/static/chunks/pages/dashboard/library-0d100ec832ef446b.js",
+    "https://www.reelshort.com/_next/static/chunks/6803-e20c3ea257b32837.js",
+    "https://www.reelshort.com/_next/static/chunks/pages/movie/%5Bslug%5D-db493082cc82fd4d.js",
+    "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2738%27%20height=%2738%27/%3e",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F211d3420-d721-11f0-84ad-6b5693b490dc.png&w=96&q=75",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F211d3420-d721-11f0-84ad-6b5693b490dc.png&w=48&q=75",
+    "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27240%27%20height=%2736%27/%3e",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F8f9e3f90-5a37-11f1-b0e9-f1e04973cf14.png&w=640&q=75",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F8f9e3f90-5a37-11f1-b0e9-f1e04973cf14.png&w=256&q=75",
+    "https://v-img.crazymaplestudios.com/images/ba658670-9628-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/ba658670-9628-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/a40ef1c0-a76e-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/a40ef1c0-a76e-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/365f0960-a6b7-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/365f0960-a6b7-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/b2ab06b0-a76e-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/b2ab06b0-a76e-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/62fba140-a6b7-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/62fba140-a6b7-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/f4814630-a76e-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/f4814630-a76e-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/31e6c460-a5ca-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/31e6c460-a5ca-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/165260a0-a102-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/165260a0-a102-11f1-8fc1-67160e4754e3.jpg?v=1.0&x-oss-process=image%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204201150000005664/18c48255-bd2b-4626-bc89-3481440297fd.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204201150000005664/18c48255-bd2b-4626-bc89-3481440297fd.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006024/3fb19fe2-dd2a-4995-bc1b-386aa9de3ce5.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006024/3fb19fe2-dd2a-4995-bc1b-386aa9de3ce5.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006360/ce84c67f-3ae4-40ce-9c28-f50db4bff7a1.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006360/ce84c67f-3ae4-40ce-9c28-f50db4bff7a1.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006258/9d0db644-04a4-4300-a9a0-79b7b44a3801.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006258/9d0db644-04a4-4300-a9a0-79b7b44a3801.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006135/b276e958-73b5-4fde-a3ae-ef21abcea516.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006135/b276e958-73b5-4fde-a3ae-ef21abcea516.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005343/2a57cef3-addb-4a31-9a28-ea3ee44935a4.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005343/2a57cef3-addb-4a31-9a28-ea3ee44935a4.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003683/12e72eca-f143-4bb0-b561-5044ab137be8.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003683/12e72eca-f143-4bb0-b561-5044ab137be8.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005908/6d37deef-3d4e-4cbd-a2e6-31c836c6882a.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005908/6d37deef-3d4e-4cbd-a2e6-31c836c6882a.jpg?v=1.0&x-oss-process=image%2Fresize%2Cw_192%2Ch_256%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000006095/2b7703e5-092f-49c1-9c24-24cc93db5266.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000006095/2b7703e5-092f-49c1-9c24-24cc93db5266.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000330/bc824d65-8eae-4dcd-bd80-bbe4df923fec.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000330/bc824d65-8eae-4dcd-bd80-bbe4df923fec.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004923/cdb055c3-e6f9-4bff-8513-7cc5ee66787a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004923/cdb055c3-e6f9-4bff-8513-7cc5ee66787a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000478/0348b57b-c85f-40e4-8e5f-2863a93ea786.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000478/0348b57b-c85f-40e4-8e5f-2863a93ea786.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000289/e1a1a81e-a573-4326-a8d6-f63da2fec5ef.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000289/e1a1a81e-a573-4326-a8d6-f63da2fec5ef.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005763/23e0b459-b324-46cb-addf-700aaf6fef01.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005763/23e0b459-b324-46cb-addf-700aaf6fef01.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000398/2e2e22e0-c717-439c-b961-5edd63c60409.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000398/2e2e22e0-c717-439c-b961-5edd63c60409.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000190/9db5b2c0-810e-4d84-b9ce-55cdca0c0563.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000190/9db5b2c0-810e-4d84-b9ce-55cdca0c0563.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000155/2e70277c-20da-42d0-a76a-079f7b8898ef.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000155/2e70277c-20da-42d0-a76a-079f7b8898ef.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003133/b4f0b83c-8b5a-482f-98e1-b07455b96a45.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003133/b4f0b83c-8b5a-482f-98e1-b07455b96a45.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006008/bd72681c-aa81-497d-80d5-687cd12f61cd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006008/bd72681c-aa81-497d-80d5-687cd12f61cd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200151000006769/c4327bd9-3c75-40c2-813b-e5559d7b54dd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200151000006769/c4327bd9-3c75-40c2-813b-e5559d7b54dd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006590/286b94fe-5ffb-4762-81f4-6ff4e79993c4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006590/286b94fe-5ffb-4762-81f4-6ff4e79993c4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005826/8f88747b-7b58-4fe9-9faa-d0ff8604009e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005826/8f88747b-7b58-4fe9-9faa-d0ff8604009e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006211/3c5272bb-bf15-46ea-8092-5b88abbfe29a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006211/3c5272bb-bf15-46ea-8092-5b88abbfe29a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005956/d9e287c6-a137-4e9e-9257-e7a9492e57cd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005956/d9e287c6-a137-4e9e-9257-e7a9492e57cd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005599/b927f5fb-9418-4944-9dbe-a74e1204f778.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005599/b927f5fb-9418-4944-9dbe-a74e1204f778.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005365/49b98298-0382-402a-9019-859a683565cf.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005365/49b98298-0382-402a-9019-859a683565cf.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200151000005314/1ee76a8d-1b86-44d2-b3c7-51daf71731ac.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200151000005314/1ee76a8d-1b86-44d2-b3c7-51daf71731ac.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004938/c80b4e81-ac8f-4cf6-bb67-9179f5092cc0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004938/c80b4e81-ac8f-4cf6-bb67-9179f5092cc0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200000000006410/2a5efa5e-c906-4a5c-b7f2-7cdb125e3ce5.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200000000006410/2a5efa5e-c906-4a5c-b7f2-7cdb125e3ce5.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/715ddf10-c91c-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/715ddf10-c91c-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/90fc1c80-71dc-11ef-a2d6-41216ff1602c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/90fc1c80-71dc-11ef-a2d6-41216ff1602c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000142/435cf8f5-0154-49eb-849b-e5b047de4c7e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000142/435cf8f5-0154-49eb-849b-e5b047de4c7e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000279/6ffd6b6b-e47c-4500-81ad-afd7fceb6724.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000279/6ffd6b6b-e47c-4500-81ad-afd7fceb6724.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003879/14bbc16e-6eca-4683-8a5d-4856f1c51607.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003879/14bbc16e-6eca-4683-8a5d-4856f1c51607.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002919/246ba742-51de-407f-bc76-14a2d5940afb.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002919/246ba742-51de-407f-bc76-14a2d5940afb.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000340/cd2941d7-dd93-4205-a359-fe82e333ecab.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000340/cd2941d7-dd93-4205-a359-fe82e333ecab.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005417/e1e1d56c-16e5-4193-b988-eb04e2d321f7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005417/e1e1d56c-16e5-4193-b988-eb04e2d321f7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000137/d2b0ef1b-bc36-46e5-97a8-8c54a78fecf2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000137/d2b0ef1b-bc36-46e5-97a8-8c54a78fecf2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006748/7946abc4-2c22-41c4-95db-bf2da255b6aa.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006748/7946abc4-2c22-41c4-95db-bf2da255b6aa.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006180/83a06ba4-ed93-4789-8f94-a25c11ca9050.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006180/83a06ba4-ed93-4789-8f94-a25c11ca9050.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006526/ee9c15ac-f36b-4ac5-870b-aa12ce7306ae.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006526/ee9c15ac-f36b-4ac5-870b-aa12ce7306ae.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005408/d9a725c4-f8ef-4101-a0fd-535b84ef6c10.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005408/d9a725c4-f8ef-4101-a0fd-535b84ef6c10.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006550/7970b96d-8557-4449-b883-647f85ba060c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006550/7970b96d-8557-4449-b883-647f85ba060c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005880/958a9dd7-675b-433d-b24e-5f5be7af274a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005880/958a9dd7-675b-433d-b24e-5f5be7af274a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004892/61bdc94b-4a1b-4b68-bb8d-0a6295fd7324.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004892/61bdc94b-4a1b-4b68-bb8d-0a6295fd7324.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005888/08ef0c7c-f164-4b56-a727-7d5537910745.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005888/08ef0c7c-f164-4b56-a727-7d5537910745.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000146/1f3a9d99-fefa-40e6-9aab-b4d7e9387a38.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000146/1f3a9d99-fefa-40e6-9aab-b4d7e9387a38.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006548/760a1851-f43f-4103-ae2b-02f9b3a3fc4a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006548/760a1851-f43f-4103-ae2b-02f9b3a3fc4a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006516/58b00374-6c41-4da3-8168-0cc751cf7e25.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006516/58b00374-6c41-4da3-8168-0cc751cf7e25.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006340/ce1c0a73-d42b-4d31-9007-c049fc1421b2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006340/ce1c0a73-d42b-4d31-9007-c049fc1421b2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006637/637f98fa-74e3-4c20-93f5-b9b6d08b26ed.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006637/637f98fa-74e3-4c20-93f5-b9b6d08b26ed.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005930/26207a7f-559e-4696-8e31-810803d87efd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005930/26207a7f-559e-4696-8e31-810803d87efd.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005023/0aa67e1e-cf9e-4a1d-baae-ed67ae192e80.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005023/0aa67e1e-cf9e-4a1d-baae-ed67ae192e80.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005883/042256e9-061f-441e-bce8-feeb52951408.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005883/042256e9-061f-441e-bce8-feeb52951408.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006593/126cbe45-8ddc-49ef-95bf-5fcd969468e0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006593/126cbe45-8ddc-49ef-95bf-5fcd969468e0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006112/53c5c75b-b73f-47d6-b3f3-9a617668c9b8.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006112/53c5c75b-b73f-47d6-b3f3-9a617668c9b8.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005838/1fb0b227-89fd-4079-b5cc-9956ae00aac4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005838/1fb0b227-89fd-4079-b5cc-9956ae00aac4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006597/a6e7e8c3-fb9b-42f7-8c64-c5d54a380d5c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006597/a6e7e8c3-fb9b-42f7-8c64-c5d54a380d5c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000406/9b4ca421-37e1-4c9f-9df6-5502cc92f631.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000406/9b4ca421-37e1-4c9f-9df6-5502cc92f631.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000045/e8922dfe-037f-4b51-bf03-edeb01ec74a9.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000045/e8922dfe-037f-4b51-bf03-edeb01ec74a9.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000359/cd4b5706-c25c-4a18-9fda-7f6b3b02186f.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000359/cd4b5706-c25c-4a18-9fda-7f6b3b02186f.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002502/912821f3-7dc1-4272-aa97-12c87756b29c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002502/912821f3-7dc1-4272-aa97-12c87756b29c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000328/9bc35f40-2b87-44e9-b6c7-f2c202d11375.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000328/9bc35f40-2b87-44e9-b6c7-f2c202d11375.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000306/54bc8e12-600e-4b7b-82fd-df375b467407.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000306/54bc8e12-600e-4b7b-82fd-df375b467407.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000249/d3431c04-3b16-42bb-8360-f69b94754d94.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000249/d3431c04-3b16-42bb-8360-f69b94754d94.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003190/27a1f453-d141-4924-a11f-33fcc7c4abad.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003190/27a1f453-d141-4924-a11f-33fcc7c4abad.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000256/03f0f6f1-dadb-4dc8-bedb-4af694edf9f2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000256/03f0f6f1-dadb-4dc8-bedb-4af694edf9f2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002528/19af3fe3-67f7-4808-9979-d5121b2797bc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002528/19af3fe3-67f7-4808-9979-d5121b2797bc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006731/476f72b2-2357-4a4a-bb32-50e8b4598e2f.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006731/476f72b2-2357-4a4a-bb32-50e8b4598e2f.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005685/36129862-e015-4070-a2be-9d41bd3ece5d.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005685/36129862-e015-4070-a2be-9d41bd3ece5d.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204300150000006838/dd7542d7-6da9-4d84-b502-7ee1f4f130a0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204300150000006838/dd7542d7-6da9-4d84-b502-7ee1f4f130a0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004851/aef7e0c3-201f-42c6-8613-f606ca5d896a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004851/aef7e0c3-201f-42c6-8613-f606ca5d896a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006732/44addecb-7957-42cf-a30e-030657dc1038.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006732/44addecb-7957-42cf-a30e-030657dc1038.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000005/c3cfd646-ac75-47c7-b8d4-e13539a1dc86.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000005/c3cfd646-ac75-47c7-b8d4-e13539a1dc86.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006213/47b076e5-ce5e-495d-8ebb-fd7bb10d81cb.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006213/47b076e5-ce5e-495d-8ebb-fd7bb10d81cb.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005967/27c11609-6aca-49c9-9158-096bb7e75c10.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005967/27c11609-6aca-49c9-9158-096bb7e75c10.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005033/3ee19e28-ccf2-4b63-9120-106fd0cfc433.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005033/3ee19e28-ccf2-4b63-9120-106fd0cfc433.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000022/8677026a-592a-42c1-855e-4b874d34a303.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000022/8677026a-592a-42c1-855e-4b874d34a303.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005362/0291b151-5f92-4d7f-a955-90d54692b845.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005362/0291b151-5f92-4d7f-a955-90d54692b845.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004948/187fc130-c911-4e52-aec0-5c1785a776f3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004948/187fc130-c911-4e52-aec0-5c1785a776f3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006601/4852ada6-4b72-4546-8095-e214440788e1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006601/4852ada6-4b72-4546-8095-e214440788e1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005848/f0795d9b-6c56-4626-bfe8-44e7dd85eec6.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005848/f0795d9b-6c56-4626-bfe8-44e7dd85eec6.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006136/1adf99b3-52f7-4aa2-9335-9a41721a9bd4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000006136/1adf99b3-52f7-4aa2-9335-9a41721a9bd4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000345/6735c019-7602-45d1-99f7-c4939f84c8f3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000345/6735c019-7602-45d1-99f7-c4939f84c8f3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000290/3a98fe44-e15b-4cc1-aee6-ec3c1aeb7ad0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000290/3a98fe44-e15b-4cc1-aee6-ec3c1aeb7ad0.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005781/559f81e1-b34b-4662-9817-d38aff3aa518.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005781/559f81e1-b34b-4662-9817-d38aff3aa518.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005459/c2f87c7a-e4e8-436a-ad15-808db16613d7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000005459/c2f87c7a-e4e8-436a-ad15-808db16613d7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004955/b3ae738e-d0f9-4f83-ac3c-1b3836617f7e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/204200150000004955/b3ae738e-d0f9-4f83-ac3c-1b3836617f7e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000011/b8a7840f-5f3d-4198-80ee-27947d6cb4db.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000011/b8a7840f-5f3d-4198-80ee-27947d6cb4db.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000005249/3d5e00f2-a57b-4298-9484-3cb2231f6df5.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000005249/3d5e00f2-a57b-4298-9484-3cb2231f6df5.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000002541/678ab1aa-a7bf-4d71-9df0-c4f8b0626ba6.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000002541/678ab1aa-a7bf-4d71-9df0-c4f8b0626ba6.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000023/bcea07cc-feca-48d4-9e63-482db2661a35.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000023/bcea07cc-feca-48d4-9e63-482db2661a35.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000018/a0f3f261-bf15-4986-ba81-8b4a37726708.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000018/a0f3f261-bf15-4986-ba81-8b4a37726708.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000019/be22d6c6-fd5f-46ae-9511-5412cc11df33.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000019/be22d6c6-fd5f-46ae-9511-5412cc11df33.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000002/a96f66da-4b67-4717-943f-eddaeb136b77.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000002/a96f66da-4b67-4717-943f-eddaeb136b77.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000009/1cfa80fb-d577-4731-b7be-9bde7f431b9b.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000009/1cfa80fb-d577-4731-b7be-9bde7f431b9b.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000008/729969c1-7b58-49a4-a95a-85f8ea38bcf3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000008/729969c1-7b58-49a4-a95a-85f8ea38bcf3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000010/53593e7c-093c-45f2-9c86-d3044339b07d.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000200000000010/53593e7c-093c-45f2-9c86-d3044339b07d.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/3b4c6fb0-c64a-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/3b4c6fb0-c64a-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/8a1fc330-d158-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/8a1fc330-d158-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/e039cdc0-dc7e-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/e039cdc0-dc7e-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/64977070-a56d-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/64977070-a56d-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/756b81d0-b5c5-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/756b81d0-b5c5-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000800000004831/af259b63-5f89-47ad-91f9-17e86fceb2cb.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000800000004831/af259b63-5f89-47ad-91f9-17e86fceb2cb.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/ad8c0870-9fe8-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/ad8c0870-9fe8-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/22010a00-b049-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/22010a00-b049-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/0a5f2080-9a46-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/0a5f2080-9a46-11f0-a06b-bdb674869ea1.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/images/a65da8f0-c0cd-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/images/a65da8f0-c0cd-11f0-84ad-6b5693b490dc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005875/f25a262d-273b-4ffb-a592-8ae6848c25d7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005875/f25a262d-273b-4ffb-a592-8ae6848c25d7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002245/491f4133-dba3-41af-b848-07c335176623.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002245/491f4133-dba3-41af-b848-07c335176623.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003200/02358c5b-9a7f-455b-889d-33e209c0bbcc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003200/02358c5b-9a7f-455b-889d-33e209c0bbcc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002239/b9914f50-06fd-474a-9ab5-21b1b918b5f8.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002239/b9914f50-06fd-474a-9ab5-21b1b918b5f8.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004988/45ddaae5-e6a4-444f-8c73-df0d2b90c360.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004988/45ddaae5-e6a4-444f-8c73-df0d2b90c360.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003880/7b6df385-e40c-4aec-b4f1-fce2b34abb47.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003880/7b6df385-e40c-4aec-b4f1-fce2b34abb47.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000373/75b5a750-84e0-4c2d-949a-a7af61e4ca40.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000373/75b5a750-84e0-4c2d-949a-a7af61e4ca40.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000006391/e0f3abca-92fb-42bc-8469-63c580a20100.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000006391/e0f3abca-92fb-42bc-8469-63c580a20100.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003202/22d0cd9d-3785-429a-b352-08953130b3b3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003202/22d0cd9d-3785-429a-b352-08953130b3b3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002501/4a3d9850-2dd1-4fb0-b4a1-cd07d491452e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002501/4a3d9850-2dd1-4fb0-b4a1-cd07d491452e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004202/0f4635cc-7e9b-4357-be56-ea6c25d902d2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004202/0f4635cc-7e9b-4357-be56-ea6c25d902d2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002139/da0f8d41-276b-445c-96fb-2887362e7242.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002139/da0f8d41-276b-445c-96fb-2887362e7242.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005825/ff97d6ec-c456-4ea0-8f3e-a3cd8b4f4fa8.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005825/ff97d6ec-c456-4ea0-8f3e-a3cd8b4f4fa8.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000239/f847197e-f891-4598-b522-cd69bc074ce4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000239/f847197e-f891-4598-b522-cd69bc074ce4.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000006106/c9bba8c8-d23d-468b-a0ac-bac12250a9aa.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000006106/c9bba8c8-d23d-468b-a0ac-bac12250a9aa.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000443/f5f34ff2-3529-4f7a-90fe-a84e1247732f.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000443/f5f34ff2-3529-4f7a-90fe-a84e1247732f.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004242/9f3647d1-4a52-43ed-95b5-3766afac3ea7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004242/9f3647d1-4a52-43ed-95b5-3766afac3ea7.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002373/e0a078ec-2829-4832-8619-bd2a6d345f97.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002373/e0a078ec-2829-4832-8619-bd2a6d345f97.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005660/791356ef-d0fe-4408-85a6-f18dbc1c26e2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000005660/791356ef-d0fe-4408-85a6-f18dbc1c26e2.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003734/faa21d60-4bba-460f-9b84-19825424204c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000003734/faa21d60-4bba-460f-9b84-19825424204c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002151/7db8f93e-aab8-45cc-a0b6-3d911f4407fc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002151/7db8f93e-aab8-45cc-a0b6-3d911f4407fc.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002412/5c362e73-a490-474a-8608-47d8b7d2e5d3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002412/5c362e73-a490-474a-8608-47d8b7d2e5d3.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000213/5abcdb27-ef1b-4f35-92e0-03b3c763933a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000213/5abcdb27-ef1b-4f35-92e0-03b3c763933a.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004356/95aa1bda-9330-4d63-a5d3-cce586073137.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000004356/95aa1bda-9330-4d63-a5d3-cce586073137.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002394/712e7935-be52-460b-9de9-67ee6b1b52ea.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002394/712e7935-be52-460b-9de9-67ee6b1b52ea.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000415/1207948a-33a1-4ac1-b58c-4c5cd487a51c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000415/1207948a-33a1-4ac1-b58c-4c5cd487a51c.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000347/20c3b261-4813-43f8-bfd6-2a45a6cdd14d.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000347/20c3b261-4813-43f8-bfd6-2a45a6cdd14d.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000383/c519701f-94e3-40e2-a9ed-48a22c13e150.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000000383/c519701f-94e3-40e2-a9ed-48a22c13e150.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002992/493dbacb-8ac4-48ca-adf4-2677c3f82684.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002992/493dbacb-8ac4-48ca-adf4-2677c3f82684.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002158/0b043d18-c9f9-44ec-ae07-f858d377b99e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80%2Fformat%2Cwebp",
+    "https://v-img.crazymaplestudios.com/v-images/book_cover_batch/200000000000002158/0b043d18-c9f9-44ec-ae07-f858d377b99e.jpg?x-oss-process=image%2Fresize%2Cw_600%2Ch_800%2Cm_fill%2Fquality%2Cq_80",
+    "https://v-mps.crazymaplestudios.com/images/8f9e3f90-5a37-11f1-b0e9-f1e04973cf14.png",
+    "https://v-mps.crazymaplestudios.com/images/df8b7de0-49c2-11f1-acb2-c14bef828c82.png",
+    "https://v-mps.crazymaplestudios.com/images/96129880-541a-11f1-b0e9-f1e04973cf14.png",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F211d3420-d721-11f0-84ad-6b5693b490dc.png&w=1920&q=75",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F211d3420-d721-11f0-84ad-6b5693b490dc.png&w=640&q=75",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-mps.crazymaplestudios.com%2Fimages%2F211d3420-d721-11f0-84ad-6b5693b490dc.png&w=1080&q=75",
+    "https://v-mps.crazymaplestudios.com/activity/mp4/10001_0100.mp4",
+    "https://v-mps.crazymaplestudios.com/images/dc205410-d6cd-11ee-94ca-b3f9375866ba.png",
+    "https://v-mps.crazymaplestudios.com/images/db028800-d6cd-11ee-94ca-b3f9375866ba.png",
+    "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2748%27%20height=%2748%27/%3e",
+    "https://v-mps.crazymaplestudios.com/images/f7c9e180-f053-11f0-84ad-6b5693b490dc.png",
+    "data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2796%27%20height=%27128%27/%3e",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-img.crazymaplestudios.com%2Fv-images%2Fbook_cover_batch%2F204200150000006590%2F286b94fe-5ffb-4762-81f4-6ff4e79993c4.jpg&w=256&q=75",
+    "https://www.reelshort.com/_next/image?url=https%3A%2F%2Fv-img.crazymaplestudios.com%2Fv-images%2Fbook_cover_batch%2F204200150000006590%2F286b94fe-5ffb-4762-81f4-6ff4e79993c4.jpg&w=96&q=75",
+    "https://v-mps.crazymaplestudios.com/images/2fde8f70-fc30-11f0-84ad-6b5693b490dc.png",
+    "https://www.reelshort.com/_next/static/media/reelshort.5c487f82.png"
+  ]
+}

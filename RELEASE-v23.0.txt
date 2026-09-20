@@ -1,0 +1,26 @@
+BingeBox v23.0 — International SEO + Support
+
+SEO focus
+- Stronger homepage title and search description for free short drama discovery.
+- Natural audience positioning for United States, Australia, Canada and Philippines.
+- WebSite + Organization structured data with BingeBox market coverage.
+- Open Graph locale signals for en_US, en_AU, en_CA and en_PH.
+- Drama detail links now update the browser URL, page title, description, canonical, social cards and TVSeries structured data.
+- No doorway/duplicate country pages and no keyword stuffing.
+
+Support BingeBox
+- One polished support dialog with two rails.
+- PayPal Hosted Button 92TYEF53NT5JJ (USD) for international supporters.
+- PayMongo hosted page https://paymongo.page/l/support-bingebox for Philippines-friendly checkout.
+- PayPal SDK is lazy-loaded only after opening the support dialog to protect initial page performance.
+- BingeBox never collects or stores payment/card/wallet credentials.
+- Existing Supabase donation URL/label fallback remains supported.
+
+Security / compatibility
+- CSP permits PayPal SDK/connect/form endpoints.
+- COOP changed to same-origin-allow-popups for hosted payment checkout compatibility.
+- No PayPal secret or PayMongo secret key is embedded.
+
+Cache
+- Frontend assets bumped to v2300.
+- Service worker cache bumped to bingebox-shell-v23.0.

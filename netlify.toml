@@ -14,7 +14,7 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
     Cross-Origin-Opener-Policy = "same-origin-allow-popups"
     X-Permitted-Cross-Domain-Policies = "none"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.paypal.com https://www.paypalobjects.com https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: https://media.bingebox.bond https://*.supabase.co; connect-src 'self' https://*.supabase.co https://www.paypal.com https://*.paypal.com https://cloudflareinsights.com https://bingebox-upload.hero-tolentino.workers.dev https://bingebox-import.hero-tolentino.workers.dev https://upload.bingebox.bond; media-src 'self' https: blob:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://www.paypal.com https://*.paypal.com; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.paypal.com https://www.paypalobjects.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://www.reelshort.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://media.bingebox.bond https://*.supabase.co https://www.reelshort.com https://v-img.crazymaplestudios.com https://v-mps.crazymaplestudios.com; connect-src 'self' https://*.supabase.co https://www.paypal.com https://*.paypal.com https://cloudflareinsights.com https://bingebox-upload.hero-tolentino.workers.dev https://bingebox-import.hero-tolentino.workers.dev https://upload.bingebox.bond; media-src 'self' https: blob:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://www.paypal.com https://*.paypal.com; upgrade-insecure-requests"
 
 [[headers]]
   for = "/assets/*"
@@ -106,8 +106,3 @@
   for = "/lite.html"
   [headers.values]
     Cache-Control = "public, max-age=120, must-revalidate"
-
-[[headers]]
-for = "/favicon.ico"
-  [headers.values]
-  Cache-Control = "no-cache, no-store, must-revalidate"

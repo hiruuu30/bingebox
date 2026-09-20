@@ -1,0 +1,10 @@
+BingeBox v24.2 — Hold-to-2x Polish
+
+- Hold activation threshold reduced from 260ms to 210ms.
+- Playback jumps immediately to 2x after the hold threshold; no acceleration ramp.
+- Finger release restores the pre-hold playback rate immediately; no 260ms deceleration tail.
+- Natural thumb drift is tolerated; hold cancels only for a clear vertical episode swipe or a large horizontal escape gesture.
+- Tap suppression reduced from 420ms to 180ms.
+- Replaced loading-spinner speed indicator with a compact ▶▶ 2× state pill.
+- Indicator exit shortened to 90ms and decoupled from playback speed restoration.
+- Existing episode swipe, edge-back, ±5s seek, resume, analytics, source failover, and player controls preserved.

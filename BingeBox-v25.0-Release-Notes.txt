@@ -1,0 +1,32 @@
+BingeBox v25.0 — ReelShort Architecture Strict Clone + BingeBox Injection
+=======================================================================
+
+SOURCE / APPROACH
+- Rebuilt the public BingeBox home experience from the supplied 2026-09-11 ReelShort full-page capture.
+- This is a structural/design injection, not a content copy: no ReelShort logos, posters, videos, or branded media are bundled.
+- BingeBox branding, catalog data, poster URLs, actions, Supabase backend, and media stack remain BingeBox-owned.
+
+PUBLIC HOME — STRICT ARCHITECTURE INJECTION
+- ~79px dark/glass header with compact navigation and utility actions.
+- Full-width cinematic hero immediately below the header.
+- Compact hero typography so artwork stays dominant.
+- Right-side mini-poster hero rail with explicit previous/next controls.
+- ReelShort-style content floors with 24px section headings, horizontal poster rails, hover motion, and row navigation arrows.
+- 3:4 poster cards with title and metadata below the artwork instead of oversized card overlays.
+- More Recommended uses a dense five-column desktop grid.
+- Section rhythm and content density tightened to match the supplied desktop capture.
+- Responsive mobile treatment keeps BingeBox's existing bottom navigation.
+
+BINGEBOX FEATURES RETAINED
+- Netflix-style large Top 10 numbering remains BingeBox's ranking treatment rather than ReelShort's ranking style.
+- Current BingeBox video player retained byte-for-byte (watch.html, watch.js, watch.css).
+- Hold-to-2x/release-to-1x and landscape switching therefore remain intact.
+- Current BingeBox Workspace retained byte-for-byte (workspace/index.html, admin.js, admin.css).
+- v24.7 low-egress architecture retained: homepage does not restore the old full episode-library fetch; playable-episode RPC workflow remains bundled.
+- Resume, favorites, Complete/R18 labels, modal actions, search, support, catalog pagination, and existing backend integrations remain wired.
+
+CACHE / DEPLOYMENT
+- Main home CSS/JS cache bust moved to v2500.
+- New reelshort-clone.css?v=2500 is layered after the existing BingeBox stylesheet.
+- Service worker cache moved to bingebox-shell-v25.0.
+- Netlify deployment is required for the public-home redesign.

@@ -1,0 +1,80 @@
+BingeBox v23.7 — Final QA
+===============================
+Result: 76/76 passed, 0 failed
+
+001. PASS — file present: index.html
+002. PASS — file present: app.js
+003. PASS — file present: styles.css
+004. PASS — file present: watch.html
+005. PASS — file present: watch.js
+006. PASS — file present: workspace/admin.js
+007. PASS — file present: workspace/index.html
+008. PASS — file present: lite.html
+009. PASS — file present: lite.css
+010. PASS — file present: lite.js
+011. PASS — file present: service-worker.js
+012. PASS — file present: netlify.toml
+013. PASS — file present: RELEASE-v23.7.txt
+014. PASS — JS syntax: app.js
+015. PASS — JS syntax: cloudflare/importer-worker.js
+016. PASS — JS syntax: config.js
+017. PASS — JS syntax: donate.js
+018. PASS — JS syntax: lite.js
+019. PASS — JS syntax: push.js
+020. PASS — JS syntax: pwa.js
+021. PASS — JS syntax: service-worker.js
+022. PASS — JS syntax: user.js
+023. PASS — JS syntax: watch.js
+024. PASS — JS syntax: workspace/admin.js
+025. PASS — No duplicate IDs: 404.html
+026. PASS — No duplicate IDs: copyright.html
+027. PASS — No duplicate IDs: index.html
+028. PASS — No duplicate IDs: lite.html
+029. PASS — No duplicate IDs: offline.html
+030. PASS — No duplicate IDs: privacy.html
+031. PASS — No duplicate IDs: swipe.html
+032. PASS — No duplicate IDs: terms.html
+033. PASS — No duplicate IDs: watch.html
+034. PASS — No duplicate IDs: workspace/index.html
+035. PASS — CSS braces balanced: styles.css — 1066/1066
+036. PASS — CSS braces balanced: watch.css — 262/262
+037. PASS — CSS braces balanced: donate.css — 35/35
+038. PASS — CSS braces balanced: workspace/admin.css — 840/840
+039. PASS — CSS braces balanced: lite.css — 86/86
+040. PASS — netlify.toml parses
+041. PASS — All Drama page size constant is 30
+042. PASS — All Drama slices by page size
+043. PASS — All Drama previous button wired
+044. PASS — All Drama next button wired
+045. PASS — Genre filter resets page 1
+046. PASS — All Drama pagination markup exists
+047. PASS — Lite link in desktop nav
+048. PASS — Lite link in mobile menu
+049. PASS — Lite link in All Drama
+050. PASS — Lite server page size is 30
+051. PASS — Lite uses Supabase limit 30
+052. PASS — Lite uses offset pagination
+053. PASS — Lite asks exact count
+054. PASS — Lite uses lazy poster loading
+055. PASS — Lite omits user.js
+056. PASS — Lite omits app.js
+057. PASS — Lite noindex present
+058. PASS — /lite Netlify route exists
+059. PASS — Homepage paginated episode helper exists
+060. PASS — Homepage episode fetch uses paginated helper
+061. PASS — Watch paginated row helper exists
+062. PASS — Watch scopes normal load to selected drama
+063. PASS — Watch source chunking is bounded
+064. PASS — Watch source request uses paginated helper
+065. PASS — Workspace reports v4 deep scan count
+066. PASS — Workspace reports dead active disabled
+067. PASS — Workspace reports inconclusive probes
+068. PASS — Service worker cache v23.7
+069. PASS — Service worker precaches lite page
+070. PASS — Changed frontend refs use v2370
+071. PASS — Pagination math total=0 — 1/0/0
+072. PASS — Pagination math total=28 — 1/28/28
+073. PASS — Pagination math total=30 — 1/30/30
+074. PASS — Pagination math total=31 — 2/30/1
+075. PASS — Pagination math total=60 — 2/30/30
+076. PASS — Pagination math total=65 — 3/30/5

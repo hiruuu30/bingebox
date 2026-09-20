@@ -1,0 +1,20 @@
+BingeBox v23.2
+
+PAYPAL
+- PayPal support now uses PayPal's hosted-button form endpoint directly.
+- Clicking Continue with PayPal opens PayPal in a separate browser tab.
+- Removes the embedded PayPal SDK rendering path from the support dialog.
+- PayMongo continues to open in a separate tab.
+
+WORKSPACE RIGHTS
+- Added Auto-confirm permission in Workspace.
+- Enabled by default in the administrator's browser.
+- New or currently unverified dramas open with publishing permission checked.
+- Saving the drama records the normal drama_rights verification record.
+- The setting is visible and can be turned off at any time.
+- Existing verified rights records remain unchanged.
+
+PRESERVED FROM v23.1
+- Analytics Intelligence dashboard with line charts and expanded viewer/search/device insights.
+- Cleaner Workspace drama library.
+- v23.0 international SEO, PayMongo, dynamic drama SEO, player, notification and rights workflows.

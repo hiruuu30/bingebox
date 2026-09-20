@@ -1,0 +1,36 @@
+BingeBox v25.1 — Final QA
+
+PASS — app.js syntax
+PASS — watch.js syntax
+PASS — service-worker.js syntax
+PASS — CSS brace balance
+PASS — 480px source-derived hero height
+PASS — 170px top hero gradient
+PASS — 40% bottom hero gradient
+PASS — 50% left hero gradient
+PASS — portrait-safe constrained hero artwork
+PASS — 84x112 hero thumbnail geometry
+PASS — 12px hero thumbnail gaps
+PASS — 222.44px captured shelf card width token
+PASS — 16px poster radius
+PASS — global shelf hover backdrop layer
+PASS — global shelf hover foreground layer
+PASS — local card glass backdrop layer
+PASS — local card glass foreground layer
+PASS — neighboring-card suppression on hover
+PASS — hover card elevation/expansion
+PASS — glass hero metadata pills
+PASS — Netflix-style Top 10 preserved
+PASS — v24.7 low-egress lazy episodes preserved
+PASS — service worker v25.1 cache
+PASS — app/css v2510 cache bust
+PASS — watch.html checksum preserved vs v25.0
+PASS — watch.js checksum preserved vs v25.0
+PASS — watch.css checksum preserved vs v25.0
+PASS — workspace/index.html checksum preserved vs v25.0
+PASS — workspace/admin.js checksum preserved vs v25.0
+PASS — workspace/admin.css checksum preserved vs v25.0
+
+30/30 static and preservation checks passed.
+
+Note: local Chromium rendering in this execution environment did not terminate cleanly because its system DBus/headless process hung, so this QA does not falsely claim a completed browser screenshot pass.

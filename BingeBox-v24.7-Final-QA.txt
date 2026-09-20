@@ -1,0 +1,44 @@
+BingeBox v24.7 — Low-Egress Final QA
+
+RESULT: 40/40 passed · 0 failed
+
+01. PASS — JavaScript syntax: app.js
+02. PASS — JavaScript syntax: watch.js
+03. PASS — JavaScript syntax: user.js
+04. PASS — JavaScript syntax: lite.js
+05. PASS — JavaScript syntax: service-worker.js
+06. PASS — JavaScript syntax: workspace/admin.js
+07. PASS — JavaScript syntax: poster-fallback.js
+08. PASS — Home full-library episode fetch removed
+09. PASS — Home uses published episode nested counts
+10. PASS — Drama modal lazy episode loader exists
+11. PASS — Progress metadata capped
+12. PASS — Redundant BBUser refresh removed
+13. PASS — Surprise Me uses random path
+14. PASS — Random playable RPC wired
+15. PASS — Drama playable RPC wired
+16. PASS — Player no full source inventory query
+17. PASS — Current episode source lazy loader
+18. PASS — Next source prefetch exists
+19. PASS — Workspace lazy data loader exists
+20. PASS — Workspace startup no eager all-panel Promise
+21. PASS — Workspace drama counts nested
+22. PASS — Workspace no all-episode count fetch
+23. PASS — System no automatic full source scan
+24. PASS — v24.7 service worker cache
+25. PASS — No active 2460 references
+26. PASS — Index app cache-bust 2470
+27. PASS — Watch cache-bust 2470
+28. PASS — Workspace cache-bust 2470
+29. PASS — v24.6 landscape control preserved
+30. PASS — v24.6 hold 2x preserved
+31. PASS — Poster fallback preserved
+32. PASS — Top 10 styling/code preserved
+33. PASS — No duplicate IDs: index.html
+34. PASS — No duplicate IDs: watch.html
+35. PASS — No duplicate IDs: lite.html
+36. PASS — No duplicate IDs: workspace/index.html
+37. PASS — Required assets exist: index.html
+38. PASS — Required assets exist: watch.html
+39. PASS — Required assets exist: lite.html
+40. PASS — Required assets exist: workspace/index.html

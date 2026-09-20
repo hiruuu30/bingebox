@@ -1,0 +1,20 @@
+BingeBox v24.6 — Player Interaction + Landscape + Workspace + Episode Count
+
+PLAYER
+- Rebuilt hold-to-2x gesture so the shell captures the hold reliably, not only the video element.
+- Release, cancellation, app blur, pause and visibility changes force playback back to normal 1x.
+- Added a contextual landscape button that appears only for landscape direct video.
+- Landscape control uses fullscreen/orientation lock where supported with iOS video-fullscreen fallback.
+
+HOMEPAGE
+- Reduced hero title and description scale so text no longer dominates the artwork.
+- Drama query now embeds published episode counts in the first response, so cards/hero show the real count immediately instead of briefly showing 0 / Coming Soon while the full episode inventory paginates.
+
+WORKSPACE
+- Reworked the workspace into a true sectioned admin interface with a fixed navigation rail on desktop and compact tabs on mobile.
+- Content, Insights, Homepage and System now behave as real views instead of one long stacked admin page.
+- Reduced oversized headings, tightened density, improved visual hierarchy, refined library rows and controls, and kept all existing IDs/actions intact.
+
+CACHE
+- Frontend assets bumped to v2460.
+- Service worker cache bumped to bingebox-shell-v24.6.

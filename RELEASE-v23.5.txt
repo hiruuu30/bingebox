@@ -1,0 +1,20 @@
+BingeBox v23.5 — Mobile Stability + Hero + Player Fixes
+
+Built from v23.4 One-Click Source Repair. Production remains v22.8 until this package is deployed.
+
+FIXED
+1. Bottom mobile navigation: removed the transformed fixed-layer behavior that could jump upward during iOS swipe/viewport changes.
+2. Mobile scrolling: Search, episode sheets, and report sheets now own vertical touch scrolling with momentum/overscroll containment.
+3. Hero video routing: the visible highlight clip is now the real clickable/accessibility target and opens the drama it displays.
+4. Hero selection: Automatic mode uses Top 3 Trending; Workspace can switch to three explicit Custom picks.
+5. Hero overlap: when video highlight is active, poster cards spread into separate left/middle/right lanes instead of hiding behind the clip.
+6. Playback errors: player failure UI now includes Retry, fallback server when available, and Report an issue with the detected error prefilled.
+7. Player controls: play/pause controls automatically hide after inactivity even while paused; error/sheet interaction still holds controls when needed.
+
+PRESERVED
+- v23.4 one-click source repair and source-health workflow.
+- v23.3 automatic R18 tagging.
+- v23.2 auto-rights + PayPal new-tab behavior.
+- v23.1 analytics intelligence.
+- v22.9 playback gestures, Trending ranking, and hero video behavior.
+- v22.8 remains the current live production baseline until deployment.

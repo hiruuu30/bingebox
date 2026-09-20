@@ -1,0 +1,66 @@
+BingeBox v25.2 — Final Browser + Static QA
+Date: 2026-09-11
+
+BROWSER QA
+Chromium rendered the exact v25.2 package files with production-shaped BingeBox catalog data.
+
+Desktop 1358x636
+PASS no horizontal overflow
+PASS 480px hero height
+PASS 3:4 hero poster composition
+PASS 10 Netflix-ranked items
+PASS hero content x/width matches captured ReelShort geometry
+PASS ~222.42px poster-card width matches captured ReelShort geometry
+PASS hero next and previous physical clicks
+PASS hero thumbnail selection
+PASS hero swipe
+PASS local hover glass activates
+PASS neighbors remain full opacity
+PASS no shelf-wide hover blackout
+PASS restrained active-card hover transform
+PASS enabled shelf-next arrow physically scrolls the row
+PASS favorite click does not open drama modal
+PASS card click opens drama modal
+PASS modal close works with a normal physical click
+PASS search opens, returns results and closes with Escape
+PASS zero page exceptions
+
+Tablet 900x700
+PASS no horizontal overflow
+PASS 480px hero height
+PASS 3:4 hero poster
+PASS hero portrait remains constrained and not stretched
+PASS hero next physical click
+PASS zero page exceptions
+
+Mobile 390x844
+PASS no horizontal overflow
+PASS 470px hero height
+PASS 3:4 hero poster
+PASS hero thumbnails remain >=52px wide
+PASS hero thumbnail rail horizontally scrolls
+PASS mobile menu opens and closes
+PASS mobile search opens
+PASS zero page exceptions
+
+Console note
+The browser harness intentionally blocks https://static.cloudflareinsights.com/beacon.min.js.
+That creates one browser console "Failed to load resource" entry. It is the Cloudflare analytics beacon, not a BingeBox runtime exception.
+
+STATIC / PRESERVATION QA
+PASS app.js syntax
+PASS watch.js syntax
+PASS workspace/admin.js syntax
+PASS service-worker.js syntax
+PASS CSS brace balance for styles.css, reelshort-clone.css, watch.css and workspace/admin.css
+PASS watch.html/watch.js/watch.css unchanged from v25.1
+PASS workspace/index.html/workspace/admin.js/workspace/admin.css unchanged from v25.1
+PASS v24.7 embedded episode-count catalog query retained
+PASS old full-library homepage episodesPromise/fetch-all pattern absent
+PASS get_random_playable_episodes and get_drama_playable_episodes watch RPCs retained
+PASS service-worker cache bumped to bingebox-shell-v25.2
+PASS test-only index-test.html excluded from deployable package
+
+QA SCOPE
+This validates the public frontend UI and interactions with exact package files and production-shaped data.
+The player and Workspace were checksum-preserved rather than reworked in this release. Third-party playback providers and authenticated admin workflows were not re-exercised end-to-end in this QA run.

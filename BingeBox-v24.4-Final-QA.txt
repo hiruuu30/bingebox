@@ -1,0 +1,20 @@
+BingeBox v24.4 — Poster Reliability Recovery Final QA
+=====================================================
+
+RESULT: PASS
+
+- Built directly from BingeBox v24.3 Mobile Poster + Top 10 Hotfix.
+- Netlify CSP permits https://*.supabase.co in img-src.
+- New poster-fallback.js is loaded on Home, Lite, and Workspace.
+- Failed media.bingebox.bond /posters/* images retry through Supabase poster-proxy.
+- Second failure falls back to the BingeBox brand mark; browser broken-image icon is avoided.
+- Service worker cache bumped to bingebox-shell-v24.4.
+- App/style/lite references cache-busted to v2440.
+- JavaScript syntax PASS: poster-fallback.js, app.js, lite.js, workspace/admin.js, service-worker.js.
+- Required local asset references PASS.
+- Supabase poster-proxy v1 is ACTIVE and was verified server-side to return HTTP 200 image/jpeg for the previously malformed R2 poster.
+- Little Red Hood repaired Supabase Storage poster was previously verified HTTP 206 image/jpeg.
+
+DEPLOYMENT
+- Netlify frontend ZIP only.
+- Supabase poster-proxy backend is already live.

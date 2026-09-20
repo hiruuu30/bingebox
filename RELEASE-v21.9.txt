@@ -1,0 +1,10 @@
+BingeBox v21.9 — Importer Diagnostics + Source Validation
+
+• Importer connection health test
+• Detailed browser/Worker/auth/server error layers
+• Episodes discovered / pages checked / valid sources / failed episodes diagnostics
+• Structural source validation with READY / REJECTED status
+• Explicit zero-source message
+• Targeted Retry failed episodes support (requires bundled Worker v21.9)
+• Duplicate skip counts during Supabase import
+• Preserves v21.8 premium 3-column catalog and Netlify CSP importer allowance

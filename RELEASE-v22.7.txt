@@ -1,0 +1,30 @@
+BingeBox v22.7 — SUPER FINAL RELEASE
+
+1) Automatic completed-drama notification
+- Uses the existing authenticated BingeBox push-api.
+- When a drama is saved as Published + Complete series, BingeBox automatically broadcasts:
+  "Complete series: <title>"
+  "Every published episode is now available. Start watching on BingeBox."
+- Notification opens the title detail route.
+- completion_push_sent_at is atomically claimed before dispatch to prevent duplicate sends from double-clicks or multiple Workspace tabs.
+- Definite API failures release the claim so the next save retries; ambiguous network failures keep the claim so BingeBox never risks a duplicate blast.
+- Scheduled titles are never notified before publish_at.
+- Existing published complete titles were protected during rollout to prevent retroactive blasts.
+
+2) Premium landscape player
+- New vector landscape/fullscreen button in the player header.
+- Preferred path: BingeBox custom fullscreen shell + Screen Orientation landscape lock.
+- iPhone/iOS fallback: native video fullscreen where custom element fullscreen/orientation lock is unavailable.
+- Physical landscape automatically activates the dedicated landscape composition.
+- No CSS 90-degree page rotation hack.
+- Dedicated iPhone safe-area handling on all four edges.
+- Landscape-specific control sizing, progress placement, action rail, title copy, overlays, and sheets.
+- Edge-back gesture is disabled while in landscape to avoid horizontal gesture collisions.
+- Escape exits fullscreen/landscape cleanly where supported.
+- Orientation is unlocked on exit/pagehide.
+- Portrait player behavior is preserved.
+
+Preserved from v22.6 and earlier:
+R18 detection and badges, expanded genres including Anime, analytics graphs, Source Health,
+cold-start Trending, mobile spacing/nav fixes, resilient external playback, ±5s seeking,
+scrubbable progress, hold-for-2x, server fallback, importer compatibility, and rights controls.

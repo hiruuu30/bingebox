@@ -1,0 +1,89 @@
+BingeBox v23.5 — Mobile Stability + Hero + Player Final QA
+
+RESULT: 74/74 passed · 0 failed
+
+01. PASS — Mobile nav remains fixed
+02. PASS — Mobile nav transform reset
+03. PASS — Mobile nav safe-area bottom stable
+04. PASS — Mobile nav remains four columns
+05. PASS — Search overlay owns vertical scroll
+06. PASS — Search overlay pan-y touch action
+07. PASS — Mobile transformed scroll layers reset
+08. PASS — Modal/account momentum scroll enabled
+09. PASS — Horizontal lists use pan-x
+10. PASS — Player sheet momentum scroll enabled
+11. PASS — Player episode sheet keeps vertical scroll container
+12. PASS — Hero video gets exact drama data-open
+13. PASS — Hero video is keyboard-accessible
+14. PASS — Hero video accepts pointer events
+15. PASS — Hero keyboard activation opens data-open target
+16. PASS — Hero error clears stale click target
+17. PASS — Homepage reads safe highlight setting
+18. PASS — Automatic hero uses trending selection
+19. PASS — Featured flag no longer boosts cold-start hero ranking
+20. PASS — Workspace hero chooser exists
+21. PASS — Workspace loads Top 3 Trending
+22. PASS — Workspace validates three unique custom picks
+23. PASS — Workspace auto mode stores empty override
+24. PASS — Legacy Featured control hidden
+25. PASS — Library marks H1/H2/H3
+26. PASS — Safe setting migration bundled
+27. PASS — Active highlight state added only with visible video
+28. PASS — Active highlight state removed on failure/reset
+29. PASS — Desktop hero lanes separated
+30. PASS — Mobile hero lanes separated
+31. PASS — Poster behind highlight is disabled
+32. PASS — Playback failure message preserved
+33. PASS — Failure UI offers Retry
+34. PASS — Failure UI offers fallback when available
+35. PASS — Failure UI offers Report an issue
+36. PASS — Detected player error prefilled into report
+37. PASS — Report reason uses existing playback enum
+38. PASS — Report detail respects 1000-char field
+39. PASS — Chrome hide timer runs while paused too
+40. PASS — Pause event now schedules auto-hide
+41. PASS — Video tap show schedules auto-hide
+42. PASS — Seek actions return to auto-hide
+43. PASS — Initial direct-player chrome also times out
+44. PASS — One-click source repair button preserved
+45. PASS — Source repair status preserved
+46. PASS — Auto R18 preserved
+47. PASS — Auto rights preserved
+48. PASS — Analytics preserved
+49. PASS — Trending Top 10 catalog preserved
+50. PASS — Homepage cache bust v2350
+51. PASS — Watch cache bust v2350
+52. PASS — Workspace cache bust v2350
+53. PASS — Service worker bumped to v23.5
+54. PASS — Service worker uses v2350 app/watch assets
+55. PASS — JavaScript syntax — app.js
+56. PASS — JavaScript syntax — watch.js
+57. PASS — JavaScript syntax — workspace/admin.js
+58. PASS — JavaScript syntax — donate.js
+59. PASS — JavaScript syntax — user.js
+60. PASS — JavaScript syntax — push.js
+61. PASS — JavaScript syntax — pwa.js
+62. PASS — JavaScript syntax — service-worker.js
+63. PASS — CSS braces balanced — styles.css
+64. PASS — CSS braces balanced — watch.css
+65. PASS — CSS braces balanced — workspace/admin.css
+66. PASS — No duplicate IDs — terms.html
+67. PASS — No duplicate IDs — 404.html
+68. PASS — No duplicate IDs — index.html
+69. PASS — No duplicate IDs — watch.html
+70. PASS — No duplicate IDs — offline.html
+71. PASS — No duplicate IDs — swipe.html
+72. PASS — No duplicate IDs — privacy.html
+73. PASS — No duplicate IDs — copyright.html
+74. PASS — No duplicate IDs — workspace/index.html
+
+LIVE BACKEND VALIDATION
+- BingeBox Supabase project: ACTIVE_HEALTHY.
+- site_settings already has anon/authenticated safe-read policies including hero_highlight_ids; no new production migration was necessary.
+- hero_highlight_ids currently has no custom row, so Automatic Top 3 Trending is the active default.
+- get_bingebox_trending(72h, limit 3) returned three ranked drama rows successfully.
+
+DEPLOYMENT STATE
+- This package was built from v23.4 One-Click Source Repair.
+- The currently deployed production site remains v22.8 until the user deploys this ZIP.
+- No Netlify deployment was performed by this QA pass.

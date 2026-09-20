@@ -1,0 +1,11 @@
+BingeBox v24.3 — Mobile Poster + Top 10 Hotfix
+
+- Fixes production poster failures caused by the Netlify Image CDN transform path.
+- Restores canonical media.bingebox.bond poster URLs as the primary image source.
+- Fixes the Top 10 selector mismatch (#trendingGrid vs actual #posterGrid).
+- Rebuilds Top 10 as a horizontal snap rail with large outlined Netflix-style rank numbers beside each poster.
+- Reduces mobile Top 10 card width and prevents rank/card overlap.
+- Tightens Top 10 → For You vertical rhythm.
+- Adds extra mobile bottom breathing room above the fixed tab bar.
+- Preserves v24.2 hold-to-2x interaction polish and v24.1 analytics/workspace changes.
+- Cache refs bumped to v2430 / bingebox-shell-v24.3.

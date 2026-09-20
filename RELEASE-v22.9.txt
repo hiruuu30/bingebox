@@ -1,0 +1,10 @@
+BingeBox v22.9 — Locked Player, Hero, Trending & Import Polish
+
+1. Smooth press-and-hold 2× ramp and smooth 2×→1× release. Pointer capture prevents tiny finger drift from cancelling the hold.
+2. Real responsive landscape treatment for genuinely landscape video sources; no fake CSS rotation and no fullscreen/landscape button.
+3. Automatic muted 8-second hero highlight clip from the featured drama when a direct playable source is available; poster stack remains the fallback.
+4. Collision-proof Trending Now pill integrated into the existing badge stack with rank. COMPLETE / R18 / NEW / UPDATED remain in one non-overlapping stack.
+5. Source Grabber poster extraction improved separately in v1.7.0.
+6. Fullscreen/landscape button removed. Player title + episode number restored as a subtle bottom-left overlay.
+
+Preserved: tap-to-hide chrome, reactions, progress, +/-5 sec, source switching, analytics, auto complete notification, R18, most-played Trending ranking.

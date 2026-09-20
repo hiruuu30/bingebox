@@ -1,0 +1,15 @@
+BingeBox v25.2 — ReelShort Reconstruction Browser-QA Fix
+
+Fixed after testing the deployed v25.1 frontend:
+- Removed shelf-wide hover blackout and neighbor dimming.
+- Reduced hover jump to a restrained 1.055x / -8px.
+- Corrected shelf right-arrow direction and dynamic disabled-state updates.
+- Fixed hero swipe/pointer handling so controls remain clickable.
+- Kept portrait hero artwork 3:4 and constrained at desktop/tablet/mobile sizes.
+- Strengthened ambient/gradient hero treatment instead of stretching portrait posters.
+- Fixed mobile hero thumbnail squeezing; rail is horizontally scrollable.
+- Reduced hero metadata/badge clutter.
+- Raised modal and search overlays above the sticky header to prevent click interception.
+- Preserved Netflix Top 10 numbering, player, Workspace and v24.7 low-egress architecture.
+
+See BingeBox-v25.2-Final-QA.txt for exact browser/static checks and QA scope.

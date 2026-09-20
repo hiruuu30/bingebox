@@ -1,0 +1,18 @@
+BingeBox v23.3
+
+AUTO R18 TAGGING
+- Added Workspace Auto-tag R18, enabled by default.
+- Continuously evaluates title, description, genre and mood.
+- Strongest signals: R18, 18+, adult-only, NC-17, TV-MA, explicit sexual-content and nudity warnings.
+- Moderate wording alone does not trigger R18.
+- PG-13, TV-14 and under-18 age ratings reduce false positives.
+- Automatic mode can tag or clear R18 as metadata changes.
+- Manual R18 toggle overrides automation for that edit session.
+- Scan metadata resets the manual override and re-applies detection.
+- A final automatic scan runs immediately before save.
+
+PRESERVED
+- PayPal opens in a separate tab.
+- Auto-confirm permission in Workspace.
+- Analytics Intelligence with line charts and expanded viewer/search/device insights.
+- Cleaner Workspace drama library.

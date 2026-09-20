@@ -1,0 +1,8 @@
+BingeBox v22.3 — Final Visual QA / Freeze Candidate
+
+- Corrected the legacy five-column mobile-tabbar cascade; final navigator is four equal tabs.
+- Tightened mobile hero vertical rhythm so content/posters appear sooner and no longer feel pushed under the fixed navigator.
+- Reduced redundant vertical gaps around hero actions, proof chips, hero poster stage and section boundaries.
+- Standardized For You and New & Updated to the same 5/4/3-column grid rhythm as All Drama.
+- Improved mobile active-tab behavior: Search/Me are active only while open; closing them restores Home/Discover based on page position.
+- Preserves all v22.2 playback, CSP, edge-back, Source Health, importer and analytics fixes.

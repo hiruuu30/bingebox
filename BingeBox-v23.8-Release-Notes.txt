@@ -1,0 +1,11 @@
+BingeBox v23.8 — Player Reliability + Frontend Optimization
+
+- Preserves v23.7 catalog pagination and bounded source loading.
+- Normal watch links fetch only the requested drama row instead of the full drama catalog.
+- Adds stale feed-request cancellation.
+- Adds automatic one-step server failover before showing playback failure UI.
+- Adds iOS/Safari readiness fallback using loadedmetadata + canplay.
+- Strengthens media element reset/readiness behavior across rapid episode switches.
+- Uses no-store for live Supabase watch/catalog reads to avoid stale inventory.
+- Bumps frontend assets to ?v=2380 and service worker cache to bingebox-shell-v23.8.
+- No backend schema changes required.

@@ -1,0 +1,48 @@
+BingeBox v24.7 — Low-Egress Architecture Pass
+==============================================
+Built directly from v24.6. The v24.6 player, landscape, workspace UI, episode-count, poster-recovery and resume fixes are preserved.
+
+LIVE SUPABASE BACKEND
+- Added public SECURITY INVOKER RPC: get_random_playable_episodes(p_limit integer default 20).
+- Added public SECURITY INVOKER RPC: get_drama_playable_episodes(p_drama_id uuid).
+- Both RPCs return only playable published episodes and respect table RLS.
+- Random Watch now receives only a small sample instead of downloading the entire published library.
+
+HOME
+- Removed the full published-episode inventory request from homepage startup.
+- Homepage receives accurate episode counts through the drama query.
+- Episode metadata is fetched only after a visitor opens a specific drama.
+- Signed-in resume metadata fetches only episode IDs already present in the user's recent progress, capped to the 60 most recent rows.
+- Removed the redundant second account refresh during homepage startup.
+- Surprise Me now opens the low-egress Random Watch path instead of requiring the homepage to know every episode.
+
+PLAYER
+- Normal drama playback loads only one drama's playable episode metadata via RPC.
+- Random Watch loads 20 random playable episodes via RPC instead of every drama + every episode + every source.
+- Playback sources are fetched only for the current episode.
+- The next episode's source list is prefetched after the current episode is ready.
+- Source lists are cached in memory for the active player session.
+- No full-library episode_sources download remains in watch.js.
+
+WORKSPACE
+- Workspace tabs are now network-lazy, not just visually hidden.
+- Content opens with Content data only.
+- Insights loads analytics only when opened.
+- Homepage loads hero settings only when opened.
+- System loads operations/moderation/donation/push data only when opened.
+- Drama episode counts come from nested counts instead of downloading every episode row.
+- Full source-health inventory is no longer automatically downloaded when System opens; it loads only when Refresh sources or a repair action explicitly needs it.
+- Episode editor still loads only the selected drama's episodes/sources.
+
+MEASURED PAYLOADS
+- Production home drama catalog response: about 72 KB for all 81 published dramas including episode counts.
+- Removed homepage episode payload: about 706 KB raw before HTTP/JSON overhead on every prior full catalog load.
+- New Random Watch sample: about 10.8 KB for 20 playable episodes.
+- 102-episode sample title metadata: about 31.6 KB before per-current-episode source fetch.
+
+CACHE
+- Frontend references bumped to ?v=2470.
+- Service worker cache bumped to bingebox-shell-v24.7.
+
+CLOUDFLARE NOTE
+- Poster fallback continues to use the already-live Supabase poster-proxy only after a direct R2 image fails. Normal poster traffic remains Cloudflare/R2, so the proxy is not on the normal image-delivery path.
