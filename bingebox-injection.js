@@ -113,7 +113,7 @@
       const res=await fetch(url,{signal:controller.signal,headers:{apikey:cfg.supabasePublishableKey,Accept:'application/json'}});if(!res.ok)throw new Error(`Catalog ${res.status}`);const rows=await res.json();
       dramas=rows.map(d=>({id:d.id,slug:d.slug,title:d.title,genre:d.genre||'Drama',mood:d.mood||[],description:d.description||'',poster:d.poster_url||'/assets/brand/mark.svg',featured:!!d.featured,sortOrder:Number(d.sort_order??9999),episodes:Number(d.published_episode_stats?.[0]?.count||0),createdAt:d.created_at,updatedAt:d.updated_at,publishAt:d.publish_at,isComplete:!!d.is_complete,isR18:!!d.is_r18})).filter(d=>d.slug&&d.title);
       if(!dramas.length)throw new Error('EMPTY_CATALOG');paintHero();paintShelves();document.documentElement.classList.remove('bb-catalog-unavailable');
-      window.BINGEBOX_EXACT_DRAMAS=dramas;
+      window.BINGEBOX_EXACT_DRAMAS=dramas;window.dispatchEvent(new CustomEvent('bb-catalog-ready'));
     }catch(err){
       document.documentElement.classList.add('bb-catalog-unavailable');
       const n=document.createElement('section');n.className='bb-data-error';n.setAttribute('role','status');

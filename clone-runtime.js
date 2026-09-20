@@ -31,6 +31,20 @@
     show(index);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     let timer=reduced?null:setInterval(()=>show(index+1),6500);
+    let touchStart=null,suppressClickUntil=0;
+    hero.addEventListener('touchstart',e=>{
+      if(e.touches.length!==1){touchStart=null;return;}
+      const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY};clearInterval(timer);
+    },{passive:true});
+    hero.addEventListener('touchend',e=>{
+      if(touchStart&&e.changedTouches.length){
+        const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;
+        if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)*1.3){show(index+(dx<0?1:-1));suppressClickUntil=Date.now()+500;}
+      }
+      touchStart=null;clearInterval(timer);timer=reduced?null:setInterval(()=>show(index+1),6500);
+    },{passive:true});
+    hero.addEventListener('touchcancel',()=>{touchStart=null;clearInterval(timer);timer=reduced?null:setInterval(()=>show(index+1),6500)},{passive:true});
+    hero.addEventListener('click',e=>{if(Date.now()<suppressClickUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
     hero.addEventListener('mouseenter',()=>clearInterval(timer));
     hero.addEventListener('mouseleave',()=>{clearInterval(timer);timer=reduced?null:setInterval(()=>show(index+1),6500)});
   }
@@ -48,6 +62,7 @@
       };
       const maxX=()=>Math.max(0,list.scrollWidth-container.clientWidth+12);
       const apply=()=>{
+        if(matchMedia('(max-width:767px)').matches){x=0;list.style.transform='none';return;}
         x=Math.min(maxX(),Math.max(0,x));
         list.style.transition='transform 500ms ease';
         list.style.transform=`translate3d(${-x}px,0,0)`;
@@ -58,7 +73,7 @@
       qs('.Slider_prevButton__5XAPR button',container)?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();x-=step()*4;apply()});
       qs('.Slider_nextButton__a5KCv button',container)?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();x+=step()*4;apply()});
       let down=false,dragged=false,sx=0,start=0;
-      list.addEventListener('pointerdown',e=>{if(e.button!==0)return;down=true;dragged=false;sx=e.clientX;start=x});
+      list.addEventListener('pointerdown',e=>{if(matchMedia('(max-width:767px)').matches||e.button!==0)return;down=true;dragged=false;sx=e.clientX;start=x});
       list.addEventListener('pointermove',e=>{if(!down)return;if(Math.abs(sx-e.clientX)<6&&!dragged)return;dragged=true;list.setPointerCapture?.(e.pointerId);x=Math.max(0,Math.min(maxX(),start+(sx-e.clientX)));list.style.transition='none';list.style.transform=`translate3d(${-x}px,0,0)`});
       const up=()=>{if(!down)return;down=false;apply()};
       list.addEventListener('click',e=>{if(dragged){e.preventDefault();e.stopPropagation();dragged=false}},{capture:true});
