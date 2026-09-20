@@ -151,3 +151,40 @@ The remaining hard dependency is a reachable authorized media source for those t
 6. publish only after rights/source verification succeeds.
 
 Do not claim full DramaFren playback restoration until newly discovered titles have verified playable media.
+
+
+## Full DramaFren title catalog sync (2026-09-21)
+The Cloudflare 403 is no longer a blocker for title/catalog discovery.
+
+A verified unsigned public Webfic browse endpoint is now the primary catalog source:
+- POST https://www.webfic.com/webfic/home/browse
+- headers: pline=DRAMABOX, language=en
+- payload: typeTwoId=0, pageNo=N, pageSize=100
+
+The endpoint reports 30 pages / 3,000 English catalog entries and returns rich metadata including bookId, title, poster, synopsis, tags, shelf time, chapter count, and completion/status fields.
+
+New Edge Function: dramafren-catalog-sync v1.
+- group 0 => pages 1-5 (500 newest titles)
+- group 1 => pages 6-10
+- group 2 => pages 11-15
+- group 3 => pages 16-20
+- group 4 => pages 21-25
+- group 5 => pages 26-30
+- each invocation fetches five pages and bulk-upserts their metadata into public.dramafren_catalog_queue.
+
+Initial production sync verification:
+- all six groups returned HTTP 200;
+- every page returned 100 titles;
+- 3,000 browse titles were upserted;
+- staging queue now contains 3,026 ready records total, including 26 prior indexed/recommendation discoveries;
+- zero catalog queue failures;
+- newest shelf date observed: 2026-09-21.
+
+Scheduling:
+- bingebox-dramafren-catalog-latest: group 0 every 2 minutes (latest 500 titles).
+- bingebox-dramafren-catalog-full: all six groups every 15 minutes (entire 3,000-title catalog).
+- old bingebox-dramafren-home-seed is disabled because the browse feed supersedes it.
+- per-title detail worker now processes only pending/failed/stale-processing rows; ready browse rows are not needlessly re-fetched.
+- direct dramabox.dramafren.org server-fetch recovery probe remains enabled hourly. It still returns HTTP 403 as of the latest verification.
+
+This architecture uses Supabase invocations for useful catalog work instead of repeatedly hammering the Cloudflare challenge. The remaining blocker is episode media/chapter streams; title discovery and metadata sync are fully operational.
