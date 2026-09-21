@@ -361,86 +361,33 @@
   async function loadSourceHealth(){
     const cards=$('#sourceHealthCards'),attention=$('#sourceHealthAttention');
     if(!cards||!attention)return;
-
     cards.dataset.loaded='1';
     cards.innerHTML='<div class="empty">Checking episode source coverage…</div>';
     attention.innerHTML='';
-
     try{
-      const [episodes,sources,signals]=await Promise.all([
-        apiAll('/rest/v1/episodes?select=id,drama_id,episode_number,title,published,video_key,video_url&order=drama_id,episode_number.asc'),
-        apiAll('/rest/v1/episode_sources?select=id,episode_id,provider,server_label,source_type,source_url,origin_source_url,priority,active&order=episode_id,priority.asc'),
-        api('/rest/v1/rpc/get_bingebox_analytics',{method:'POST',body:JSON.stringify({p_days:7})}).catch(()=>({}))
-      ]);
-
-      const now=Date.now(),soon=now+48*3600000;
-      const dramaMap=new Map((dramas||[]).map(d=>[d.id,d]));
-      const byEpisode=new Map();
-      let expiredSigned=0,expiringSigned=0,unsignedActive=0;
-
-      for(const src of sources||[]){
-        const list=byEpisode.get(src.episode_id)||[];
-        list.push(src);
-        byEpisode.set(src.episode_id,list);
-        if(src.provider==='external'&&src.source_type==='direct'){
-          const exp=sourceExpiryMs(src.origin_source_url||'');
-          if(exp&&exp<=now+30000)expiredSigned++;
-          else if(exp&&exp<=soon)expiringSigned++;
-          else if(!exp&&src.active)unsignedActive++;
-        }
-      }
-
-      const published=(episodes||[]).filter(e=>e.published);
-      const missing=[],disabledOnly=[],expiredOnly=[];
-      let covered=0,multiServer=0;
-
-      for(const ep of published){
-        const list=byEpisode.get(ep.id)||[];
-        const active=list.filter(s=>s.active);
-        const usable=active.filter(s=>{
-          if(s.provider!=='external'||s.source_type!=='direct')return true;
-          const exp=sourceExpiryMs(s.origin_source_url||'');
-          return !exp||exp>Date.now()+30000;
-        });
-        if(usable.length){
-          covered++;
-          if(usable.length>1)multiServer++;
-        }else if(active.length&&active.some(s=>sourceExpiryMs(s.origin_source_url||'')&&sourceExpiryMs(s.origin_source_url||'')<=Date.now()+30000)){
-          expiredOnly.push(ep);
-        }else if(list.length){
-          disabledOnly.push(ep);
-        }else{
-          missing.push(ep);
-        }
-      }
-
-      const pct=published.length?Math.round(covered/published.length*100):100;
-      const errors=Number(signals?.playback_errors||0);
+      const d=await api('/rest/v1/rpc/get_bingebox_workspace_source_health',{method:'POST',body:'{}'});
+      const pct=Number(d?.coverage_pct||0);
+      const missing=Number(d?.missing||0),disabled=Number(d?.disabled_only||0),expired=Number(d?.expired_only||0);
+      const needs=Number(d?.needs_source||missing+disabled+expired),multi=Number(d?.multi_server||0);
+      const errors=Number(d?.playback_errors_7d||0),src=d?.sources||{};
+      const expiredSources=Number(src.expired_active_sources||0),expiring=Number(src.expiring_sources||0);
       const card=(value,label,tone='')=>`<div class="source-health-card ${tone}"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`;
-
       cards.innerHTML=[
-        card(`${pct}%`,'Usable coverage',pct>=98?'ok':pct>=90?'warn':'bad'),
-        card(String(missing.length+expiredOnly.length+disabledOnly.length),'Needs source',(missing.length+expiredOnly.length+disabledOnly.length)?'bad':'ok'),
-        card(String(expiredSigned),'Expired signed',expiredSigned?'bad':'ok'),
-        card(String(expiringSigned),'Expiring <48h',expiringSigned?'warn':'ok'),
-        card(String(multiServer),'With fallback',''),
+        card(`${pct.toFixed(1)}%`,'Usable coverage',pct>=98?'ok':pct>=90?'warn':'bad'),
+        card(String(needs),'Needs source',needs?'bad':'ok'),
+        card(String(expiredSources),'Expired active',expiredSources?'bad':'ok'),
+        card(String(expiring),'Expiring <48h',expiring?'warn':'ok'),
+        card(String(multi),'With fallback',''),
         card(String(errors),'7d playback errors',errors?'warn':'ok')
       ].join('');
 
-      const issueRows=[
-        ...expiredOnly.map(ep=>({ep,state:'SIGNED SOURCE EXPIRED',tone:'bad'})),
-        ...missing.map(ep=>({ep,state:'NO ACTIVE SOURCE',tone:'bad'})),
-        ...disabledOnly.map(ep=>({ep,state:'ALL SOURCES DISABLED',tone:'warn'}))
-      ].slice(0,12);
-
-      if(issueRows.length){
-        const totalIssues=expiredOnly.length+missing.length+disabledOnly.length;
-        attention.innerHTML=`<div class="source-health-subhead"><span>NEEDS ATTENTION</span><strong>${totalIssues} published episode${totalIssues===1?'':'s'}</strong></div>`+
-          issueRows.map(({ep,state,tone})=>{
-            const d=dramaMap.get(ep.drama_id);
-            return `<div class="source-health-row"><span><strong>${esc(d?.title||'Unknown title')}</strong><small>EP ${String(ep.episode_number).padStart(2,'0')} · ${esc(ep.title||`Episode ${ep.episode_number}`)}</small></span><b class="${tone}">${esc(state)}</b></div>`;
-          }).join('')+
-          (totalIssues>issueRows.length?`<div class="source-health-more">+ ${totalIssues-issueRows.length} more in the episode manager</div>`:'');
+      const issues=Array.isArray(d?.issues)?d.issues:[];
+      if(needs){
+        const stateLabel={expired:'SIGNED SOURCE EXPIRED',missing:'NO ACTIVE SOURCE',disabled:'ALL SOURCES DISABLED'};
+        const stateTone={expired:'bad',missing:'bad',disabled:'warn'};
+        attention.innerHTML=`<div class="source-health-subhead"><span>NEEDS ATTENTION</span><strong>${needs} published episode${needs===1?'':'s'}</strong></div>`+
+          issues.map(x=>`<div class="source-health-row"><span><strong>${esc(x.drama_title||'Unknown title')}</strong><small>EP ${String(x.episode_number||0).padStart(2,'0')} · ${esc(x.title||`Episode ${x.episode_number||0}`)}</small></span><b class="${stateTone[x.state]||'warn'}">${esc(stateLabel[x.state]||String(x.state||'NEEDS SOURCE').toUpperCase())}</b></div>`).join('')+
+          (needs>issues.length?`<div class="source-health-more">+ ${needs-issues.length} more in the episode manager</div>`:'');
       }else{
         attention.innerHTML='<div class="source-health-clear"><strong>✓ Source coverage is clean</strong><span>Every published episode has at least one usable configured source.</span></div>';
       }
