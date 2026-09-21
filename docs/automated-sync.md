@@ -211,3 +211,27 @@ It reports:
 3. The historical episode/media backfill is still being drained by Supabase workers; use the health RPC for current completion state.
 
 Do not claim the entire 3,000-title historical catalog is playable until the backfill has completed and the resulting source inventory is verified.
+
+
+## DramaFren v2 secondary adapter
+Source: `https://dramaboxv2.dramafren.org/`
+
+This host is another frontend over the same DramaBox book-ID universe. It is not treated as a separate library, so BingeBox deduplicates v2 observations into the canonical `dramafren_webfic` content records and existing dramas.
+
+Current behavior:
+- ordinary Supabase/Vercel backend requests receive Cloudflare HTTP 403;
+- no challenge bypass is attempted;
+- an hourly `dramafren-v2-sync` probe records the blocked state and exits cheaply;
+- when ordinary HTTP access becomes available, the adapter parses exposed detail/book IDs from the v2 homepage;
+- known IDs are mapped as `dramafren_v2` aliases to existing dramas;
+- genuinely new IDs are enriched through the public Webfic detail endpoint and queued into the existing title/episode workers;
+- v2 is discovery-only; protected/unlock-only playback data is not imported.
+
+Initial indexed cross-check:
+- 11 of 12 current v2 Recently Watched titles matched existing BingeBox DramaBox book IDs;
+- the indexed v2 detail `42000027417` was already fully represented in the canonical catalog;
+- one title-name observation remains unresolved until v2 exposes its book ID through an accessible page/index.
+
+State is stored in `dramafren_v2_observations`, `content_source_map` with source key `dramafren_v2`, and `source_sync_state` with source key `dramafren_v2`.
+
+Health RPC `get_bingebox_sync_health()` includes `secondary_sources`, v2 observation counts, alias mappings and unresolved observations.
