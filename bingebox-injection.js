@@ -147,6 +147,22 @@
   }
 
   async function fetchHomeRows(signal){
+    const staticUrl=String(cfg.catalogEndpoint||'/data/catalog.json');
+    try{
+      const staticRes=await fetch(staticUrl,{
+        signal,
+        cache:'no-store',
+        headers:{Accept:'application/json'}
+      });
+      if(staticRes.ok){
+        const body=await staticRes.json();
+        const rows=Array.isArray(body)?body:body?.items;
+        if(Array.isArray(rows)&&rows.length)return rows.slice(0,HOME_LIMIT);
+      }
+    }catch(err){
+      if(signal.aborted)throw err;
+    }
+
     try{
       const res=await fetch('/api/catalog',{signal,headers:{Accept:'application/json'}});
       if(!res.ok)throw new Error(`Catalog API ${res.status}`);

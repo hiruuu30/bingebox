@@ -48,6 +48,6 @@ export async function GET(){
     if(Array.isArray(memoryItems)&&memoryItems.length){
       return response({items:memoryItems,generatedAt:new Date(memoryAt).toISOString(),stale:true},200,'memory');
     }
-    return response({error:'catalog_temporarily_unavailable',detail:String(error?.name||'Error')+':'+String(error?.message||error).slice(0,120)},503,'unavailable');
+    return response({error:'catalog_temporarily_unavailable'},503,'unavailable');
   }
 }
