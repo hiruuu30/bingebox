@@ -630,7 +630,6 @@
       if(res.ok&&data.ready){el.textContent='Ready';el.className='ok'}else{el.textContent='Needs setup';el.className='warn'}
     }catch{el.textContent='Needs setup';el.className='warn'}
   }
-  function rightsState(){ return {verified:true,expired:false,label:'Ready'}; }
   function localDateTimeValue(value){
     if(!value)return '';
     const d=new Date(value); if(Number.isNaN(d.getTime()))return '';
@@ -934,14 +933,13 @@
   }
   function renderEpisodes(){
     $('#episodeCountLabel').textContent=`${currentEpisodes.length} total`;
-    const canPublish=true;
-    const drafts=currentEpisodes.filter(e=>!e.published).length; const allBtn=$('#publishAllDraftsBtn'); if(allBtn){allBtn.disabled=!drafts||!canPublish;allBtn.textContent=drafts?`Publish all drafts (${drafts})`:'All episodes published';}
+    const drafts=currentEpisodes.filter(e=>!e.published).length; const allBtn=$('#publishAllDraftsBtn'); if(allBtn){allBtn.disabled=!drafts;allBtn.textContent=drafts?`Publish all drafts (${drafts})`:'All episodes published';}
     $('#episodeList').innerHTML=currentEpisodes.length?currentEpisodes.map(e=>{
       const future=e.published&&e.publish_at&&new Date(e.publish_at)>new Date();
       const state=future?`Scheduled · ${new Date(e.publish_at).toLocaleString()}`:e.published?'Published':'Draft';
       const sources=episodeSourcesByEpisode.get(e.id)||[];
       const chips=sources.length?`<div class="episode-source-chips">${sources.map((src,i)=>`<span class="episode-source-chip ${src.active?'':'is-off'}"><b>${esc(src.server_label||`Server ${src.priority}`)}</b>${esc(src.provider)} · ${esc(src.source_type)}${src.active?'':' · OFF'}<span class="source-chip-actions"><button type="button" data-move-source="up" data-source-id="${src.id}" data-episode-id="${e.id}" ${i===0?'disabled':''} title="Move up" aria-label="Move source up">↑</button><button type="button" data-move-source="down" data-source-id="${src.id}" data-episode-id="${e.id}" ${i===sources.length-1?'disabled':''} title="Move down" aria-label="Move source down">↓</button><button type="button" data-toggle-source="${src.id}" title="${src.active?'Disable':'Enable'} source" aria-label="${src.active?'Disable':'Enable'} ${esc(src.server_label)}">${src.active?'●':'○'}</button><button type="button" data-edit-source="${src.id}" data-episode-number="${e.episode_number}" title="Edit source" aria-label="Edit ${esc(src.server_label)}">✎</button><button type="button" data-delete-source="${src.id}" title="Remove source" aria-label="Remove ${esc(src.server_label)}">×</button></span></span>`).join('')}</div>`:'<div class="episode-source-chips"><span class="episode-source-chip">No player source</span></div>';
-      return `<div class="episode-row"><label class="episode-select"><input type="checkbox" data-episode-select="${e.id}" aria-label="Select episode ${e.episode_number}"></label><div class="episode-num">${String(e.episode_number).padStart(2,'0')}</div><div><h4>${esc(e.title||`Episode ${e.episode_number}`)}</h4><p>${sources.length} source${sources.length===1?'':'s'} · ${esc(state)}</p>${chips}</div><div class="row-actions"><button class="ghost-btn" data-add-source="${e.episode_number}" type="button">+ Source</button><button class="ghost-btn" data-toggle-episode="${e.id}" data-live="${e.published}" ${!e.published&&!canPublish?'disabled title="Confirm permission before publishing"':''}>${e.published?'Unpublish':'Publish'}</button><button class="danger-btn" data-delete-episode="${e.id}">Delete</button></div></div>`;
+      return `<div class="episode-row"><label class="episode-select"><input type="checkbox" data-episode-select="${e.id}" aria-label="Select episode ${e.episode_number}"></label><div class="episode-num">${String(e.episode_number).padStart(2,'0')}</div><div><h4>${esc(e.title||`Episode ${e.episode_number}`)}</h4><p>${sources.length} source${sources.length===1?'':'s'} · ${esc(state)}</p>${chips}</div><div class="row-actions"><button class="ghost-btn" data-add-source="${e.episode_number}" type="button">+ Source</button><button class="ghost-btn" data-toggle-episode="${e.id}" data-live="${e.published}">${e.published?'Unpublish':'Publish'}</button><button class="danger-btn" data-delete-episode="${e.id}">Delete</button></div></div>`;
     }).join(''):'<div class="empty">No episodes yet.</div>';
     syncEpisodeSelectionUI();
   }
@@ -1182,7 +1180,6 @@
 
   async function runBulkUpload(){
     if(bulkUploading||!bulkItems.length) return;
-    if($('#bulkPublish').checked&&!rightsState(activeDrama.id).verified) return status($('#bulkStatus'),'Confirm publishing permission for this title before publishing episodes.','error');
     const invalid=bulkItems.find(x=>x.conflict||x.oversize);
     if(invalid) return status($('#bulkStatus'),'Fix the episode-number conflict or oversized file before uploading.','error');
     if(!config.r2UploadEndpoint) return status($('#bulkStatus'),'Cloudflare R2 is not connected yet.','error');
@@ -1235,7 +1232,7 @@
 
 
   $('#publishAllDraftsBtn')?.addEventListener('click',async()=>{
-    const drafts=currentEpisodes.filter(e=>!e.published); if(!drafts.length)return; if(!rightsState(activeDrama.id).verified)return status($('#episodeStatus'),'Confirm publishing permission for this title first.','error');
+    const drafts=currentEpisodes.filter(e=>!e.published); if(!drafts.length)return;
     if(!confirm(`Publish all ${drafts.length} draft episode${drafts.length===1?'':'s'} now?`))return;
     try{const b=$('#publishAllDraftsBtn');b.disabled=true;b.textContent='Publishing…';await api(`/rest/v1/episodes?drama_id=eq.${activeDrama.id}&published=eq.false`,{method:'PATCH',headers:{Prefer:'return=minimal'},body:JSON.stringify({published:true,publish_at:null})});status($('#episodeStatus'),`${drafts.length} draft episode${drafts.length===1?'':'s'} published.`,'success');await loadEpisodes();await loadDramas();await loadAuditLog()}catch(err){status($('#episodeStatus'),err.message,'error');renderEpisodes()}
   });
@@ -1245,7 +1242,7 @@
     const on=$('#bulkSchedule').checked;
     $('#bulkScheduleFields')?.classList.toggle('hidden',!on);
     if(on){$('#bulkPublish').checked=true;$('#bulkPublish').disabled=true;if(!$('#bulkScheduleStart').value){const d=new Date(Date.now()+3600000);d.setMinutes(0,0,0);$('#bulkScheduleStart').value=localDateTimeValue(d.toISOString())}}
-    else $('#bulkPublish').disabled=!rightsState(activeDrama?.id).verified;
+    else $('#bulkPublish').disabled=false;
   });
 
   function selectedEpisodeIds(){return [...document.querySelectorAll('[data-episode-select]:checked')].map(x=>x.dataset.episodeSelect)}
@@ -1264,7 +1261,6 @@
   $('#applyEpisodeBulkBtn')?.addEventListener('click',async()=>{
     const ids=selectedEpisodeIds();if(!ids.length)return;
     const action=$('#episodeBulkAction').value,st=$('#episodeBulkStatus');
-    if((action==='publish'||action==='schedule')&&!rightsState(activeDrama.id).verified)return status(st,'Confirm publishing permission for this title first.','error');
     status(st,'Applying changes…');
     try{
       const rows=currentEpisodes.filter(e=>ids.includes(e.id));
