@@ -18,13 +18,6 @@
     padding:40px 6vw!important;
   }
 
-  /* Cap the large recommendation cards without changing the five-column structure. */
-  .home_recommendGrid__RUlrd{
-    grid-template-columns:repeat(5,minmax(0,250px))!important;
-    justify-content:space-between!important;
-    align-items:start!important;
-  }
-
   /* Center shelf arrows against responsive 3:4 poster heights. */
   .Slider_pageButtons__jvO9V{
     top:clamp(113px,10.92vw,167px)!important;
@@ -81,6 +74,15 @@
 
   /* Remove the captured source site's floating control as a CSS safety net. */
   .CommonNavigationLayout_to_top_btn__VLUit{display:none!important}
+}
+
+@media (min-width:1001px){
+  /* Cap the large recommendation cards without changing the five-column desktop structure. */
+  .home_recommendGrid__RUlrd{
+    grid-template-columns:repeat(5,minmax(0,250px))!important;
+    justify-content:space-between!important;
+    align-items:start!important;
+  }
 }
 
 @media (min-width:768px) and (max-width:1180px){
