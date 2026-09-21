@@ -16,6 +16,12 @@
     try{hlsController.destroy?.()}catch{}
     hlsController=null;
   }
+  function needsHlsRelay(url){
+    try{return new URL(String(url||''),location.href).hostname.toLowerCase()==='akamai-static.shorttv.live'}catch{return false}
+  }
+  function relayHlsUrl(url){
+    return '/api/hls-proxy?url='+encodeURIComponent(String(url||''));
+  }
   function attachVideoSource(url,sourceType,onFatal){
     destroyHls();
     const isHls=sourceType==='hls'||/\.m3u8(?:$|[?#])/i.test(String(url||''));
@@ -31,7 +37,7 @@
       if(hlsController===h)hlsController=null;
       onFatal?.(data?.details||data?.type||'HLS stream failed');
     });
-    h.loadSource(url);
+    h.loadSource(needsHlsRelay(url)?relayHlsUrl(url):url);
     h.attachMedia(video);
   }
   function setChrome(show=true,hold=false){
