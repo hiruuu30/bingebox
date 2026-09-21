@@ -9,6 +9,16 @@
   const datev=d=>Date.parse(d.publishAt||d.updatedAt||d.createdAt||0)||0;
   const favSet=()=>{const out=new Set();for(const key of ['bb-exact-favorites','bb-local-favorites']){try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))v.forEach(x=>out.add(String(x)))}catch{}}return out};
 
+  function ensureLoadingNote(){
+    if(!matchMedia('(min-width:768px)').matches||qs('.bb-loading-note'))return;
+    const n=document.createElement('div');
+    n.className='bb-loading-note';
+    n.setAttribute('role','status');
+    n.setAttribute('aria-live','polite');
+    n.textContent='Loading BingeBox';
+    document.body.appendChild(n);
+  }
+
   function brand(){
     document.title='Watch Free Short Dramas Online | BingeBox';
     const desc='Watch free short dramas online on BingeBox — romance, revenge, fantasy, action and more.';
@@ -91,7 +101,7 @@
       const pic=qs('picture',slide);let img=pic?qs('img',pic):qs('img',slide);if(pic)qsa('source',pic).forEach(s=>s.remove());if(!img){img=document.createElement('img');img.className='bb-hero-source-poster';slide.prepend(img)}img.src=d.poster;img.removeAttribute('srcset');img.alt=d.title;img.loading='eager';img.decoding='async';
       let sharp=qs('.bb-hero-poster',slide);if(!sharp){sharp=document.createElement('img');sharp.className='bb-hero-poster';slide.appendChild(sharp)}sharp.src=d.poster;sharp.alt='';sharp.setAttribute('aria-hidden','true');
       const title=qs('h2',slide);if(title)title.textContent=d.title;const desc=qs('p',slide);if(desc)desc.textContent=d.description||'Binge-worthy short drama on BingeBox.';
-      const spans=qsa('span.truncate.whitespace-nowrap',slide);if(spans[0])spans[0].textContent=i<3?'Trending':'BingeBox';if(spans[1])spans[1].textContent=d.genre||'Drama';
+      const spans=qsa('span.truncate.whitespace-nowrap',slide);if(spans[0])spans[0].textContent=d.featured?'Trending':'New';if(spans[1])spans[1].textContent=d.genre||'Drama';
     });
     const hero=qs('section[aria-label="Featured series"]');
     ['Show','Preview'].forEach(prefix=>qsa('button[aria-label^="'+prefix+' "]',hero).forEach((btn,i)=>{
@@ -101,7 +111,7 @@
   }
 
   async function load(){
-    if(loading)return;loading=true;document.documentElement.classList.add('bb-pending');qs('.bb-data-error')?.remove();
+    if(loading)return;loading=true;ensureLoadingNote();document.documentElement.classList.add('bb-pending');qs('.bb-data-error')?.remove();
     if(!initialized){brand();setupSearch();initialized=true;
     qsa('[data-bb-scroll]').forEach(el=>el.addEventListener('click',()=>qs('#bb-categories')?.scrollIntoView({behavior:'smooth',block:'start'})));
     }
