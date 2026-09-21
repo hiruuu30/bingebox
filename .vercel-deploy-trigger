@@ -1,3 +1,4 @@
-Deployment trigger for BingeBox automated sync integration.
+Deployment trigger for BingeBox Workspace production release.
 
-Source commit: 93f40154e5f67d66f0e2e40a8ede5536f3d673d3
+Source commit: cf68b5d52f7f6fbbf3fe2b3bd6b5c57eb2e18c51
+Workspace features: sync center, full library paging, server-side source health.
