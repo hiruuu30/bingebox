@@ -363,7 +363,7 @@ function posterCard(d, rank = 0, cleanPoster = false, priority = false) {
     try{
       const ep=featured.episodeItems[0],base=config.supabaseUrl.replace(/\/$/,'');
       const headers={apikey:config.supabasePublishableKey,Accept:'application/json'};
-      const sr=await fetch(`${base}/rest/v1/episode_sources?episode_id=eq.${ep.id}&active=eq.true&source_type=neq.embed&select=provider,source_type,source_url,priority&order=priority.asc&limit=1`,{headers,cache:'no-store'});
+      const sr=await fetch(`${base}/rest/v1/episode_sources?episode_id=eq.${ep.id}&active=eq.true&source_type=eq.direct&select=provider,source_type,source_url,priority&order=priority.asc&limit=1`,{headers,cache:'no-store'});
       const rows=sr.ok?await sr.json():[];const src=rows?.[0];let url='';
       if(src?.source_url&&src.provider!=='legacy_r2')url=src.source_url;
       else if(ep.video_key){const endpoint=config.secureMediaEndpoint||'/api/stream';const rr=await fetch(`${endpoint}?key=${encodeURIComponent(ep.video_key)}`,{headers:{Accept:'application/json'},cache:'no-store'});const data=await rr.json().catch(()=>({}));if(rr.ok)url=data.url||''}
