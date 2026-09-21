@@ -87,7 +87,10 @@
     if(!item)return [];
     if(item.sourcesLoaded)return item.sources||[];
     const base=(config.supabaseUrl||'').replace(/\/$/,''),headers={apikey:config.supabasePublishableKey,Accept:'application/json'};
-    item.sources=await fetchSourcesForEpisode(base,headers,item.episode_id);
+    const existing=Array.isArray(item.sources)?item.sources:[];
+    const remote=await fetchSourcesForEpisode(base,headers,item.episode_id);
+    const seen=new Set(existing.map(x=>String(x.source_url||'')+'|'+String(x.provider||'')));
+    item.sources=[...existing,...remote.filter(x=>{const k=String(x.source_url||'')+'|'+String(x.provider||'');if(seen.has(k))return false;seen.add(k);return true})];
     item.sourcesLoaded=true;
     return item.sources;
   }
@@ -100,9 +103,16 @@
 
   function normalizeFeedRow(e,d=null,order=0){
     const drama=d||e;
+    const videoUrl=String(e.video_url||'');
+    const initial=[];
+    if(e.video_key){
+      initial.push({provider:'legacy_r2',server_label:'BingeBox',source_type:/\.m3u8(?:$|[?#])/i.test(videoUrl)?'hls':'direct',source_url:videoUrl,priority:0,source_stability:'stable',health_status:'healthy',expires_at:null});
+    }else if(videoUrl){
+      initial.push({provider:'episode_url',server_label:'Primary',source_type:/\.m3u8(?:$|[?#])/i.test(videoUrl)?'hls':'direct',source_url:videoUrl,priority:0,source_stability:'unknown',health_status:'healthy',expires_at:null});
+    }
     return {
       episode_id:e.episode_id||e.id,drama_id:e.drama_id,episode_number:Number(e.episode_number),episode_title:e.episode_title??e.title??'',duration_seconds:e.duration_seconds,video_key:e.video_key,video_url:e.video_url,
-      sources:[],sourcesLoaded:false,slug:drama.slug,title:drama.title,poster_url:drama.poster_url,is_complete:!!drama.is_complete,drama_order:order
+      sources:initial,sourcesLoaded:false,slug:drama.slug,title:drama.title,poster_url:drama.poster_url,is_complete:!!drama.is_complete,drama_order:order
     };
   }
 
@@ -120,11 +130,37 @@
         index=0;
       }else{
         if(!slug)throw new Error('Choose a drama to watch.');
-        const res=await fetch(`${base}/rest/v1/dramas?published=eq.true&slug=eq.${encodeURIComponent(slug)}&select=id,slug,title,poster_url,is_complete,sort_order&limit=1`,{headers,signal,cache:'no-store'});
-        if(!res.ok)throw new Error('Player is temporarily unavailable.');
-        const selectedDrama=(await res.json())?.[0]||null;
+        let selectedDrama=null;
+        try{
+          const snap=await fetch('/data/catalog.json',{signal,headers:{Accept:'application/json'},cache:'no-store'});
+          if(snap.ok){
+            const body=await snap.json();
+            const items=Array.isArray(body)?body:body?.items;
+            selectedDrama=(Array.isArray(items)?items:[]).find(x=>x.slug===slug)||null;
+          }
+        }catch(err){if(signal.aborted)throw err}
+        if(!selectedDrama){
+          const res=await fetch(`${base}/rest/v1/dramas?published=eq.true&slug=eq.${encodeURIComponent(slug)}&select=id,slug,title,poster_url,is_complete,sort_order&limit=1`,{headers,signal,cache:'no-store'});
+          if(!res.ok)throw new Error('Player is temporarily unavailable.');
+          selectedDrama=(await res.json())?.[0]||null;
+        }
         if(!selectedDrama)throw new Error('This drama is unavailable.');
-        const rows=await reactionApi('/rest/v1/rpc/get_drama_playable_episodes',{p_drama_id:selectedDrama.id});
+        let rows=[];
+        try{
+          const epParams=new URLSearchParams({
+            drama_id:`eq.${selectedDrama.id}`,
+            published:'eq.true',
+            select:'id,drama_id,episode_number,title,duration_seconds,video_key,video_url',
+            order:'episode_number.asc',
+            limit:'600'
+          });
+          const epRes=await fetch(`${base}/rest/v1/episodes?${epParams}`,{headers,signal,cache:'no-store'});
+          if(!epRes.ok)throw new Error('episodes_'+epRes.status);
+          rows=await epRes.json();
+        }catch(primaryError){
+          if(signal.aborted)throw primaryError;
+          rows=await reactionApi('/rest/v1/rpc/get_drama_playable_episodes',{p_drama_id:selectedDrama.id});
+        }
         feed=(Array.isArray(rows)?rows:[]).map(row=>normalizeFeedRow(row,selectedDrama,0));
         const i=feed.findIndex(x=>!requestedEp||x.episode_number===requestedEp);index=i>=0?i:0;
       }
@@ -177,10 +213,12 @@
     const dramaPos=Math.max(0,sameDrama.findIndex(x=>x.episode_id===item.episode_id));
     $('#swipePosition').textContent=randomModeActive?`SURPRISE · ${index+1} / ${feed.length}`:`${dramaPos+1} / ${sameDrama.length}`;renderFavorite();renderEpisodeSheet();resetCounts();history.replaceState(null,'',`/watch?drama=${encodeURIComponent(item.slug)}&ep=${item.episode_number}`);
     try{
-      await ensureSources(item);if(s!==seq)return;
+      if(!(item.sources?.length))await ensureSources(item);
+      else ensureSources(item).then(()=>{if(s===seq)renderServers(item)}).catch(()=>{});
+      if(s!==seq)return;
       const src=item.sources?.[currentSourceIndex]||item.sources?.[0]||null;renderServers(item);currentMode=src?.source_type==='embed'?'embed':'direct';shell.classList.remove('landscape-mode');syncMediaLayout();
       if(currentMode==='embed'){video.classList.add('hidden');embed.classList.remove('hidden');embed.src=src.source_url;loading.classList.add('hidden');playBtn.classList.add('hidden');centerControls?.classList.add('embed-disabled');progressWrap?.classList.add('hidden');if(startedEpisodeId!==item.episode_id){startedEpisodeId=item.episode_id;BBUser?.track?.('watch_start',{dramaId:item.drama_id,episodeId:item.episode_id,metadata:{mode:'unified',provider:src.provider||'external'}}).catch(()=>{})}loadCounts(item).catch(()=>{});prefetchNeighborSources();setChrome(true,true);return}
-      playBtn.classList.remove('hidden');centerControls?.classList.remove('embed-disabled');progressWrap?.classList.remove('hidden');let url;if(src&&src.provider!=='legacy_r2')url=src.source_url;else if(item.video_key)url=await streamUrl(item);else url=src?.source_url||item.video_url;if(!url)throw new Error('No playable source is available for this episode yet.');
+      playBtn.classList.remove('hidden');centerControls?.classList.remove('embed-disabled');progressWrap?.classList.remove('hidden');let url;if(src&&src.provider!=='legacy_r2')url=src.source_url;else if(item.video_key){try{url=await streamUrl(item)}catch{url=src?.source_url||item.video_url}}else url=src?.source_url||item.video_url;if(!url)throw new Error('No playable source is available for this episode yet.');
       if(s!==seq)return;
       video.onerror=()=>{if(s!==seq)return;const code=video.error?.code||0;playerFailure(code?`This video source failed to load (media error ${code}).`:'This video source failed to load.',autoplay)};
       let readyHandled=false;
