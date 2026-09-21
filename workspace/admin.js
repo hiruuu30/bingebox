@@ -11,6 +11,8 @@
   let activeDrama = null;
   let heroHighlightIds=[];
   let heroAutoIds=[];
+  let dramaRenderLimit=120;
+  const DRAMA_RENDER_STEP=120;
 
   const $ = s => document.querySelector(s);
   const esc = (v='') => String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -594,8 +596,9 @@
 
   async function loadDramas(){
     try{
-      const dramaRows=await api('/rest/v1/dramas?select=*,episode_stats:episodes(count)&order=sort_order.asc,created_at.desc');
-      dramas=dramaRows;
+      const dramaRows=await apiAll('/rest/v1/dramas?select=*,episode_stats:episodes(count)&order=sort_order.asc,created_at.desc',1000);
+      dramas=Array.isArray(dramaRows)?dramaRows:[];
+      dramaRenderLimit=DRAMA_RENDER_STEP;
       const counts={};
       for(const d of dramas)counts[d.id]=Math.max(0,Number(d.episode_stats?.[0]?.count||0));
       dramaEpisodeCounts=counts;
@@ -659,11 +662,11 @@
   }
   function renderDramas(counts=dramaEpisodeCounts){
     dramaEpisodeCounts=counts||{};
-    const rows=dramaViewRows();
+    const rows=dramaViewRows(),visible=rows.slice(0,dramaRenderLimit);
     const total=dramas.length,published=dramas.filter(d=>d.published&&!(d.publish_at&&new Date(d.publish_at)>new Date())).length,drafts=dramas.filter(d=>!d.published).length;
-    const summary=$('#librarySummary');if(summary)summary.textContent=`${rows.length} shown · ${total} total · ${published} published · ${drafts} drafts`;
+    const summary=$('#librarySummary');if(summary)summary.textContent=`${rows.length} matched · ${Math.min(visible.length,rows.length)} rendered · ${total} total · ${published} published · ${drafts} drafts`;
     const heroIds=heroHighlightIds.length?heroHighlightIds:heroAutoIds;
-    $('#dramaList').innerHTML=rows.length?rows.map(d=>{
+    $('#dramaList').innerHTML=visible.length?visible.map(d=>{
       const scheduled=!!(d.published&&d.publish_at&&new Date(d.publish_at)>new Date());
       const state=scheduled?`Scheduled ${new Date(d.publish_at).toLocaleDateString()}`:d.published?'Published':'Draft';
       const description=String(d.description||'').trim();
@@ -678,8 +681,15 @@
         <div class="row-actions"><button class="ghost-btn" data-episodes="${d.id}">Episodes</button><button class="primary-btn compact-action" data-edit="${d.id}">Edit</button></div>
       </article>`;
     }).join(''):'<div class="empty library-empty">No dramas match this view.</div>';
+    const more=$('#loadMoreDramasBtn');
+    if(more){
+      const remaining=Math.max(0,rows.length-visible.length);
+      more.classList.toggle('hidden',remaining===0);
+      more.textContent=remaining?('Load '+Math.min(DRAMA_RENDER_STEP,remaining)+' more · '+remaining.toLocaleString()+' remaining'):'Load more';
+    }
   }
-  ['dramaSearch','dramaStatusFilter','dramaSort'].forEach(id=>$('#'+id)?.addEventListener(id==='dramaSearch'?'input':'change',()=>renderDramas(dramaEpisodeCounts)));
+  ['dramaSearch','dramaStatusFilter','dramaSort'].forEach(id=>$('#'+id)?.addEventListener(id==='dramaSearch'?'input':'change',()=>{dramaRenderLimit=DRAMA_RENDER_STEP;renderDramas(dramaEpisodeCounts)}));
+  $('#loadMoreDramasBtn')?.addEventListener('click',()=>{dramaRenderLimit+=DRAMA_RENDER_STEP;renderDramas(dramaEpisodeCounts)});
 
   const dlg=$('#dramaDialog');
   function slugify(s){return s.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)}
