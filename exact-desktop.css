@@ -161,6 +161,7 @@
     border-radius:24px!important;
     transition:opacity .16s ease-out!important;
   }
+  .home_main_content__GxekS:has(.rs-hover-active){z-index:2!important}
   .rs-source-backdrop{box-shadow:0 16px 42px rgba(0,0,0,.45)}
   .rs-source-foreground{display:flex;flex-direction:column;overflow:hidden}
   .rs-source-foreground-cover{

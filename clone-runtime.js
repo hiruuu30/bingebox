@@ -147,6 +147,9 @@
     const share=qs('[aria-label="Share"]',foreground);
     try{const fav=new Set();for(const key of ['bb-exact-favorites','bb-local-favorites']){const value=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(value))value.forEach(x=>fav.add(String(x)))}if(data.slug&&fav.has(data.slug))save.classList.add('rs-collected','HoverCard_collected__83dCr')}catch{}
 
+    qs('.rs-source-foreground-cover',foreground).addEventListener('click',()=>{
+      if(data.link&&data.link!=='#')location.href=data.link;
+    });
     play.addEventListener('click',e=>{
       e.preventDefault();e.stopPropagation();
       if(data.link&&data.link!=='#') location.href=data.link;
@@ -222,7 +225,7 @@
         if(!matchMedia('(min-width:768px) and (hover:hover) and (pointer:fine)').matches)return;
         clearTimeout(closeTimer);clearTimeout(clearTimer);
         // Small anti-accidental-hover delay; once opened every layer appears together.
-        if(card.classList.contains('rs-hover-active'))return;
+        if(card.classList.contains('rs-hover-active')&&ui?.foreground.classList.contains('rs-open'))return;
         clearTimeout(openTimer);
         openTimer=setTimeout(openNow,120);
       };
