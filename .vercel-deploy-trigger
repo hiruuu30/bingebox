@@ -1,4 +1,5 @@
-Deployment trigger for BingeBox Workspace production release.
+Deployment trigger for BingeBox Workspace revamp production release.
 
-Source commit: cf68b5d52f7f6fbbf3fe2b3bd6b5c57eb2e18c51
-Workspace features: sync center, full library paging, server-side source health.
+Source commit: a602db2793184f76f7b0da0be43ac22f60f681c5
+Workspace features: revamped navigation, readable library, sync monitoring, provider filters, refresh status, responsive styling.
+Preserve current playback and backend fixes.
