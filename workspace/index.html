@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#090909" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
-  <title>BingeBox Workspace</title>
+  <title>BingeBox · Workspace</title>
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/workspace/admin.css?v=20260921sync1" />
-  <link rel="stylesheet" href="/workspace/rework.css?v=20260921r1" />
+  <link rel="stylesheet" href="/workspace/admin.css?v=20260921workspace2" />
+  <link rel="stylesheet" href="/workspace/workspace.css?v=20260921workspace2" />
 </head>
 <body>
   <header class="admin-header">
-    <div class="workspace-mark" aria-label="Private workspace"><span></span><strong>Workspace</strong></div>
+    <div class="workspace-mark" aria-label="Private workspace"><img src="/assets/brand/mark.svg" alt="" /><strong>BingeBox <em>Workspace</em></strong></div>
     <div class="admin-header-actions">
+      <a class="workspace-site-link" href="/" target="_blank" rel="noopener">View site <span aria-hidden="true">↗</span></a>
       <span id="sessionEmail" class="session-email"></span>
       <button id="logoutBtn" class="ghost-btn hidden" type="button">Sign out</button>
     </div>
@@ -35,23 +36,26 @@
     </section>
 
     <section id="dashboardView" class="dashboard hidden">
-      <nav class="workspace-nav" aria-label="Workspace sections">
-        <div class="workspace-nav-label">BINGEBOX</div>
-        <a href="#libraryWorkspace" data-workspace-nav="content"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v4H4zM14 15h6v4h-6z"/></svg></span><b>Content</b><small>Library & episodes</small></a>
-        <a href="#analyticsWorkspace" data-workspace-nav="analytics"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7"/></svg></span><b>Insights</b><small>Audience performance</small></a>
-        <a href="#homepageWorkspace" data-workspace-nav="homepage"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 8-7 8 7v7H4zM9 19v-5h6v5"/></svg></span><b>Homepage</b><small>Hero & discovery</small></a>
-        <a href="#systemWorkspace" data-workspace-nav="system"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a8 8 0 0 0-1.7-1L14.5 3h-5L9 6.1a8 8 0 0 0-1.7 1l-2.4-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a8 8 0 0 0 1.7 1l.4 3.1h5l.4-3.1a8 8 0 0 0 1.7-1l2.4 1 2-3.4-2.1-1.5a7 7 0 0 0 .1-1z"/></svg></span><b>System</b><small>Health & operations</small></a>
-      </nav>
+      <nav class="workspace-nav" aria-label="Workspace sections"><div class="workspace-nav-label">MANAGE</div>
+<a href="#libraryWorkspace" data-workspace-nav="content"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><b>Content library</b><small>Titles & episodes</small></a>
+<a href="#syncWorkspace" data-workspace-nav="sync"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 2M4 17l2 2a7 7 0 0 0 12-2"/></svg></span><b>Sync Center</b><small>Providers & queues</small></a>
+<a href="#analyticsWorkspace" data-workspace-nav="analytics"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span><b>Insights</b><small>Audience & engagement</small></a>
+<a href="#homepageWorkspace" data-workspace-nav="homepage"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v11h14V10M9 21v-7h6v7"/></svg></span><b>Homepage</b><small>Featured titles</small></a>
+<a href="#systemWorkspace" data-workspace-nav="system"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 12 4 0 3-8 4 16 3-8h4"/></svg></span><b>System health</b><small>Playback & storage</small></a>
+<a href="#communityWorkspace" data-workspace-nav="community"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4zM8 8h8M8 12h5"/></svg></span><b>Community</b><small>Requests & reports</small></a>
+<a href="#settingsWorkspace" data-workspace-nav="settings"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16M8 3v6M16 9v6M10 15v6"/></svg></span><b>Settings</b><small>Notifications & support</small></a>
+<div class="workspace-nav-foot">BingeBox administration</div></nav>
       <div class="dashboard-top">
         <div>
           <p class="kicker" id="workspaceEyebrow">CONTENT</p>
           <h1 id="workspaceTitle">Content Library</h1>
           <p class="muted" id="workspaceSubtitle">Manage titles, episodes and publishing.</p>
         </div>
-        <button id="newDramaBtn" class="primary-btn" type="button">+ Add drama</button>
+        <div class="workspace-top-actions"><button id="refreshWorkspaceBtn" class="ghost-btn" type="button">Refresh</button><button id="newDramaBtn" class="primary-btn" type="button">+ Add title</button></div>
       </div>
 
-      <div class="stats" id="stats"></div>
+      <p id="workspaceStatus" class="status workspace-status" role="status"></p>
+      <div class="stats workspace-tab-panel" data-workspace-panel="content" id="stats"></div>
 
       <section class="highlight-manager workspace-tab-panel" data-workspace-panel="homepage" id="homepageWorkspace" aria-labelledby="highlightManagerTitle">
         <div class="highlight-manager-head">
@@ -86,6 +90,38 @@
 
 
 
+        <section class="sync-center workspace-tab-panel" data-workspace-panel="sync" id="syncWorkspace" aria-labelledby="syncCenterTitle">
+          <div class="sync-center-head">
+            <div>
+              <p class="kicker">AUTOMATION</p>
+              <h3 id="syncCenterTitle">Sync Center</h3>
+              <p class="muted">Provider discovery, episode resolution and poster health. Refreshes every 30 seconds while this tab is visible.</p>
+            </div>
+            <button id="refreshSyncCenterBtn" class="ghost-btn" type="button">Refresh sync</button>
+          </div>
+          <p id="syncFreshness" class="status" role="status">Waiting for sync data…</p>
+          <div id="syncOverviewCards" class="sync-overview-cards"><div class="empty">Loading sync health…</div></div>
+          <div class="sync-center-grid">
+            <section class="sync-subpanel">
+              <div class="sync-subhead"><span>QUEUE LANES</span><strong id="syncQueueSummary">—</strong></div>
+              <div id="syncQueueLanes" class="sync-lanes"><div class="empty">Loading queues…</div></div>
+            </section>
+            <section class="sync-subpanel">
+              <div class="sync-subhead"><span>SOURCE RECORDS</span><strong id="syncSourceSummary">—</strong></div>
+              <div id="syncSourceProviders" class="sync-source-providers"><div class="empty">Loading source providers…</div></div>
+            </section>
+          </div>
+          <section class="sync-provider-panel">
+            <div class="sync-subhead"><span>PROVIDERS</span><strong id="syncProviderSummary">—</strong></div>
+            <div class="provider-toolbar"><label>Find provider<input id="syncProviderSearch" type="search" placeholder="Search providers…" /></label><label>Show<select id="syncProviderFilter"><option value="all">All providers</option><option value="attention">Needs attention</option><option value="online">HTTP 200</option></select></label><span id="syncProviderResults" role="status"></span></div>
+            <div id="syncProviderList" class="sync-provider-list"><div class="empty">Loading providers…</div></div>
+          </section>
+          <section class="sync-error-panel">
+            <div class="sync-subhead"><span>RECENT RETRIES / FAILURES</span><strong id="syncErrorSummary">—</strong></div>
+            <div id="syncRecentErrors" class="sync-error-list"><div class="empty">No recent sync errors loaded.</div></div>
+          </section>
+        </section>
+
       <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system" id="systemWorkspace" open><summary>System health</summary>
       <section class="ops-panel" aria-labelledby="opsTitle">
         <div class="ops-head"><div><p class="kicker">OPERATIONS</p><h2 id="opsTitle">Storage &amp; live health</h2><p class="muted">Live checks for R2 storage, secure playback, push delivery and donation tracking.</p></div><button id="runOpsChecksBtn" class="ghost-btn" type="button">Run live checks</button></div>
@@ -94,38 +130,9 @@
         <div class="ops-detail-grid"><div><span>Video objects</span><strong id="storageVideoObjects">—</strong></div><div><span>Average video</span><strong id="storageAverageVideo">—</strong></div><div><span>Orphaned video files</span><strong id="storageOrphans">—</strong></div><div><span>Est. storage cost</span><strong id="storageCost">—</strong></div></div>
         <div id="opsCheckList" class="ops-check-list"></div>
 
-        <section class="sync-center" aria-labelledby="syncCenterTitle">
-          <div class="sync-center-head">
-            <div>
-              <p class="kicker">AUTOMATION</p>
-              <h3 id="syncCenterTitle">Sync Center</h3>
-              <p class="muted">Live provider discovery, episode resolution, media queues and poster health. Auto-refreshes while System is open.</p>
-            </div>
-            <button id="refreshSyncCenterBtn" class="ghost-btn" type="button">Refresh sync</button>
-          </div>
-          <div id="syncOverviewCards" class="sync-overview-cards"><div class="empty">Loading sync health…</div></div>
-          <div class="sync-center-grid">
-            <section class="sync-subpanel">
-              <div class="sync-subhead"><span>QUEUE LANES</span><strong id="syncQueueSummary">—</strong></div>
-              <div id="syncQueueLanes" class="sync-lanes"><div class="empty">Loading queues…</div></div>
-            </section>
-            <section class="sync-subpanel">
-              <div class="sync-subhead"><span>PLAYABLE SOURCES</span><strong id="syncSourceSummary">—</strong></div>
-              <div id="syncSourceProviders" class="sync-source-providers"><div class="empty">Loading source providers…</div></div>
-            </section>
-          </div>
-          <section class="sync-provider-panel">
-            <div class="sync-subhead"><span>PROVIDERS</span><strong id="syncProviderSummary">—</strong></div>
-            <div id="syncProviderList" class="sync-provider-list"><div class="empty">Loading providers…</div></div>
-          </section>
-          <section class="sync-error-panel">
-            <div class="sync-subhead"><span>RECENT RETRIES / FAILURES</span><strong id="syncErrorSummary">—</strong></div>
-            <div id="syncRecentErrors" class="sync-error-list"><div class="empty">No recent sync errors loaded.</div></div>
-          </section>
-        </section>
         <section class="source-health" aria-labelledby="sourceHealthTitle">
           <div class="source-health-head">
-            <div><p class="kicker">PLAYER COVERAGE</p><h3 id="sourceHealthTitle">Playback source health</h3><p class="muted">Coverage is calculated server-side across the full published library. Repair actions retest stored playback sources; provider discovery and sync queues are tracked separately in Sync Center above.</p></div>
+            <div><p class="kicker">PLAYER COVERAGE</p><h3 id="sourceHealthTitle">Playback source health</h3><p class="muted">Coverage is calculated server-side across the full published library. Repair actions retest stored playback sources; provider discovery and sync queues are tracked separately in Sync Center.</p></div>
             <div class="source-health-actions"><button id="fixBrokenEpisodesBtn" class="primary-btn" type="button">Repair uncovered episodes</button><button id="fixAllSourcesBtn" class="ghost-btn" type="button">Retest stored sources</button><button id="refreshSourceHealthBtn" class="ghost-btn" type="button">Refresh coverage</button></div>
           </div>
           <p id="sourceRepairStatus" class="status source-repair-status" aria-live="polite"></p>
@@ -135,7 +142,7 @@
       </section>
       </details>
 
-      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Notifications & donations</summary>
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="settings" id="settingsWorkspace" open><summary>Notifications & donations</summary>
       <div class="operations-grid">
         <section class="ops-subpanel" aria-labelledby="donationTrackingTitle">
           <div class="ops-subhead"><div><p class="kicker">PAYMONGO</p><h2 id="donationTrackingTitle">Donation tracking</h2></div><button id="refreshDonationsBtn" class="ghost-btn" type="button">Refresh</button></div>
@@ -158,7 +165,7 @@
       </div>
       </details>
 
-      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Donation settings</summary>
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="settings" open><summary>Donation settings</summary>
       <section class="site-settings-panel" aria-labelledby="donationSettingsTitle">
         <div class="site-settings-head"><div><p class="kicker">SUPPORT</p><h2 id="donationSettingsTitle">Donation button</h2><p class="muted">Use an external HTTPS payment or donation page. BingeBox never handles card details directly.</p></div><button id="saveDonationSettingsBtn" class="primary-btn" type="button">Save</button></div>
         <div class="site-settings-grid"><label>Button label<input id="donationLabel" maxlength="28" placeholder="Donate" /></label><label>Donation URL<input id="donationUrl" type="url" placeholder="https://…" /></label></div><p id="donationSettingsStatus" class="status"></p>
@@ -168,19 +175,19 @@
       <div class="notice hidden legacy-control workspace-tab-panel" data-workspace-panel="content" id="r2Notice"><strong>Video uploads are not connected yet.</strong><span>Finish the Cloudflare R2 Worker setup, then paste the Worker URL into <code>config.js</code>.</span></div>
       <section class="library-panel workspace-tab-panel" data-workspace-panel="content" id="libraryWorkspace" aria-labelledby="libraryTitle">
         <div class="library-head">
-          <div><p class="kicker">LIBRARY</p><h2 id="libraryTitle">Dramas</h2><p class="muted" id="librarySummary">Loading titles…</p></div>
+          <div><p class="kicker">LIBRARY</p><h2 id="libraryTitle">All titles</h2><p class="muted" id="librarySummary">Loading titles…</p></div>
           <div class="library-controls">
-            <label class="library-search"><span>Search</span><input id="dramaSearch" type="search" placeholder="Find a drama…" autocomplete="off" /></label>
+            <label class="library-search"><span>Search</span><input id="dramaSearch" type="search" placeholder="Search titles, genres or keywords…" autocomplete="off" /></label>
             <label><span>Status</span><select id="dramaStatusFilter"><option value="all">All</option><option value="published">Published</option><option value="draft">Draft</option><option value="scheduled">Scheduled</option><option value="complete">Complete</option><option value="r18">R18</option></select></label>
             <label><span>Sort</span><select id="dramaSort"><option value="updated">Recently updated</option><option value="title">Title A–Z</option><option value="episodes">Most episodes</option><option value="status">Status</option></select></label>
           </div>
         </div>
-        <div id="dramaList" class="drama-list"></div>
+        <div class="library-columns" aria-hidden="true"><span>Title / publishing status</span><span>Manage</span></div><div id="dramaList" class="drama-list"></div>
         <div class="library-load-more-wrap"><button id="loadMoreDramasBtn" class="ghost-btn hidden" type="button">Load more</button></div>
       </section>
 
 
-      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Requests & reports</summary>
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="community" id="communityWorkspace" open><summary>Requests & reports</summary>
       <div class="moderation-grid">
         <section class="moderation-panel"><div class="moderation-head"><div><p class="kicker">COMMUNITY POLL</p><h2>Upload requests</h2></div><button id="refreshRequestsBtn" class="ghost-btn" type="button">Refresh</button></div><div id="adminRequestList" class="moderation-list"><div class="empty">Loading requests…</div></div></section>
         <section class="moderation-panel"><div class="moderation-head"><div><p class="kicker">EPISODE HEALTH</p><h2>Viewer reports</h2></div><button id="refreshReportsBtn" class="ghost-btn" type="button">Refresh</button></div><div id="adminReportList" class="moderation-list"><div class="empty">Loading reports…</div></div></section>
@@ -383,7 +390,7 @@
 
   <script src="/config.js?v=2050"></script>
   <script src="/poster-fallback.js?v=2470"></script>
-  <script src="/workspace/admin.js?v=20260921sync1"></script>
-  <script src="/workspace/sync-center.js?v=20260921sync1"></script>
+  <script src="/workspace/admin.js?v=20260921workspace2"></script>
+  <script src="/workspace/sync-center.js?v=20260921workspace2"></script>
 </body>
 </html>

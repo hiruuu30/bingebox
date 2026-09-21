@@ -7,6 +7,8 @@
   const storageKey = 'bingebox_admin_session';
   let busy=false;
   let timer=null;
+  let lastData=null;
+  let lastUpdated=null;
 
   function session(){
     try{return JSON.parse(localStorage.getItem(storageKey)||'null')}catch{return null}
@@ -57,7 +59,8 @@
   function systemVisible(){
     return !!session()?.access_token
       && !$('#dashboardView')?.classList.contains('hidden')
-      && document.body.dataset.workspaceView==='system';
+      && !document.hidden
+      && document.body.dataset.workspaceView==='sync';
   }
   async function rpc(){
     const s=await freshSession();
@@ -78,6 +81,7 @@
     return data||{};
   }
   function render(data){
+    lastData=data;
     const overview=$('#syncOverviewCards'),lanesHost=$('#syncQueueLanes'),providersHost=$('#syncProviderList'),sourcesHost=$('#syncSourceProviders'),errorsHost=$('#syncRecentErrors');
     if(!overview||!lanesHost||!providersHost||!sourcesHost||!errorsHost)return;
     const q=data.queue||{},lib=data.library||{},http=data.http_recent||{};
@@ -93,7 +97,7 @@
     const card=(value,label,tone='')=>'<div class="sync-overview-card '+tone+'"><strong>'+esc(value)+'</strong><span>'+esc(label)+'</span></div>';
     overview.innerHTML=[
       card(fmt(lib.dramas),'Library titles'),
-      card(fmt(lib.active_sources),'Active playable sources'),
+      card(fmt(lib.active_sources),'Active source records'),
       card(fmt(queueActive),'Jobs remaining',queueActive?'warn':'ok'),
       card(fmt(q.failed),'Failed jobs',Number(q.failed)?'bad':'ok'),
       card(fmt(posterIssues),'Poster issues',posterIssues?'bad':'ok'),
@@ -105,7 +109,7 @@
     const queueSummary=$('#syncQueueSummary');
     if(queueSummary)queueSummary.textContent=fmt(q.completed)+' complete · '+fmt(queueActive)+' active';
     lanesHost.innerHTML=laneRows.length?laneRows.map(x=>{
-      const total=Number(x.total||0),done=Number(x.completed||0),pct=total?Math.round(done/total*100):100;
+      const total=Number(x.total||0),done=Number(x.completed||0),pct=total?Math.round(done/total*100):0;
       const waiting=Number(x.pending||0)+Number(x.processing||0)+Number(x.retry_wait||0);
       return '<div class="sync-lane">'+
         '<div class="sync-lane-top"><span><strong>'+esc(laneLabel(x.job_type))+'</strong><small>'+fmt(done)+' / '+fmt(total)+' completed</small></span><b>'+pct+'%</b></div>'+
@@ -123,7 +127,15 @@
     }).join(''):'<div class="empty">No episode sources yet.</div>';
 
     const issueScore=x=>(x.cloudflare_blocked?5:0)+(Number(x.failed)>0?4:0)+(Number(x.retry_wait)>0?3:0)+(String(x.last_http_status)!=='200'?2:0)+(Number(x.pending)>0?1:0);
-    const ranked=[...providerRows].sort((a,b)=>issueScore(b)-issueScore(a)||String(a.provider||'').localeCompare(String(b.provider||'')));
+    const query=($('#syncProviderSearch')?.value||'').trim().toLowerCase();
+    const filter=$('#syncProviderFilter')?.value||'all';
+    const filtered=providerRows.filter(p=>{
+      const matches=(String(p.provider||'')+' '+String(p.source_key||'')).toLowerCase().includes(query);
+      const attention=p.cloudflare_blocked||Number(p.failed)>0||Number(p.retry_wait)>0||(p.last_http_status&&String(p.last_http_status)!=='200');
+      return matches&&(filter==='all'||(filter==='attention'&&attention)||(filter==='online'&&String(p.last_http_status)==='200'&&!p.cloudflare_blocked));
+    });
+    if($('#syncProviderResults'))$('#syncProviderResults').textContent=filtered.length+' of '+providerRows.length+' providers';
+    const ranked=[...filtered].sort((a,b)=>issueScore(b)-issueScore(a)||String(a.provider||'').localeCompare(String(b.provider||'')));
     const providerSummary=$('#syncProviderSummary');
     if(providerSummary)providerSummary.textContent=providerRows.length+' enabled · '+healthyProviders+' HTTP 200 · '+blockedProviders+' blocked mirrors';
     providersHost.innerHTML=ranked.length?ranked.map(p=>{
@@ -140,7 +152,7 @@
         '<div class="sync-provider-metric"><span>Done</span><strong>'+fmt(p.completed)+'</strong></div>'+
         '<div class="sync-provider-state"><b>'+esc(label)+'</b><small>'+age(p.last_successful_scan_at)+'</small></div>'+
       '</article>';
-    }).join(''):'<div class="empty">No provider registry rows available.</div>';
+    }).join(''):'<div class="empty">No providers match this view.</div>';
 
     const errorSummary=$('#syncErrorSummary');
     if(errorSummary)errorSummary.textContent=errorRows.length?(errorRows.length+' latest shown'):'Clean';
@@ -153,22 +165,38 @@
     if(busy)return;
     const overview=$('#syncOverviewCards');
     if(!overview)return;
+    if(!systemVisible())return;
     busy=true;
+    const button=$('#refreshSyncCenterBtn'),freshness=$('#syncFreshness');
+    if(button){button.disabled=true;button.textContent='Refreshing…'}
+    if(freshness){freshness.className='status';freshness.textContent='Refreshing sync health…'}
     if(!quiet)overview.innerHTML='<div class="empty">Loading sync health…</div>';
-    try{render(await rpc())}
-    catch(err){if(!quiet)overview.innerHTML='<div class="empty">'+esc(err.message)+'</div>'}
-    finally{busy=false}
+    try{
+      const data=await rpc();
+      if(!systemVisible())return;
+      render(data);lastUpdated=new Date();
+      if(freshness)freshness.textContent='Updated '+lastUpdated.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · refreshes every 30s';
+    }
+    catch(err){
+      if(!lastData)overview.innerHTML='<div class="empty">'+esc(err.message)+'</div>';
+      else render(lastData);
+      if(freshness){freshness.className='status error';freshness.textContent=(lastUpdated?'Refresh failed. Showing data from '+lastUpdated.toLocaleTimeString()+'. ':'')+err.message}
+    }
+    finally{busy=false;if(button){button.disabled=false;button.textContent='Refresh sync'}}
   }
   function maybeLoad(){
     if(systemVisible())load({quiet:$('#syncProviderList')?.querySelector('.sync-provider-row')!=null}).catch(()=>{});
   }
-  $('#refreshSyncCenterBtn')?.addEventListener('click',()=>load());
+  $('#refreshSyncCenterBtn')?.addEventListener('click',()=>load({quiet:!!lastData}));
+  ['syncProviderSearch','syncProviderFilter'].forEach(id=>$('#'+id)?.addEventListener(id==='syncProviderSearch'?'input':'change',()=>{if(lastData)render(lastData)}));
+  $('#logoutBtn')?.addEventListener('click',()=>{lastData=null;lastUpdated=null;['syncOverviewCards','syncProviderList','syncQueueLanes','syncSourceProviders','syncRecentErrors'].forEach(id=>{if($('#'+id))$('#'+id).replaceChildren()})});
   window.addEventListener('hashchange',()=>setTimeout(maybeLoad,0));
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)maybeLoad()});
   const observer=new MutationObserver(muts=>{
     if(muts.some(m=>m.attributeName==='data-workspace-view'||m.attributeName==='class'))maybeLoad();
   });
   observer.observe(document.body,{attributes:true,attributeFilter:['data-workspace-view','class']});
+  if($('#dashboardView'))observer.observe($('#dashboardView'),{attributes:true,attributeFilter:['class']});
   timer=setInterval(maybeLoad,30000);
   setTimeout(maybeLoad,800);
 })();

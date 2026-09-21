@@ -21,7 +21,10 @@
     content:{eyebrow:'CONTENT',title:'Content Library',subtitle:'Manage titles, episodes and publishing.'},
     analytics:{eyebrow:'INSIGHTS',title:'Performance',subtitle:'Understand viewing, engagement and discovery.'},
     homepage:{eyebrow:'HOMEPAGE',title:'Homepage',subtitle:'Control the hero and featured discovery surfaces.'},
-    system:{eyebrow:'SYSTEM',title:'Operations',subtitle:'Playback health, storage, notifications and moderation.'}
+    sync:{eyebrow:'AUTOMATION',title:'Sync Center',subtitle:'Monitor providers, queues and source availability.'},
+    system:{eyebrow:'OPERATIONS',title:'System health',subtitle:'Playback coverage, storage and publishing activity.'},
+    community:{eyebrow:'COMMUNITY',title:'Requests & reports',subtitle:'Review what viewers need next.'},
+    settings:{eyebrow:'PREFERENCES',title:'Settings',subtitle:'Manage notifications, donations and support.'}
   };
   const workspaceLoaded=new Set();
   const workspaceLoading=new Map();
@@ -37,7 +40,11 @@
         if(!dramas.length)await loadDramas();
         await loadHeroHighlightSettings();
       }else if(view==='system'){
-        await Promise.allSettled([loadAuditLog(),checkSecureMedia(),loadContentRequests(),loadEpisodeReports(),loadDonationSettings(),loadOpsDashboard(),loadDonationTracking(),loadPushAdmin(),loadSourceHealth()]);
+        await Promise.allSettled([loadAuditLog(),checkSecureMedia(),loadOpsDashboard(),loadSourceHealth()]);
+      }else if(view==='community'){
+        await Promise.allSettled([loadContentRequests(),loadEpisodeReports()]);
+      }else if(view==='settings'){
+        await Promise.allSettled([loadDonationSettings(),loadDonationTracking(),loadPushAdmin()]);
       }
       workspaceLoaded.add(view);
     })().finally(()=>workspaceLoading.delete(view));
@@ -54,19 +61,31 @@
     if($('#workspaceSubtitle'))$('#workspaceSubtitle').textContent=meta.subtitle;
     if($('#newDramaBtn'))$('#newDramaBtn').classList.toggle('hidden',view!=='content');
     document.body.dataset.workspaceView=view;
+    status($('#workspaceStatus'),'');
+    $('#refreshWorkspaceBtn')?.classList.toggle('hidden',view==='sync');
     try{sessionStorage.setItem('bingebox_workspace_view',view)}catch{}
-    if(replaceHash){const target={content:'libraryWorkspace',analytics:'analyticsWorkspace',homepage:'homepageWorkspace',system:'systemWorkspace'}[view];history.replaceState(null,'',`#${target}`)}
+    if(replaceHash){const target={content:'libraryWorkspace',analytics:'analyticsWorkspace',homepage:'homepageWorkspace',system:'systemWorkspace',sync:'syncWorkspace',community:'communityWorkspace',settings:'settingsWorkspace'}[view];history.pushState(null,'',`#${target}`)}
     window.scrollTo(0,0);
     if(session?.user&&!$('#dashboardView')?.classList.contains('hidden'))loadWorkspaceViewData(view).catch(()=>{});
   }
+  let workspaceNavigationReady=false;
   function initWorkspaceNavigation(){
-    const hashMap={libraryWorkspace:'content',analyticsWorkspace:'analytics',homepageWorkspace:'homepage',systemWorkspace:'system'};
+    const hashMap={libraryWorkspace:'content',analyticsWorkspace:'analytics',homepageWorkspace:'homepage',systemWorkspace:'system',syncWorkspace:'sync',communityWorkspace:'community',settingsWorkspace:'settings'};
     let initial=hashMap[location.hash.replace('#','')];
     if(!initial){try{initial=sessionStorage.getItem('bingebox_workspace_view')}catch{}}
     setWorkspaceView(initial||'content',false);
+    if(workspaceNavigationReady)return;
+    workspaceNavigationReady=true;
     document.querySelectorAll('[data-workspace-nav]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();setWorkspaceView(a.dataset.workspaceNav,true)}));
-    window.addEventListener('hashchange',()=>{const next=hashMap[location.hash.replace('#','')];if(next)setWorkspaceView(next,false)});
+    window.addEventListener('hashchange',()=>{const next=hashMap[location.hash.replace('#','')]||'content';setWorkspaceView(next,false)});
   }
+  $('#refreshWorkspaceBtn')?.addEventListener('click',async()=>{
+    const button=$('#refreshWorkspaceBtn'),view=document.body.dataset.workspaceView||'content';
+    button.disabled=true;button.textContent='Refreshing…';workspaceLoaded.delete(view);
+    try{await loadWorkspaceViewData(view);status($('#workspaceStatus'),'Refresh finished. Check section messages for any unavailable data.')}
+    catch(err){status($('#workspaceStatus'),err.message,'error')}
+    finally{button.disabled=false;button.textContent='Refresh'}
+  });
   const headers = (auth=true, json=true) => ({
     apikey:key,
     ...(auth && session?.access_token ? {Authorization:`Bearer ${session.access_token}`} : {}),
@@ -126,6 +145,7 @@
   }
 
   function showLogin(msg=''){
+    workspaceLoaded.clear();
     $('#loginView').classList.remove('hidden'); $('#dashboardView').classList.add('hidden'); $('#logoutBtn').classList.add('hidden'); $('#sessionEmail').textContent='';
     if(msg) status($('#loginStatus'),msg,'error');
   }
@@ -552,8 +572,8 @@
     }catch(err){ $('#dramaList').innerHTML=`<div class="empty">${esc(err.message)}</div>`; }
   }
   function renderStats(counts){
-    const total=dramas.length, live=dramas.filter(d=>d.published).length, episodes=Object.values(counts).reduce((a,b)=>a+b,0);
-    $('#stats').innerHTML=`<div class="stat"><strong>${total}</strong><span>Dramas</span></div><div class="stat"><strong>${episodes}</strong><span>Episodes</span></div><div class="stat"><strong>${live}</strong><span>Published</span></div>`;
+    const total=dramas.length, live=dramas.filter(d=>d.published&&!(d.publish_at&&new Date(d.publish_at)>new Date())).length, episodes=Object.values(counts).reduce((a,b)=>a+b,0);
+    $('#stats').innerHTML=`<div class="stat"><strong>${total.toLocaleString()}</strong><span>Total titles</span></div><div class="stat"><strong>${episodes.toLocaleString()}</strong><span>Episodes</span></div><div class="stat"><strong>${live.toLocaleString()}</strong><span>Published now</span></div>`;
   }
   function auditLabel(action=''){
     return ({drama_published:'Drama published',drama_unpublished:'Drama taken offline',episode_published:'Episode published',episode_unpublished:'Episode unpublished'})[action] || action.replaceAll('_',' ');
@@ -609,8 +629,8 @@
   function renderDramas(counts=dramaEpisodeCounts){
     dramaEpisodeCounts=counts||{};
     const rows=dramaViewRows(),visible=rows.slice(0,dramaRenderLimit);
-    const total=dramas.length,published=dramas.filter(d=>d.published&&!(d.publish_at&&new Date(d.publish_at)>new Date())).length,drafts=dramas.filter(d=>!d.published).length;
-    const summary=$('#librarySummary');if(summary)summary.textContent=`${rows.length} matched · ${Math.min(visible.length,rows.length)} rendered · ${total} total · ${published} published · ${drafts} drafts`;
+    const total=dramas.length;
+    const summary=$('#librarySummary');if(summary)summary.textContent=`Showing ${visible.length.toLocaleString()} of ${rows.length.toLocaleString()} titles${rows.length!==total?` · ${total.toLocaleString()} in library`:""}`;
     const heroIds=heroHighlightIds.length?heroHighlightIds:heroAutoIds;
     $('#dramaList').innerHTML=visible.length?visible.map(d=>{
       const scheduled=!!(d.published&&d.publish_at&&new Date(d.publish_at)>new Date());
@@ -622,7 +642,7 @@
         <div class="drama-main">
           <div class="drama-title-line"><h3>${esc(d.title)}</h3><span class="library-ep-count">${counts[d.id]||0} EP</span></div>
           ${description?`<p class="drama-row-description">${esc(description)}</p>`:''}
-          <div class="drama-meta"><span class="genre-chip">${esc(d.genre)}</span><span class="badge ${d.published?'live':''}">${esc(state)}</span>${d.is_complete?'<span class="badge complete">Complete</span>':''}${d.is_r18?'<span class="badge r18">R18</span>':''}${heroSlot>=0?`<span class="badge hero-slot">H${heroSlot+1}</span>`:''}</div>
+          <div class="drama-meta"><span class="genre-chip">${esc(d.genre)}</span><span class="badge ${scheduled?'scheduled':d.published?'live':''}">${esc(state)}</span>${d.is_complete?'<span class="badge complete">Complete</span>':''}${d.is_r18?'<span class="badge r18">R18</span>':''}${heroSlot>=0?`<span class="badge hero-slot">H${heroSlot+1}</span>`:''}</div>
         </div>
         <div class="row-actions"><button class="ghost-btn" data-episodes="${d.id}">Episodes</button><button class="primary-btn compact-action" data-edit="${d.id}">Edit</button></div>
       </article>`;
