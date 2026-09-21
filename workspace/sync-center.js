@@ -11,6 +11,26 @@
   function session(){
     try{return JSON.parse(localStorage.getItem(storageKey)||'null')}catch{return null}
   }
+  async function freshSession(){
+    let s=session();
+    if(!s?.access_token)return null;
+    if((Number(s.expires_at||0)*1000)>Date.now()+60000)return s;
+    if(!s.refresh_token)return s;
+    try{
+      const res=await fetch(base+'/auth/v1/token?grant_type=refresh_token',{
+        method:'POST',
+        headers:{apikey:key,'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token:s.refresh_token}),
+        cache:'no-store'
+      });
+      if(!res.ok)return s;
+      const next=await res.json();
+      next.expires_at=Math.floor(Date.now()/1000)+Number(next.expires_in||3600);
+      if(!next.user&&s.user)next.user=s.user;
+      localStorage.setItem(storageKey,JSON.stringify(next));
+      return next;
+    }catch{return s}
+  }
   function fmt(n){return Number(n||0).toLocaleString()}
   function age(ts){
     if(!ts)return 'Never';
@@ -40,7 +60,7 @@
       && document.body.dataset.workspaceView==='system';
   }
   async function rpc(){
-    const s=session();
+    const s=await freshSession();
     if(!s?.access_token)throw new Error('Sign in to load sync health.');
     const res=await fetch(base+'/rest/v1/rpc/get_bingebox_workspace_sync_dashboard',{
       method:'POST',
