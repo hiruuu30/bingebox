@@ -152,6 +152,15 @@
   "functions": {
     "api/bingebox-sync.js": {
       "maxDuration": 300
+    },
+    "api/catalog.js": {
+      "maxDuration": 20,
+      "regions": [
+        "hnd1"
+      ],
+      "functionFailoverRegions": [
+        "sin1"
+      ]
     }
   }
 }
