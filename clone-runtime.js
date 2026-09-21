@@ -188,23 +188,32 @@
         item?.classList.add('rs-hover-item-active');
         const shelf=card.closest('.Slider_sliderWrapper__66_q7');
         shelf?.classList.add('rs-hover-shelf-active');
-        // Clamp the floating panel inside the viewport without changing its source dimensions.
+        // Clamp the floating panel inside the viewport. Desktop uses the compact
+        // recording-driven overlay; smaller layouts retain the original geometry.
         const cr=card.getBoundingClientRect();
-        const panelW=cr.width+30;
-        const desired=cr.left-15;
+        const compactDesktop=matchMedia('(min-width:1024px) and (hover:hover)').matches;
+        const extra=compactDesktop?24:30;
+        const inset=compactDesktop?12:15;
+        const panelW=cr.width+extra;
+        const desired=cr.left-inset;
         const clamped=Math.max(8,Math.min(window.innerWidth-panelW-8,desired));
         const edgeShift=clamped-desired;
         ui.backdrop.style.setProperty('--rs-edge-shift',`${edgeShift}px`);
         ui.foreground.style.setProperty('--rs-edge-shift',`${edgeShift}px`);
-        // Active and open are separate in ReelShort. Trigger every layer together.
-        requestAnimationFrame(()=>requestAnimationFrame(()=>{
-          const cssMin=parseFloat(getComputedStyle(ui.foreground).minHeight)||504;
-          const targetH=Math.ceil(Math.max(cssMin,ui.foreground.scrollHeight));
-          ui.backdrop.style.height=`${targetH}px`;
-          ui.foreground.style.minHeight=`${targetH}px`;
+        // Open every layer on the same frame so poster/text/actions never stagger.
+        requestAnimationFrame(()=>{
+          if(compactDesktop){
+            ui.backdrop.style.removeProperty('height');
+            ui.foreground.style.removeProperty('min-height');
+          }else{
+            const cssMin=parseFloat(getComputedStyle(ui.foreground).minHeight)||504;
+            const targetH=Math.ceil(Math.max(cssMin,ui.foreground.scrollHeight));
+            ui.backdrop.style.height=`${targetH}px`;
+            ui.foreground.style.minHeight=`${targetH}px`;
+          }
           ui.backdrop.classList.add('HoverCard_open__Pb934','rs-open');
           ui.foreground.classList.add('HoverCard_open__Pb934','rs-open');
-        }));
+        });
         activeController={card,close};
       };
 
