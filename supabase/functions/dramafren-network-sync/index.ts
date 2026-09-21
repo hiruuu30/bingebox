@@ -7,6 +7,18 @@ const db=createClient(U,K,{auth:{persistSession:false}});
 const H={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"};
 const J=(x:any,s=200)=>new Response(JSON.stringify(x),{status:s,headers:H});
 const N=()=>new Date().toISOString();
+async function sha256Text(v:string){
+  const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+async function authorized(req:Request){
+  const token=req.headers.get("x-bingebox-sync-token")||"";
+  if(!token)return false;
+  const {data,error}=await db.from("source_sync_state").select("metadata")
+    .eq("source_key","dramafren_network").maybeSingle();
+  if(error||!data?.metadata?.token_sha256)return false;
+  return await sha256Text(token)===String(data.metadata.token_sha256);
+}
 const UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151.0.0.0 Safari/537.36";
 
 type SourceRow={source_key:string;provider:string;base_url:string;enabled:boolean;mode:string;canonical_source_key:string|null;metadata:any};
@@ -188,6 +200,7 @@ async function scanSource(src:SourceRow,maxPages:number){
   return {source_key:src.source_key,provider:src.provider,ok:true,http_status:lastStatus,blocked:false,pages_scanned:pagesScanned,discovered:arr.length,new_observations:inserted,matched,errors,total_observations:count||0};
 }
 Deno.serve(async(req:Request)=>{
+  if(!(await authorized(req)))return J({error:"Unauthorized"},401);
   const u=new URL(req.url);
   if(req.method==="GET"){
     const {data}=await db.from("dramafren_source_registry").select("source_key,provider,base_url").eq("enabled",true);
