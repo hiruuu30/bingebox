@@ -4,6 +4,10 @@
     qsa('body > div:not(#__next):not(.bb-search-overlay),next-route-announcer').forEach(e=>e.remove());
     qsa('#__next > div').filter(e=>!e.querySelector('main')).forEach(e=>e.remove());
     qsa('.ant-modal-root,.ant-popover,.BasicsSpin_shade___COc4,.BasicsSpin_spin__ZMmJP').forEach(e=>e.remove());
+    if(matchMedia('(min-width:768px)').matches){
+      qsa('.CommonNavigationLayout_to_top_btn__VLUit').forEach(e=>e.remove());
+      qsa('button[aria-label="Expand QR code"]').forEach(b=>b.parentElement?.remove());
+    }
     const footers=qsa('footer');footers.slice(1).forEach(e=>e.remove());
     const f=footers[0];if(f){f.parentElement.classList.remove('md:hidden');f.innerHTML='<div class="bb-footer-inner"><a href="/" aria-label="BingeBox home" class="bb-footer-brand"><img src="/assets/brand/wordmark-hd.png" alt="BingeBox"></a><p>© '+new Date().getFullYear()+' BingeBox</p><nav aria-label="Footer"><a href="/terms.html">Terms</a><a href="/privacy.html">Privacy</a><a href="/copyright.html">Copyright &amp; takedown</a><a href="mailto:partnership@bingebox.bond">Contact</a></nav></div>';}
     const hero=document.querySelector('section[aria-label="Featured series"]');
