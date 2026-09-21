@@ -124,8 +124,8 @@
         </section>
         <section class="source-health" aria-labelledby="sourceHealthTitle">
           <div class="source-health-head">
-            <div><p class="kicker">PLAYER COVERAGE</p><h3 id="sourceHealthTitle">Source health</h3><p class="muted">One-click broken-episode repair retests disabled stored sources, safely reactivates any source that is genuinely reusable, restores the playback fallback, and leaves truly dead sources disabled for fresh recapture.</p></div>
-            <div class="source-health-actions"><button id="fixBrokenEpisodesBtn" class="primary-btn" type="button">Fix all broken episodes</button><button id="fixAllSourcesBtn" class="ghost-btn" type="button">Fix all sources</button><button id="refreshSourceHealthBtn" class="ghost-btn" type="button">Refresh sources</button></div>
+            <div><p class="kicker">PLAYER COVERAGE</p><h3 id="sourceHealthTitle">Playback source health</h3><p class="muted">Coverage is calculated server-side across the full published library. Repair actions retest stored playback sources; provider discovery and sync queues are tracked separately in Sync Center above.</p></div>
+            <div class="source-health-actions"><button id="fixBrokenEpisodesBtn" class="primary-btn" type="button">Repair uncovered episodes</button><button id="fixAllSourcesBtn" class="ghost-btn" type="button">Retest stored sources</button><button id="refreshSourceHealthBtn" class="ghost-btn" type="button">Refresh coverage</button></div>
           </div>
           <p id="sourceRepairStatus" class="status source-repair-status" aria-live="polite"></p>
           <div id="sourceHealthCards" class="source-health-cards"><div class="empty">Run live checks to review source coverage.</div></div>
