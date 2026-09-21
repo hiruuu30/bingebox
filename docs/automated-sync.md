@@ -157,17 +157,15 @@ At the latest production health check during backfill:
 These numbers are an in-progress snapshot; `get_bingebox_sync_health()` is the authoritative live state.
 
 ## Publishing
-BingeBox no longer has a rights-verification or permission-attestation gate.
+Publishing is source-driven.
 
-Publishing is source-driven:
-- a validated playable episode source can publish that episode immediately;
-- resolving the first validated playable source can publish its drama;
-- existing R2-backed content remains publishable as before;
-- no worker reads or writes `drama_rights`;
-- no sync/import job requires `rights_attested`;
-- Workspace publishing controls no longer request permission confirmation.
-
-A legacy compatibility record may temporarily remain in production only while an older Vercel Workspace build is cached/deployed. It is not consulted by publishing logic and every compatibility row is nonblocking.
+- A validated playable episode source publishes that episode immediately.
+- Resolving the first validated playable source publishes its drama.
+- Existing R2-backed content remains publishable as before.
+- There is no rights-verification or permission-attestation gate.
+- The legacy `drama_rights` table and attestation columns were removed.
+- Workspace publishing controls contain no permission-confirmation step.
+- Publication changes are retained in `publication_audit_events` / `publication_audit_log`.
 
 ## R2
 The clean public catalog still contains 116 R2-backed published episodes. Signed R2 delivery was previously verified end to end with HTTP 206 range playback.
