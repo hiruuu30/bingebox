@@ -50,7 +50,8 @@
       "src": "/workspace/.*",
       "headers": {
         "X-Robots-Tag": "noindex, nofollow, noarchive",
-        "Cache-Control": "no-store"
+        "Cache-Control": "no-store",
+        "X-BingeBox-Workspace-Build": "20260921-sync1"
       },
       "continue": true
     },
