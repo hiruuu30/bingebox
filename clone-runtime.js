@@ -198,7 +198,8 @@
         ui.foreground.style.setProperty('--rs-edge-shift',`${edgeShift}px`);
         // Active and open are separate in ReelShort. Trigger every layer together.
         requestAnimationFrame(()=>requestAnimationFrame(()=>{
-          const targetH=Math.ceil(Math.max(504,ui.foreground.scrollHeight));
+          const cssMin=parseFloat(getComputedStyle(ui.foreground).minHeight)||504;
+          const targetH=Math.ceil(Math.max(cssMin,ui.foreground.scrollHeight));
           ui.backdrop.style.height=`${targetH}px`;
           ui.foreground.style.minHeight=`${targetH}px`;
           ui.backdrop.classList.add('HoverCard_open__Pb934','rs-open');
