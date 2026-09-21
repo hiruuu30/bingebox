@@ -19,3 +19,5 @@ Fixed:
 - replaced the ambiguous BingeBox hero chip with Trending/New metadata.
 
 The fixes are loaded through `exact-desktop.css` and cache-busted desktop scripts.
+
+Deployment verification merge: production rebuild requested after the complete desktop QA patch set.
