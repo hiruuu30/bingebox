@@ -176,10 +176,10 @@
   function setupHover(){
     qsa('.BookItem_bookItem__sK4Qp').forEach(card=>{
       const item=card.closest('.Slider_item__28DWA')||card.parentElement;
-      let ui=null,openTimer=null,closeTimer=null;
+      let ui=null,openTimer=null,closeTimer=null,clearTimer=null,openFrame=null;
 
       const openNow=()=>{
-        clearTimeout(openTimer);clearTimeout(closeTimer);
+        clearTimeout(openTimer);clearTimeout(closeTimer);clearTimeout(clearTimer);cancelAnimationFrame(openFrame);
         if(activeController&&activeController.card!==card) activeController.close(true);
         if(ui&&ui.data.slug!==card.dataset.bbSlug){ui.backdrop.remove();ui.foreground.remove();ui=null}
         ui=ui||buildHover(card); if(!ui)return;
@@ -188,29 +188,30 @@
         item?.classList.add('rs-hover-item-active');
         const shelf=card.closest('.Slider_sliderWrapper__66_q7');
         shelf?.classList.add('rs-hover-shelf-active');
-        // Clamp the floating panel inside the viewport. Desktop uses the compact
-        // recording-driven overlay; smaller layouts retain the original geometry.
+        // Fit above the current card's bottom, leaving the next shelf untouched.
         const cr=card.getBoundingClientRect();
-        const compactDesktop=matchMedia('(min-width:1024px) and (hover:hover)').matches;
-        const extra=compactDesktop?24:30;
-        const inset=compactDesktop?12:15;
-        const panelW=cr.width+extra;
-        const desired=cr.left-inset;
-        const clamped=Math.max(8,Math.min(window.innerWidth-panelW-8,desired));
-        const edgeShift=clamped-desired;
-        ui.backdrop.style.setProperty('--rs-edge-shift',`${edgeShift}px`);
-        ui.foreground.style.setProperty('--rs-edge-shift',`${edgeShift}px`);
-        // Open every layer on the same frame so poster/text/actions never stagger.
-        requestAnimationFrame(()=>{
-          if(compactDesktop){
-            ui.backdrop.style.removeProperty('height');
-            ui.foreground.style.removeProperty('min-height');
-          }else{
-            const cssMin=parseFloat(getComputedStyle(ui.foreground).minHeight)||504;
-            const targetH=Math.ceil(Math.max(cssMin,ui.foreground.scrollHeight));
-            ui.backdrop.style.height=`${targetH}px`;
-            ui.foreground.style.minHeight=`${targetH}px`;
-          }
+        const container=card.closest('.Slider_sliderContainer__2F8gq');
+        const bounds=container?.getBoundingClientRect();
+        const panelW=cr.width+30;
+        const minLeft=Math.max(8,bounds?.left||8);
+        const maxRight=Math.min(innerWidth-8,bounds?.right||innerWidth-8);
+        const left=Math.max(minLeft,Math.min(maxRight-panelW,cr.left-15));
+        const headerBottom=Math.max(0,qs('header')?.getBoundingClientRect().bottom||0);
+        const bottom=Math.min(cr.bottom,innerHeight-12);
+        const available=Math.max(0,bottom-headerBottom-12);
+        // Don't open a clipped, unusable panel on a barely visible card.
+        if(available<280){close(true);return;}
+        const details=qs('.rs-source-details',ui.foreground);
+        const detailHeight=details.getBoundingClientRect().height+27;
+        const naturalHeight=Math.ceil((panelW-14)*4/3+7+detailHeight);
+        const height=Math.min(naturalHeight,available);
+        for(const layer of [ui.backdrop,ui.foreground]){
+          layer.style.setProperty('--rs-panel-left',`${left-cr.left}px`);
+          layer.style.setProperty('--rs-panel-top',`${bottom-height-cr.top}px`);
+          layer.style.setProperty('--rs-panel-height',`${height}px`);
+        }
+        // Reveal all layers together. Cancel this frame if the pointer leaves.
+        openFrame=requestAnimationFrame(()=>{
           ui.backdrop.classList.add('HoverCard_open__Pb934','rs-open');
           ui.foreground.classList.add('HoverCard_open__Pb934','rs-open');
         });
@@ -218,7 +219,8 @@
       };
 
       const open=()=>{
-        clearTimeout(closeTimer);
+        if(!matchMedia('(min-width:768px) and (hover:hover) and (pointer:fine)').matches)return;
+        clearTimeout(closeTimer);clearTimeout(clearTimer);
         // Small anti-accidental-hover delay; once opened every layer appears together.
         if(card.classList.contains('rs-hover-active'))return;
         clearTimeout(openTimer);
@@ -226,7 +228,7 @@
       };
 
       function close(immediate=false){
-        clearTimeout(openTimer);clearTimeout(closeTimer);
+        clearTimeout(openTimer);clearTimeout(closeTimer);clearTimeout(clearTimer);cancelAnimationFrame(openFrame);
         if(!ui)return;
         const finish=()=>{
           ui.backdrop.classList.remove('HoverCard_open__Pb934','rs-open');
@@ -237,12 +239,14 @@
             card.closest('.Slider_sliderWrapper__66_q7')?.classList.remove('rs-hover-shelf-active');
             if(activeController?.card===card)activeController=null;
           };
-          if(immediate) clear(); else setTimeout(clear,310);
+          if(immediate) clear(); else clearTimer=setTimeout(clear,170);
         };
         if(immediate)finish(); else closeTimer=setTimeout(finish,40);
       }
 
       card.addEventListener('mouseenter',open);
+      card.addEventListener('focusin',open);
+      card.addEventListener('focusout',e=>{if(!card.contains(e.relatedTarget))close(true)});
       card.addEventListener('mouseleave',()=>close(false));
       card.addEventListener('click',e=>{
         if(!matchMedia('(hover: none), (max-width: 767px)').matches)return;
@@ -251,6 +255,9 @@
         e.preventDefault();e.stopPropagation();openNow();
       },{passive:false});
     });
+    addEventListener('scroll',()=>activeController?.close(true),{passive:true,capture:true});
+    addEventListener('resize',()=>activeController?.close(true),{passive:true});
+    addEventListener('keydown',e=>{if(e.key==='Escape')activeController?.close(true)});
   }
 
   function setupLocalRoutes(){ /* BingeBox uses real Netlify routes. */ }

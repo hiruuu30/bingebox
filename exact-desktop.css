@@ -141,83 +141,52 @@
     height:48px!important;
   }
 
-  .rs-source-backdrop,
-  .rs-source-foreground{
-    left:calc(-12px + var(--rs-edge-shift,0px))!important;
-    top:-18px!important;
-    width:calc(100% + 24px)!important;
-    min-height:0!important;
-    height:auto!important;
-    aspect-ratio:3/4!important;
-    border-radius:18px!important;
-    transform:scale(.97)!important;
-    transform-origin:center center!important;
-    transition:opacity .18s ease-out,transform .18s ease-out!important;
-  }
-  .rs-hover-active .rs-source-backdrop.rs-open,
-  .rs-hover-active .rs-source-foreground.rs-open{
-    transform:scale(1)!important;
-  }
-  .rs-source-background-cover{
-    inset:-30px!important;
-    filter:blur(32px)!important;
-    -webkit-filter:blur(32px)!important;
-    transform:scale(1.05)!important;
-  }
-  .rs-source-foreground-cover{
-    position:absolute!important;
-    inset:0!important;
-    margin:0!important;
-    width:100%!important;
-    height:100%!important;
-    aspect-ratio:auto!important;
-    border-radius:18px!important;
-    transform:none!important;
-  }
-  .rs-source-foreground.rs-open .rs-source-foreground-cover{
-    transform:none!important;
-  }
-  .rs-source-details{
-    position:absolute!important;
-    left:0!important;
-    right:0!important;
-    bottom:0!important;
-    margin:0!important;
-    padding:64px 14px 14px!important;
-    gap:6px!important;
-    opacity:1!important;
-    background:linear-gradient(180deg,transparent 0,rgba(0,0,0,.72) 32%,rgba(0,0,0,.96) 100%);
-    transition:none!important;
-  }
-  .rs-hover-title{
-    min-height:0!important;
-    font-size:13px!important;
-    line-height:17px!important;
-    font-weight:600!important;
-  }
-  .rs-hover-meta{
-    margin-top:0!important;
-    min-height:0!important;
-    font-size:11px!important;
-    line-height:15px!important;
-    color:rgba(255,255,255,.68)!important;
-  }
-  .rs-hover-description{display:none!important}
-  .rs-hover-actions{
-    height:38px!important;
-    margin-top:4px!important;
-    gap:6px!important;
-  }
-  .rs-hover-action{
-    width:38px!important;
-    height:38px!important;
-    flex:0 0 38px!important;
-    border-radius:19px!important;
-  }
-  .rs-hover-action svg{width:17px!important;height:17px!important}
+
 }
 
 @media (min-width:1024px) and (max-width:1180px){
   .bb-hero-poster{width:min(300px,25vw)!important;right:6vw!important}
   section[aria-label="Featured series"]>div:nth-child(3){width:36%!important;right:6vw!important}
+}
+
+/* Expanded glass preview: artwork above readable details; the runtime anchors
+   its bottom to the current card so it cannot cover the next shelf. */
+@media (min-width:768px) and (hover:hover) and (pointer:fine){
+  .rs-source-backdrop,.rs-source-foreground{
+    left:var(--rs-panel-left,-15px)!important;
+    top:var(--rs-panel-top,-28px)!important;
+    width:calc(100% + 30px)!important;
+    min-height:0!important;
+    height:var(--rs-panel-height,520px)!important;
+    border-radius:24px!important;
+    transition:opacity .16s ease-out!important;
+  }
+  .rs-source-backdrop{box-shadow:0 16px 42px rgba(0,0,0,.45)}
+  .rs-source-foreground{display:flex;flex-direction:column;overflow:hidden}
+  .rs-source-foreground-cover{
+    flex:1 1 auto;min-height:0;aspect-ratio:auto;
+    transform:none!important;transition:none!important;
+  }
+  .rs-source-foreground-cover img{object-fit:contain;background:rgba(0,0,0,.12)}
+  .rs-source-details{flex:0 0 auto;margin:12px 15px 15px;gap:12px!important;transition:none!important}
+  .rs-hover-title{font-weight:600;min-height:0}
+  .rs-hover-description{color:rgba(255,255,255,.76)}
+  .rs-hover-action:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .Slider_sliderWrapper__66_q7.rs-hover-shelf-active .Slider_sliderContainer__2F8gq{
+    overflow-x:clip!important;overflow-y:visible!important;
+  }
+}
+@media (min-width:768px){
+  .home_recommendFloor__OPMn1 .bb-browse-all{
+    display:flex;align-items:center;justify-content:center;
+    min-height:48px;min-width:200px;margin:32px auto 0;padding:12px 28px;
+    border:1px solid rgba(255,255,255,.24);border-radius:999px;
+    background:#202024;color:#fff;font:600 14px/20px Arial,Helvetica,sans-serif;
+    cursor:pointer;transition:background .16s ease,border-color .16s ease;
+  }
+  .home_recommendFloor__OPMn1 .bb-browse-all:hover{background:#303036;border-color:rgba(255,255,255,.5)}
+  .bb-browse-all:focus-visible{outline:2px solid #fff;outline-offset:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rs-source-backdrop,.rs-source-foreground,.rs-source-foreground-cover{transition:none!important}
 }
