@@ -24,7 +24,7 @@ export async function GET(){
     const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/get_drama_playable_episodes',{
       method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({p_drama_id:drama.value.id}),cache:'no-store'
     });
-    if(!r.ok)throw new Error('HTTP '+r.status);
+    if(!r.ok){const t=await r.text().catch(()=>String(r.status));throw new Error('HTTP '+r.status+' '+t.slice(0,240));}
     const rows=await r.json(); if(!rows?.length)throw new Error('no_playable_episodes'); return {count:rows.length,first:rows[0]};
   });
   if(!eps.ok)return Response.json({ok:false,steps:[drama,{...eps,value:undefined}]},{status:503});
