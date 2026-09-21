@@ -17,7 +17,10 @@
     hlsController=null;
   }
   function needsHlsRelay(url){
-    try{return new URL(String(url||''),location.href).hostname.toLowerCase()==='akamai-static.shorttv.live'}catch{return false}
+    try{
+      const u=new URL(String(url||''),location.href);
+      return u.hostname.toLowerCase()==='akamai-static.shorttv.live'&&u.pathname.startsWith('/hls-encrypted/');
+    }catch{return false}
   }
   function relayHlsUrl(url){
     return '/api/hls-proxy?url='+encodeURIComponent(String(url||''));
@@ -26,7 +29,8 @@
     destroyHls();
     const isHls=sourceType==='hls'||/\.m3u8(?:$|[?#])/i.test(String(url||''));
     if(!isHls){video.src=url;video.load();return}
-    if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=url;video.load();return}
+    const playbackUrl=needsHlsRelay(url)?relayHlsUrl(url):url;
+    if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=playbackUrl;video.load();return}
     const H=window.Hls;
     if(!H?.isSupported?.())throw new Error('HLS playback is not supported in this browser.');
     const h=new H({enableWorker:true,lowLatencyMode:false,backBufferLength:60,maxBufferLength:30});
@@ -37,7 +41,7 @@
       if(hlsController===h)hlsController=null;
       onFatal?.(data?.details||data?.type||'HLS stream failed');
     });
-    h.loadSource(needsHlsRelay(url)?relayHlsUrl(url):url);
+    h.loadSource(playbackUrl);
     h.attachMedia(video);
   }
   function setChrome(show=true,hold=false){
