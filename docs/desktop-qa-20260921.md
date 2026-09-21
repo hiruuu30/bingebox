@@ -21,3 +21,5 @@ Fixed:
 The fixes are loaded through `exact-desktop.css` and cache-busted desktop scripts.
 
 Deployment verification merge: production rebuild requested after the complete desktop QA patch set.
+
+Vercel production deployment retry requested at 2026-09-21 12:05 PHT.
