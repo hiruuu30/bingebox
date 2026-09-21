@@ -161,7 +161,6 @@
       const params=new URLSearchParams({
         published:'eq.true',
         select:'id,slug,title,genre,mood,description,poster_url,featured,sort_order,created_at,updated_at,is_complete,publish_at,is_r18',
-        order:'featured.desc,sort_order.asc,created_at.desc',
         limit:String(HOME_LIMIT)
       });
       const res=await fetch(`${base}/rest/v1/dramas?${params}`,{

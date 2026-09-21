@@ -19,11 +19,10 @@ async function fetchCatalog(){
   const params=new URLSearchParams({
     published:'eq.true',
     select:'id,slug,title,genre,mood,description,poster_url,featured,sort_order,created_at,updated_at,is_complete,publish_at,is_r18',
-    order:'featured.desc,sort_order.asc,created_at.desc',
     limit:String(LIMIT)
   });
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),4500);
+  const timer=setTimeout(()=>controller.abort(),12000);
   try{
     const res=await fetch(`${SUPABASE_URL}/rest/v1/dramas?${params}`,{
       signal:controller.signal,
