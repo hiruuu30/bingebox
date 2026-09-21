@@ -113,8 +113,19 @@
     const res=await fetch(url,{headers,cache:'no-store'});
     if(!res.ok)throw new Error('Playback sources are temporarily unavailable.');
     const rows=await res.json();
-    sourceCache.set(episodeId,rows||[]);
-    return rows||[];
+    const now=Date.now();
+    const usable=(rows||[]).filter(s=>{
+      const health=String(s.health_status||'unknown');
+      if(!['healthy','unknown','expiring'].includes(health))return false;
+      if(!s.source_url)return false;
+      if(s.expires_at){
+        const exp=new Date(s.expires_at).getTime();
+        if(Number.isFinite(exp)&&exp<=now+120000)return false;
+      }
+      return true;
+    });
+    sourceCache.set(episodeId,usable);
+    return usable;
   }
 
   async function ensureSources(item){
