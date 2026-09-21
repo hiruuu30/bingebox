@@ -5,12 +5,35 @@
   const episodeSheet=$('#episodeSheet'),moreSheet=$('#moreSheet'),reportDialog=$('#swipeReportDialog'),centerControls=$('#swipeCenterControls');
   const progressRange=$('#swipeProgressRange'),progressCurrent=$('#swipeCurrentTime'),progressDuration=$('#swipeDuration'),progressWrap=$('#swipeProgress');let scrubbing=false;
   const emoji={heart:'❤️',shock:'😱',laugh:'😂',fire:'🔥'};
-  let feed=[],index=0,seq=0,touchY=null,touchX=null,edgeBack=false,edgeBackDx=0,lastSave=0,lastCloud=0,streamCache=new Map(),sourceCache=new Map(),chromeTimer=null,autoplayCancelled=false,lastCueSecond=null,navLockUntil=0,currentMode='direct',holdTimer=null,holdSpeed=false,preHoldRate=1,rateRamp=0,holdPointerId=null,suppressTapUntil=0,currentSourceIndex=0,qualifiedSent=false,playSeconds=0,lastPlayTick=0,milestones=new Set(),startedEpisodeId=null,loadTimer=null,feedAbort=null,autoFailoverTried=new Set(),randomModeActive=false;
+  let feed=[],index=0,seq=0,touchY=null,touchX=null,edgeBack=false,edgeBackDx=0,lastSave=0,lastCloud=0,streamCache=new Map(),sourceCache=new Map(),chromeTimer=null,autoplayCancelled=false,lastCueSecond=null,navLockUntil=0,currentMode='direct',holdTimer=null,holdSpeed=false,preHoldRate=1,rateRamp=0,holdPointerId=null,suppressTapUntil=0,currentSourceIndex=0,qualifiedSent=false,playSeconds=0,lastPlayTick=0,milestones=new Set(),startedEpisodeId=null,loadTimer=null,feedAbort=null,autoFailoverTried=new Set(),randomModeActive=false,hlsController=null;
   const localKey=item=>`bb-progress:${item.slug}:${item.episode_number}`;
   const getLocal=item=>{try{return Number(localStorage.getItem(localKey(item))||0)}catch{return 0}};
   const visitorToken=()=>window.BBUser?.visitorToken?.()||(()=>{const k='bb-visitor-token';try{let v=localStorage.getItem(k);if(v)return v;v=crypto.randomUUID();localStorage.setItem(k,v);return v}catch{return '00000000-0000-4000-8000-000000000001'}})();
   const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const toast=msg=>{const t=$('#swipeToast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1800)};
+  function destroyHls(){
+    if(!hlsController)return;
+    try{hlsController.destroy?.()}catch{}
+    hlsController=null;
+  }
+  function attachVideoSource(url,sourceType,onFatal){
+    destroyHls();
+    const isHls=sourceType==='hls'||/\.m3u8(?:$|[?#])/i.test(String(url||''));
+    if(!isHls){video.src=url;video.load();return}
+    if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=url;video.load();return}
+    const H=window.Hls;
+    if(!H?.isSupported?.())throw new Error('HLS playback is not supported in this browser.');
+    const h=new H({enableWorker:true,lowLatencyMode:false,backBufferLength:60,maxBufferLength:30});
+    hlsController=h;
+    h.on(H.Events.ERROR,(_event,data)=>{
+      if(!data?.fatal)return;
+      try{h.destroy()}catch{}
+      if(hlsController===h)hlsController=null;
+      onFatal?.(data?.details||data?.type||'HLS stream failed');
+    });
+    h.loadSource(url);
+    h.attachMedia(video);
+  }
   function setChrome(show=true,hold=false){
     if(!loading.classList.contains('hidden')&&loading.querySelector('.playback-failure')){show=true;hold=true}
     shell.classList.toggle('controls-visible',show);
@@ -172,7 +195,7 @@
   }
 
   async function loadItem(next,autoplay=true){
-    if(!feed[next])return;save(true);releaseHoldSpeed();clearLoadTimer();video.onerror=null;video.onloadedmetadata=null;video.oncanplay=null;const item=feed[next],previousEpisodeId=feed[index]?.episode_id,s=++seq;index=next;if(previousEpisodeId!==item.episode_id)autoFailoverTried=new Set();autoplayCancelled=false;lastCueSecond=null,navLockUntil=0;qualifiedSent=false;playSeconds=0;lastPlayTick=0;milestones=new Set();$('#swipeNextCue').classList.add('hidden');closeReactionTray();setChrome(true,true);
+    if(!feed[next])return;save(true);releaseHoldSpeed();clearLoadTimer();destroyHls();video.onerror=null;video.onloadedmetadata=null;video.oncanplay=null;const item=feed[next],previousEpisodeId=feed[index]?.episode_id,s=++seq;index=next;if(previousEpisodeId!==item.episode_id)autoFailoverTried=new Set();autoplayCancelled=false;lastCueSecond=null,navLockUntil=0;qualifiedSent=false;playSeconds=0;lastPlayTick=0;milestones=new Set();$('#swipeNextCue').classList.add('hidden');closeReactionTray();setChrome(true,true);
     loading.classList.remove('hidden');loading.innerHTML='<span></span><p>Loading episode…</p>';video.pause();video.removeAttribute('src');video.load();embed.src='about:blank';embed.classList.add('hidden');video.classList.remove('hidden');
     $('#swipeEpisode').textContent=`EP ${String(item.episode_number).padStart(2,'0')}`;$('#swipeTitle').textContent=item.title;$('#swipeEpisodeTitle').textContent=item.episode_title||`Episode ${item.episode_number}`;$('#swipeComplete').classList.toggle('hidden',!item.is_complete);const sameDrama=feed.filter(x=>x.drama_id===item.drama_id);
     const dramaPos=Math.max(0,sameDrama.findIndex(x=>x.episode_id===item.episode_id));
@@ -194,7 +217,8 @@
         if(autoplay)video.play().then(()=>setChrome(true)).catch(()=>setChrome(true));else setChrome(true)
       };
       video.onloadedmetadata=onReady;video.oncanplay=onReady;
-      video.playsInline=true;video.preload='metadata';video.src=url;video.load();
+      video.playsInline=true;video.preload='metadata';
+      attachVideoSource(url,src?.source_type||'direct',detail=>{if(s===seq)playerFailure('This HLS source failed to load'+(detail?': '+detail:''),autoplay)});
       loadTimer=setTimeout(()=>{if(s===seq&&video.readyState<1)playerFailure('This source is taking too long to respond. Retry it or try another server.',autoplay)},15000);
     }catch(err){playerFailure(err.message,autoplay)}
   }
@@ -243,7 +267,7 @@
   }
   setInterval(()=>flushMeasuredWatch(false),20000);
 
-  video.addEventListener('timeupdate',()=>{save(false);updateNextCue();updateProgress();analyticsPlaybackTick()});video.addEventListener('loadedmetadata',()=>{updateProgress();syncMediaLayout()});video.addEventListener('durationchange',updateProgress);video.addEventListener('play',()=>{lastPlayTick=Date.now();playBtn.classList.add('playing');const s=playBtn.querySelector('span');if(s)s.textContent='Ⅱ';setChrome(true)});video.addEventListener('pause',()=>{flushMeasuredWatch(true);lastPlayTick=0;playBtn.classList.remove('playing');const s=playBtn.querySelector('span');if(s)s.textContent='▶';setChrome(true)});video.addEventListener('ended',()=>{complete();$('#swipeNextCue').classList.add('hidden');if(!autoplayCancelled)setTimeout(goNext,220)});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){releaseHoldSpeed();flushMeasuredWatch(true);save(true)}});window.addEventListener('pagehide',()=>{flushMeasuredWatch(true);save(true);feedAbort?.abort?.()});
+  video.addEventListener('timeupdate',()=>{save(false);updateNextCue();updateProgress();analyticsPlaybackTick()});video.addEventListener('loadedmetadata',()=>{updateProgress();syncMediaLayout()});video.addEventListener('durationchange',updateProgress);video.addEventListener('play',()=>{lastPlayTick=Date.now();playBtn.classList.add('playing');const s=playBtn.querySelector('span');if(s)s.textContent='Ⅱ';setChrome(true)});video.addEventListener('pause',()=>{flushMeasuredWatch(true);lastPlayTick=0;playBtn.classList.remove('playing');const s=playBtn.querySelector('span');if(s)s.textContent='▶';setChrome(true)});video.addEventListener('ended',()=>{complete();$('#swipeNextCue').classList.add('hidden');if(!autoplayCancelled)setTimeout(goNext,220)});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){releaseHoldSpeed();flushMeasuredWatch(true);save(true)}});window.addEventListener('pagehide',()=>{flushMeasuredWatch(true);save(true);destroyHls();feedAbort?.abort?.()});
   const NORMAL_PLAYBACK_RATE=1;
   function setPlaybackRateImmediate(rate){
     cancelAnimationFrame(rateRamp);rateRamp=0;
