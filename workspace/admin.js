@@ -37,7 +37,6 @@
         if(!dramas.length)await loadDramas();
         await loadHeroHighlightSettings();
       }else if(view==='system'){
-        if(!dramas.length)await loadDramas();
         await Promise.allSettled([loadAuditLog(),checkSecureMedia(),loadContentRequests(),loadEpisodeReports(),loadDonationSettings(),loadOpsDashboard(),loadDonationTracking(),loadPushAdmin(),loadSourceHealth()]);
       }
       workspaceLoaded.add(view);
