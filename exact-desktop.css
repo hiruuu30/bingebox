@@ -178,14 +178,14 @@
   }
 }
 @media (min-width:768px){
-  .home_recommendFloor__OPMn1 .bb-browse-all{
+  .bb-browse-all{
     display:flex;align-items:center;justify-content:center;
     min-height:48px;min-width:200px;margin:32px auto 0;padding:12px 28px;
     border:1px solid rgba(255,255,255,.24);border-radius:999px;
     background:#202024;color:#fff;font:600 14px/20px Arial,Helvetica,sans-serif;
     cursor:pointer;transition:background .16s ease,border-color .16s ease;
   }
-  .home_recommendFloor__OPMn1 .bb-browse-all:hover{background:#303036;border-color:rgba(255,255,255,.5)}
+  .bb-browse-all:hover{background:#303036;border-color:rgba(255,255,255,.5)}
   .bb-browse-all:focus-visible{outline:2px solid #fff;outline-offset:4px}
 }
 @media (prefers-reduced-motion:reduce){
