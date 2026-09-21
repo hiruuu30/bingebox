@@ -62,7 +62,7 @@
     const fav=favSet();
     const unique=(items)=>items.filter((d,i,a)=>a.findIndex(x=>x.slug===d.slug)===i);
     if(type==='new')return fresh;
-    if(type==='top')return [...dramas].sort((a,b)=>Number(b.episodes||0)-Number(a.episodes||0)||datev(b)-datev(a));
+    if(type==='top')return [...dramas].sort((a,b)=>Number(a.sortOrder??9999)-Number(b.sortOrder??9999)||Number(b.featured)-Number(a.featured)||datev(b)-datev(a));
     if(type==='trending')return unique([...featured,...fresh]).sort((a,b)=>Number(b.featured)-Number(a.featured)||datev(b)-datev(a));
     if(type==='romance')return by('romance');
     if(type==='fantasy')return by('fantasy');
@@ -110,27 +110,122 @@
     }));
   }
 
-  async function load(){
-    if(loading)return;loading=true;ensureLoadingNote();document.documentElement.classList.add('bb-pending');qs('.bb-data-error')?.remove();
-    if(!initialized){brand();setupSearch();initialized=true;
-    qsa('[data-bb-scroll]').forEach(el=>el.addEventListener('click',()=>qs('#bb-categories')?.scrollIntoView({behavior:'smooth',block:'start'})));
-    }
-    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
-    try{
-      const base=String(cfg.supabaseUrl||'').replace(/\/$/,'');if(!base||!cfg.supabasePublishableKey)throw new Error('BingeBox backend config missing');
-      const url=`${base}/rest/v1/dramas?published=eq.true&select=id,slug,title,genre,mood,description,poster_url,featured,sort_order,created_at,updated_at,is_complete,publish_at,is_r18,published_episode_stats:episodes(count)&episodes.published=eq.true&order=sort_order.asc,created_at.desc`;
-      const res=await fetch(url,{signal:controller.signal,headers:{apikey:cfg.supabasePublishableKey,Accept:'application/json'}});if(!res.ok)throw new Error(`Catalog ${res.status}`);const rows=await res.json();
-      dramas=rows.map(d=>({id:d.id,slug:d.slug,title:d.title,genre:d.genre||'Drama',mood:d.mood||[],description:d.description||'',poster:d.poster_url||'/assets/brand/mark.svg',featured:!!d.featured,sortOrder:Number(d.sort_order??9999),episodes:Number(d.published_episode_stats?.[0]?.count||0),createdAt:d.created_at,updatedAt:d.updated_at,publishAt:d.publish_at,isComplete:!!d.is_complete,isR18:!!d.is_r18})).filter(d=>d.slug&&d.title);
-      if(!dramas.length)throw new Error('EMPTY_CATALOG');paintHero();paintShelves();document.documentElement.classList.remove('bb-catalog-unavailable');
-      window.BINGEBOX_EXACT_DRAMAS=dramas;window.dispatchEvent(new CustomEvent('bb-catalog-ready'));
-    }catch(err){
-      document.documentElement.classList.add('bb-catalog-unavailable');
-      const n=document.createElement('section');n.className='bb-data-error';n.setAttribute('role','status');
-      const message=document.createElement('p');message.textContent=err.message==='EMPTY_CATALOG'?'No published titles yet. Please check back soon.':'The catalog could not load. Please try again.';
-      const retry=document.createElement('button');retry.type='button';retry.textContent='Try again';retry.addEventListener('click',load);
-      n.append(message,retry);qs('main').prepend(n);
-    }finally{clearTimeout(timeout);loading=false;document.documentElement.classList.remove('bb-pending');qs('.bb-loading-note')?.remove()}
+  const HOME_CACHE_KEY='bb-home-catalog-v3';
+  const HOME_LIMIT=160;
 
+  function normalizeRows(rows){
+    return (Array.isArray(rows)?rows:[]).map(d=>({
+      id:d.id,slug:d.slug,title:d.title,genre:d.genre||'Drama',mood:d.mood||[],
+      description:d.description||'',poster:d.poster_url||d.poster||'/assets/brand/mark.svg',
+      featured:!!d.featured,sortOrder:Number(d.sort_order??d.sortOrder??9999),
+      episodes:Number(d.episodes||0),createdAt:d.created_at||d.createdAt,
+      updatedAt:d.updated_at||d.updatedAt,publishAt:d.publish_at||d.publishAt,
+      isComplete:!!(d.is_complete??d.isComplete),isR18:!!(d.is_r18??d.isR18)
+    })).filter(d=>d.slug&&d.title);
+  }
+
+  function readCachedRows(){
+    try{
+      const value=JSON.parse(localStorage.getItem(HOME_CACHE_KEY)||'null');
+      return Array.isArray(value?.items)?value.items:[];
+    }catch{return []}
+  }
+
+  function writeCachedRows(rows){
+    try{localStorage.setItem(HOME_CACHE_KEY,JSON.stringify({at:Date.now(),items:rows.slice(0,HOME_LIMIT)}))}catch{}
+  }
+
+  function applyRows(rows){
+    const next=normalizeRows(rows);
+    if(!next.length)throw new Error('EMPTY_CATALOG');
+    dramas=next;
+    paintHero();
+    paintShelves();
+    document.documentElement.classList.remove('bb-catalog-unavailable');
+    window.BINGEBOX_EXACT_DRAMAS=dramas;
+    window.dispatchEvent(new CustomEvent('bb-catalog-ready'));
+  }
+
+  async function fetchHomeRows(signal){
+    try{
+      const res=await fetch('/api/catalog',{signal,headers:{Accept:'application/json'}});
+      if(!res.ok)throw new Error(`Catalog API ${res.status}`);
+      const body=await res.json();
+      const rows=Array.isArray(body)?body:body?.items;
+      if(!Array.isArray(rows)||!rows.length)throw new Error('EMPTY_CATALOG');
+      return rows;
+    }catch(apiError){
+      if(signal.aborted)throw apiError;
+      const base=String(cfg.supabaseUrl||'').replace(/\/$/,'');
+      if(!base||!cfg.supabasePublishableKey)throw apiError;
+      const params=new URLSearchParams({
+        published:'eq.true',
+        select:'id,slug,title,genre,mood,description,poster_url,featured,sort_order,created_at,updated_at,is_complete,publish_at,is_r18',
+        order:'featured.desc,sort_order.asc,created_at.desc',
+        limit:String(HOME_LIMIT)
+      });
+      const res=await fetch(`${base}/rest/v1/dramas?${params}`,{
+        signal,
+        headers:{apikey:cfg.supabasePublishableKey,Accept:'application/json'}
+      });
+      if(!res.ok)throw new Error(`Catalog ${res.status}`);
+      return await res.json();
+    }
+  }
+
+  async function load(){
+    if(loading)return;
+    loading=true;
+    ensureLoadingNote();
+    document.documentElement.classList.add('bb-pending');
+    qs('.bb-data-error')?.remove();
+
+    if(!initialized){
+      brand();
+      setupSearch();
+      initialized=true;
+      qsa('[data-bb-scroll]').forEach(el=>el.addEventListener('click',()=>qs('#bb-categories')?.scrollIntoView({behavior:'smooth',block:'start'})));
+    }
+
+    let hadCatalog=false;
+    const cached=readCachedRows();
+    if(cached.length){
+      try{
+        applyRows(cached);
+        hadCatalog=true;
+        document.documentElement.classList.remove('bb-pending');
+        qs('.bb-loading-note')?.remove();
+      }catch{}
+    }
+
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),6500);
+    try{
+      const rows=await fetchHomeRows(controller.signal);
+      applyRows(rows);
+      writeCachedRows(rows);
+      hadCatalog=true;
+    }catch(err){
+      if(!hadCatalog){
+        document.documentElement.classList.add('bb-catalog-unavailable');
+        const n=document.createElement('section');
+        n.className='bb-data-error';
+        n.setAttribute('role','status');
+        const message=document.createElement('p');
+        message.textContent=err.message==='EMPTY_CATALOG'?'No published titles yet. Please check back soon.':'The catalog could not load. Please try again.';
+        const retry=document.createElement('button');
+        retry.type='button';
+        retry.textContent='Try again';
+        retry.addEventListener('click',load);
+        n.append(message,retry);
+        qs('main')?.prepend(n);
+      }
+    }finally{
+      clearTimeout(timeout);
+      loading=false;
+      document.documentElement.classList.remove('bb-pending');
+      qs('.bb-loading-note')?.remove();
+    }
   }
   window.addEventListener('bb-exact-favorites-changed',()=>{if(dramas.length)paintShelves()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
