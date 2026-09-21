@@ -51,7 +51,6 @@
     const featured=dramas.filter(d=>d.featured);
     const fav=favSet();
     const unique=(items)=>items.filter((d,i,a)=>a.findIndex(x=>x.slug===d.slug)===i);
-    if(type==='originals')return unique(featured.length?featured:dramas).sort((a,b)=>Number(a.sortOrder??9999)-Number(b.sortOrder??9999));
     if(type==='new')return fresh;
     if(type==='top')return [...dramas].sort((a,b)=>Number(b.episodes||0)-Number(a.episodes||0)||datev(b)-datev(a));
     if(type==='trending')return unique([...featured,...fresh]).sort((a,b)=>Number(b.featured)-Number(a.featured)||datev(b)-datev(a));
@@ -64,7 +63,7 @@
   }
 
   const defs=[
-    ['BingeBox Originals','originals'],['New Release','new'],['TOP','top'],['Trending Now 🔥','trending'],['Romance 🌹','romance'],['Fantasy ✨','fantasy'],['Drama & Revenge','revenge'],['Action & Power','action'],['More to Binge','all'],['My List','mylist']
+    ['New Release','new'],['TOP','top'],['Trending Now 🔥','trending'],['Romance 🌹','romance'],['Fantasy ✨','fantasy'],['Drama & Revenge','revenge'],['Action & Power','action'],['More to Binge','all'],['My List','mylist']
   ];
   function paintShelf(wrapper,title,type){
     const h=qs('.home_floorTitle__cIyIp h2',wrapper);
