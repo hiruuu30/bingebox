@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <title>Workspace</title>
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/workspace/admin.css?v=2470" />
+  <link rel="stylesheet" href="/workspace/admin.css?v=20260921sync1" />
 </head>
 <body>
   <header class="admin-header">
@@ -92,6 +92,36 @@
         <div class="storage-meter"><div class="storage-meter-head"><span>R2 free storage allowance</span><strong id="storageMeterLabel">—</strong></div><div class="storage-meter-track"><i id="storageMeterFill"></i></div></div>
         <div class="ops-detail-grid"><div><span>Video objects</span><strong id="storageVideoObjects">—</strong></div><div><span>Average video</span><strong id="storageAverageVideo">—</strong></div><div><span>Orphaned video files</span><strong id="storageOrphans">—</strong></div><div><span>Est. storage cost</span><strong id="storageCost">—</strong></div></div>
         <div id="opsCheckList" class="ops-check-list"></div>
+
+        <section class="sync-center" aria-labelledby="syncCenterTitle">
+          <div class="sync-center-head">
+            <div>
+              <p class="kicker">AUTOMATION</p>
+              <h3 id="syncCenterTitle">Sync Center</h3>
+              <p class="muted">Live provider discovery, episode resolution, media queues and poster health. Auto-refreshes while System is open.</p>
+            </div>
+            <button id="refreshSyncCenterBtn" class="ghost-btn" type="button">Refresh sync</button>
+          </div>
+          <div id="syncOverviewCards" class="sync-overview-cards"><div class="empty">Loading sync health…</div></div>
+          <div class="sync-center-grid">
+            <section class="sync-subpanel">
+              <div class="sync-subhead"><span>QUEUE LANES</span><strong id="syncQueueSummary">—</strong></div>
+              <div id="syncQueueLanes" class="sync-lanes"><div class="empty">Loading queues…</div></div>
+            </section>
+            <section class="sync-subpanel">
+              <div class="sync-subhead"><span>PLAYABLE SOURCES</span><strong id="syncSourceSummary">—</strong></div>
+              <div id="syncSourceProviders" class="sync-source-providers"><div class="empty">Loading source providers…</div></div>
+            </section>
+          </div>
+          <section class="sync-provider-panel">
+            <div class="sync-subhead"><span>PROVIDERS</span><strong id="syncProviderSummary">—</strong></div>
+            <div id="syncProviderList" class="sync-provider-list"><div class="empty">Loading providers…</div></div>
+          </section>
+          <section class="sync-error-panel">
+            <div class="sync-subhead"><span>RECENT RETRIES / FAILURES</span><strong id="syncErrorSummary">—</strong></div>
+            <div id="syncRecentErrors" class="sync-error-list"><div class="empty">No recent sync errors loaded.</div></div>
+          </section>
+        </section>
         <section class="source-health" aria-labelledby="sourceHealthTitle">
           <div class="source-health-head">
             <div><p class="kicker">PLAYER COVERAGE</p><h3 id="sourceHealthTitle">Source health</h3><p class="muted">One-click broken-episode repair retests disabled stored sources, safely reactivates any source that is genuinely reusable, restores the playback fallback, and leaves truly dead sources disabled for fresh recapture.</p></div>
@@ -145,6 +175,7 @@
           </div>
         </div>
         <div id="dramaList" class="drama-list"></div>
+        <div class="library-load-more-wrap"><button id="loadMoreDramasBtn" class="ghost-btn hidden" type="button">Load more</button></div>
       </section>
 
 
@@ -155,9 +186,9 @@
       </div>
       </details>
 
-      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Security & rights log</summary>
+      <details class="workspace-secondary workspace-tab-panel" data-workspace-panel="system"><summary>Security & publication log</summary>
       <section class="security-panel" aria-labelledby="securityPanelTitle">
-        <div class="security-panel-head"><div><p class="kicker">SECURITY &amp; RIGHTS</p><h2 id="securityPanelTitle">Protection status</h2></div><button id="refreshAuditBtn" class="ghost-btn" type="button">Refresh</button></div>
+        <div class="security-panel-head"><div><p class="kicker">SECURITY &amp; PUBLICATION</p><h2 id="securityPanelTitle">Protection status</h2></div><button id="refreshAuditBtn" class="ghost-btn" type="button">Refresh</button></div>
         <div class="security-status-grid">
           <div class="security-status-item"><span>Secure media gateway</span><strong id="secureMediaStatus">Checking…</strong></div>
           <div class="security-status-item"><span>Publishing confirmation guard</span><strong class="ok">Active</strong></div>
@@ -351,6 +382,6 @@
 
   <script src="/config.js?v=2050"></script>
   <script src="/poster-fallback.js?v=2470"></script>
-  <script src="/workspace/admin.js?v=2470"></script>
+  <script src="/workspace/admin.js?v=20260921sync1"></script>
 </body>
 </html>
