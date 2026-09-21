@@ -38,7 +38,7 @@
         await loadHeroHighlightSettings();
       }else if(view==='system'){
         if(!dramas.length)await loadDramas();
-        await Promise.allSettled([loadAuditLog(),checkSecureMedia(),loadContentRequests(),loadEpisodeReports(),loadDonationSettings(),loadOpsDashboard(),loadDonationTracking(),loadPushAdmin()]);
+        await Promise.allSettled([loadAuditLog(),checkSecureMedia(),loadContentRequests(),loadEpisodeReports(),loadDonationSettings(),loadOpsDashboard(),loadDonationTracking(),loadPushAdmin(),loadSourceHealth()]);
       }
       workspaceLoaded.add(view);
     })().finally(()=>workspaceLoading.delete(view));
