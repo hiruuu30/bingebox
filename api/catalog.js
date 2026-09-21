@@ -1,5 +1,5 @@
 const SUPABASE_URL='https://shffgnuprnycqblpwkrp.supabase.co';
-const PUBLISHABLE_KEY='sb_publishable_PeopMn9aiDdzxqLvSkkR6w_PUw9BIJH';
+const PUBLISHABLE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZmZnbnVwcm55Y3FibHB3a3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5ODg5MDUsImV4cCI6MjEwMzU2NDkwNX0.kzZzOXtpbTXdrNHW6VUd_qbL1WEY7uuHvW--JdmnfFs';
 const LIMIT=160;
 let memoryItems=null;
 let memoryAt=0;
