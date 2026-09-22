@@ -5,6 +5,16 @@
   "outputDirectory": "public",
   "routes": [
     {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "movie.bingebox.bond"
+        }
+      ],
+      "dest": "https://bingebox-movie-d92skq5ue-hello-65386311.vercel.app/$1"
+    },
+    {
       "src": "/.*",
       "headers": {
         "X-Frame-Options": "DENY",
