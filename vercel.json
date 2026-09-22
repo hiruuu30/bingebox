@@ -161,6 +161,15 @@
       "functionFailoverRegions": [
         "sin1"
       ]
+    },
+    "api/search.js": {
+      "maxDuration": 10,
+      "regions": [
+        "hnd1"
+      ],
+      "functionFailoverRegions": [
+        "sin1"
+      ]
     }
   }
 }
