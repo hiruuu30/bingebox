@@ -74,6 +74,9 @@ function stripKnownAds(html) {
 
 function sanitizeHtml(html) {
   let out = stripKnownAds(replaceBranding(html));
+  out = sanitizeScript(out)
+    .replace(/\baclib\b/gi, 'blockedAdLib')
+    .replace(/\baclib-run\b/gi, 'blocked-ad-run');
 
   out = out
     .replace(/<title>[\s\S]*?<\/title>/i, '<title>BingeBox Movies — Watch Movies Online</title>')
