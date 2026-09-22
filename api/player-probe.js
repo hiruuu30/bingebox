@@ -1,4 +1,4 @@
-const TEST_URL = 'https://vidnest.fun/movie/238?1=1';
+const TEST_URL = 'https://chillflix.pw/embed/movie/238?autoplay=true';
 const TERMS = ['window.open','popunder','popads','popup','adsterra','monetag','propeller','aclib','acscdn','doubleclick','googlesyndication','target="_blank"','disable sandbox'];
 
 export async function GET() {
@@ -26,7 +26,15 @@ export async function GET() {
     }
   }
   return new Response(JSON.stringify({
-    page: { status: base.status, finalUrl: base.url, length: html.length, hits: TERMS.filter(t => html.toLowerCase().includes(t.toLowerCase())) },
+    page: {
+      status: base.status,
+      finalUrl: base.url,
+      length: html.length,
+      hits: TERMS.filter(t => html.toLowerCase().includes(t.toLowerCase())),
+      iframeCount: (html.match(/<iframe\b/gi)||[]).length,
+      videoCount: (html.match(/<video\b/gi)||[]).length,
+      sample: html.slice(0, 1800)
+    },
     suspiciousScripts: scripts
   }), { headers: { 'content-type':'application/json; charset=utf-8', 'cache-control':'no-store' }});
 }
