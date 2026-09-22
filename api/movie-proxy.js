@@ -14,38 +14,6 @@ const AD_HOSTS = [
   'juicyads.com'
 ];
 
-
-const PLAYER_AD_GUARD = `<script id="bb-player-ad-guard">
-(function(){
-  function harden(frame){
-    if(!frame || frame.tagName !== 'IFRAME') return;
-    var src = frame.getAttribute('src') || '';
-    if(!/^https?:/i.test(src)) return;
-    if(frame.dataset.bbAdGuard === '1') return;
-    frame.dataset.bbAdGuard = '1';
-    frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-presentation allow-downloads');
-    frame.setAttribute('allow','autoplay; fullscreen; picture-in-picture; encrypted-media');
-    frame.setAttribute('referrerpolicy','no-referrer');
-  }
-  function scan(root){
-    if(!root) return;
-    if(root.tagName === 'IFRAME') harden(root);
-    if(root.querySelectorAll) root.querySelectorAll('iframe').forEach(harden);
-  }
-  new MutationObserver(function(records){
-    records.forEach(function(record){
-      record.addedNodes.forEach(scan);
-      if(record.type === 'attributes' && record.target && record.target.tagName === 'IFRAME') harden(record.target);
-    });
-  }).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src']});
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded',function(){scan(document);},{once:true});
-  } else {
-    scan(document);
-  }
-})();
-<\/script>`;
-
 const DROP_RESPONSE_HEADERS = new Set([
   'content-length',
   'content-encoding',
@@ -106,14 +74,6 @@ function stripKnownAds(html) {
 
 function sanitizeHtml(html) {
   let out = stripKnownAds(replaceBranding(html));
-
-  // Purge ad URLs embedded in Next.js hydration payloads as well as normal tags.
-  out = sanitizeScript(out)
-    .replace(/\\baclib-run\\b/gi, 'blocked-ad-run')
-    .replace(/\\baclib\\b/gi, 'blockedAdLib');
-
-  // Install the player guard before application scripts run.
-  out = out.replace(/<head([^>]*)>/i, '<head$1>' + PLAYER_AD_GUARD);
 
   out = out
     .replace(/<title>[\s\S]*?<\/title>/i, '<title>BingeBox Movies — Watch Movies Online</title>')
