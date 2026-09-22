@@ -20,14 +20,11 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/native-movies",
-      "dest": "/api/native-movies"
-    },
-    { "handle": "filesystem" },
-    {
-      "src": "/.*",
-      "dest": "/movie-native.html"
-    }
+    { "src": "/api/native-movies", "dest": "/api/native-movies" },
+    { "src": "/movie-native.css", "dest": "/movie-native.css" },
+    { "src": "/movie-native.js", "dest": "/movie-native.js" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { "src": "/(.*)", "dest": "/movie-native.html" }
   ]
 }
