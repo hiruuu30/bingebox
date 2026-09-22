@@ -22,7 +22,10 @@ const DROP_RESPONSE_HEADERS = new Set([
   'keep-alive',
   'report-to',
   'nel',
-  'server-timing'
+  'server-timing',
+  'cf-ray',
+  'cf-cache-status',
+  'speculation-rules'
 ]);
 
 const DROP_REQUEST_HEADERS = new Set([
@@ -46,7 +49,10 @@ function replaceBranding(input) {
     .replace(/\bBingeflix\b/g, 'BingeBox')
     .replace(/\bbingeflix\b/g, 'bingebox')
     .replace(/https?:\/\/discord\.com\/invite\/ajRY6Bn3rr/gi, '/')
-    .replace(/https?:\/\/discord\.gg\/ajRY6Bn3rr/gi, '/');
+    .replace(/https?:\/\/discord\.gg\/ajRY6Bn3rr/gi, '/')
+    .replace(/Join our Discord/gi, 'Community')
+    .replace(/Join Discord/gi, 'Community')
+    .replace(/>Discord</g, '>Community<');
 }
 
 function stripKnownAds(html) {
@@ -151,7 +157,6 @@ function requestHeaders(request) {
   for (const [key, value] of request.headers.entries()) {
     if (!DROP_REQUEST_HEADERS.has(key.toLowerCase())) headers.set(key, value);
   }
-  headers.set('host', 'bingeflix.tv');
   headers.set('origin', UPSTREAM_ORIGIN);
   headers.set('referer', UPSTREAM_ORIGIN + '/');
   headers.set('accept-encoding', 'identity');
@@ -225,7 +230,9 @@ async function proxy(request) {
   const isScript = /(?:javascript|ecmascript)/i.test(contentType);
   const isJson = /(?:application\/json|application\/manifest\+json)/i.test(contentType);
   const isCss = contentType.includes('text/css');
-  const shouldTransform = isHtml || isScript || isJson || isCss;
+  const isFlight = contentType.includes('text/x-component') || request.headers.get('rsc') === '1';
+  const isText = contentType.startsWith('text/');
+  const shouldTransform = isHtml || isScript || isJson || isCss || isFlight || isText;
 
   const headers = responseHeaders(upstream, contentType, isHtml);
 
