@@ -562,14 +562,19 @@
 
   async function loadDramas(){
     try{
-      const dramaRows=await apiAll('/rest/v1/dramas?select=*,episode_stats:episodes(count)&order=sort_order.asc,created_at.desc',1000);
-      dramas=Array.isArray(dramaRows)?dramaRows:[];
+      const payload=await api('/rest/v1/rpc/get_bingebox_workspace_library',{method:'POST',body:'{}'});
+      dramas=Array.isArray(payload?.items)?payload.items:[];
       dramaRenderLimit=DRAMA_RENDER_STEP;
       const counts={};
-      for(const d of dramas)counts[d.id]=Math.max(0,Number(d.episode_stats?.[0]?.count||0));
+      for(const d of dramas)counts[d.id]=Math.max(0,Number(d.episode_count||0));
       dramaEpisodeCounts=counts;
       renderStats(counts);renderDramas(counts);
-    }catch(err){ $('#dramaList').innerHTML=`<div class="empty">${esc(err.message)}</div>`; }
+      return true;
+    }catch(err){
+      $('#dramaList').innerHTML=`<div class="empty">${esc(err.message)}</div>`;
+      const summary=$('#librarySummary');if(summary)summary.textContent='Library data could not be loaded.';
+      throw err;
+    }
   }
   function renderStats(counts){
     const total=dramas.length, live=dramas.filter(d=>d.published&&!(d.publish_at&&new Date(d.publish_at)>new Date())).length, episodes=Object.values(counts).reduce((a,b)=>a+b,0);

@@ -174,8 +174,8 @@
     try{
       const data=await rpc();
       if(!systemVisible())return;
-      render(data);lastUpdated=new Date();
-      if(freshness)freshness.textContent='Updated '+lastUpdated.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · refreshes every 30s';
+      render(data);lastUpdated=new Date(data?.at||Date.now());
+      if(freshness)freshness.textContent='Backend snapshot '+age(data?.at||lastUpdated.toISOString())+' · UI checks every 30s';
     }
     catch(err){
       if(!lastData)overview.innerHTML='<div class="empty">'+esc(err.message)+'</div>';
