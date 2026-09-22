@@ -38,9 +38,10 @@ export async function GET(){
   const first=episodes.value.first;
   const media=await timed('media_probe',async()=>{
     if(!first.video_url)return {skipped:true,reason:'no_direct_url'};
-    const r=await fetch(first.video_url,{method:'HEAD',cache:'no-store',redirect:'follow'});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return {reachable:true,contentType:r.headers.get('content-type')||null};
+    const r=await fetch(first.video_url,{method:'GET',cache:'no-store',redirect:'follow',headers:{Range:'bytes=0-0'}});
+    if(!(r.ok||r.status===206))throw new Error('HTTP '+r.status);
+    try{await r.body?.cancel()}catch{}
+    return {reachable:true,status:r.status,contentType:r.headers.get('content-type')||null};
   });
 
   const source=await timed('alternate_source_lookup',async()=>{
