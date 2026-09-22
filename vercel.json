@@ -9,6 +9,10 @@
       "dest": "/api/movie-proxy"
     },
     {
+      "src": "/api/player-probe",
+      "dest": "/api/player-probe"
+    },
+    {
       "src": "/(.*)",
       "has": [
         {
@@ -187,6 +191,9 @@
     },
     "api/movie-proxy.js": {
       "maxDuration": 60
+    },
+    "api/player-probe.js": {
+      "maxDuration": 30
     }
   }
 }
