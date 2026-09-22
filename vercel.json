@@ -3,10 +3,19 @@
   "framework": null,
   "buildCommand": "node ./scripts/build.mjs",
   "outputDirectory": "public",
+  "functions": {
+    "api/movie-proxy.js": {
+      "maxDuration": 60
+    }
+  },
   "routes": [
     {
+      "src": "/api/movie-proxy",
+      "dest": "/api/movie-proxy"
+    },
+    {
       "src": "/(.*)",
-      "dest": "https://bingeflix.tv/$1"
+      "dest": "/api/movie-proxy?path=$1"
     }
   ]
 }
