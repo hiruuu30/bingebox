@@ -45,8 +45,13 @@ export async function GET(request){
       const detail=(await res.text().catch(()=>'' )).slice(0,120);
       throw new Error(`supabase_${res.status}_${detail}`);
     }
-    const items=await res.json();
-    if(!Array.isArray(items))throw new Error('invalid_search_payload');
+    const rows=await res.json();
+    if(!Array.isArray(rows))throw new Error('invalid_search_payload');
+    const items=rows.map(d=>({
+      id:d.id,slug:d.slug,title:d.title,genre:d.genre,mood:d.mood,poster_url:d.poster_url,
+      featured:d.featured,is_complete:d.is_complete,is_r18:d.is_r18,
+      score:d.score,match_reason:d.match_reason
+    }));
     memory.set(key,{items,at:Date.now()});
     if(memory.size>100)memory.delete(memory.keys().next().value);
     return json({items,query:q},200,'live');

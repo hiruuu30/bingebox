@@ -46,7 +46,7 @@
     let debounceTimer=null;
     let activeIndex=-1;
 
-    const searchNorm=s=>String(s||'').normalize?.('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()||'';
+    const searchNorm=s=>{const raw=String(s||'');const folded=typeof raw.normalize==='function'?raw.normalize('NFKD'):raw;return folded.replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()};
     const dice=(a,b)=>{
       a=searchNorm(a);b=searchNorm(b);
       if(!a||!b)return 0;if(a===b)return 1;
