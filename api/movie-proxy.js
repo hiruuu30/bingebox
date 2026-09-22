@@ -75,6 +75,11 @@ function stripKnownAds(html) {
 function sanitizeHtml(html) {
   let out = stripKnownAds(replaceBranding(html));
 
+  // Neutralize the hard-coded pop-ad scripts while preserving page hydration.
+  out = out
+    .replace(/(?:https?:)?\/\/acscdn\.com\/script\/aclib\.js/gi, 'about:blank')
+    .replace(/aclib\.runPop/gi, 'aclib.blockedPop');
+
   out = out
     .replace(/<title>[\s\S]*?<\/title>/i, '<title>BingeBox Movies — Watch Movies Online</title>')
     .replace(
@@ -88,7 +93,45 @@ function sanitizeHtml(html) {
 }
 
 function sanitizeScript(text) {
-  return replaceBranding(text).replace(/https?:\/\/[^"'\s)]+/gi, (url) => isAdUrl(url) ? 'about:blank' : url);
+  let out = replaceBranding(text)
+    .replace(/https?:\/\/[^"'\s)]+/gi, (url) => isAdUrl(url) ? 'about:blank' : url);
+
+  // Player-only hardening: start with VidNest and prevent embedded players from opening popups/new tabs.
+  out = out
+    .replace(/useState\)\("EMBED_SU"\)/g, 'useState)("AUTOEMBED")')
+    .replace(
+      'className:"w-full h-full border-0 absolute inset-0 z-0 bg-black",allowFullScreen:!0',
+      'className:"w-full h-full border-0 absolute inset-0 z-0 bg-black",sandbox:"allow-scripts allow-same-origin allow-forms allow-presentation allow-downloads",referrerPolicy:"no-referrer",allowFullScreen:!0'
+    );
+
+  return out;
+}
+
+function sanitizeAdminConfig(text) {
+  try {
+    const data = JSON.parse(text);
+    data.adScript = '';
+    data.adScriptPages = 'none';
+    data.defaultProvider = 'AUTOEMBED';
+
+    if (typeof data.activeProviders === 'string') {
+      try {
+        const providers = JSON.parse(data.activeProviders);
+        if (Array.isArray(providers)) {
+          providers.sort((a, b) => {
+            if (a?.id === 'AUTOEMBED') return -1;
+            if (b?.id === 'AUTOEMBED') return 1;
+            return 0;
+          });
+          data.activeProviders = JSON.stringify(providers);
+        }
+      } catch {}
+    }
+
+    return JSON.stringify(data);
+  } catch {
+    return text;
+  }
 }
 
 function manifestResponse() {
@@ -240,9 +283,15 @@ async function proxy(request) {
 
   if (shouldTransform) {
     let text = await upstream.text();
-    if (isHtml) text = sanitizeHtml(text);
-    else if (isScript) text = sanitizeScript(text);
-    else text = replaceBranding(text);
+    if (requestedPath === '/api/sys-admin/config' && isJson) {
+      text = sanitizeAdminConfig(text);
+    } else if (isHtml) {
+      text = sanitizeHtml(text);
+    } else if (isScript) {
+      text = sanitizeScript(text);
+    } else {
+      text = replaceBranding(text);
+    }
     return new Response(text, { status: upstream.status, headers });
   }
 
