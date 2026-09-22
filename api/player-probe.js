@@ -1,8 +1,8 @@
-const URL = 'https://vidnest.fun/movie/238?1=1';
+const TEST_URL = 'https://vidnest.fun/movie/238?1=1';
 const TERMS = ['window.open','popunder','popads','popup','adsterra','monetag','propeller','aclib','acscdn','doubleclick','googlesyndication','target="_blank"','disable sandbox'];
 
 export async function GET() {
-  const base = await fetch(URL, {
+  const base = await fetch(TEST_URL, {
     redirect: 'follow',
     headers: {
       'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1',
