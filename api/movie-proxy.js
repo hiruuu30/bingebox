@@ -117,23 +117,19 @@ function bustPlayerChunkRefs(text) {
 function sanitizeAdminConfig(text) {
   try {
     const data = JSON.parse(text);
+
     data.adScript = '';
     data.adScriptPages = 'none';
     data.defaultProvider = 'AUTOEMBED';
-
-    if (typeof data.activeProviders === 'string') {
-      try {
-        const providers = JSON.parse(data.activeProviders);
-        if (Array.isArray(providers)) {
-          providers.sort((a, b) => {
-            if (a?.id === 'AUTOEMBED') return -1;
-            if (b?.id === 'AUTOEMBED') return 1;
-            return 0;
-          });
-          data.activeProviders = JSON.stringify(providers);
-        }
-      } catch {}
-    }
+    data.activeProviders = JSON.stringify([
+      {
+        id: 'AUTOEMBED',
+        name: 'Server 1',
+        enabled: true,
+        movieUrl: 'https://bingebox-movie-omega.vercel.app/movie/{tmdbId}?1=1{extra}',
+        tvUrl: 'https://bingebox-movie-omega.vercel.app/tv/{tmdbId}/{season}/{episode}?1=1{extra}'
+      }
+    ]);
 
     return JSON.stringify(data);
   } catch {

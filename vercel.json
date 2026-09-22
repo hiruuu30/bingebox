@@ -9,8 +9,18 @@
       "dest": "/api/movie-proxy"
     },
     {
-      "src": "/api/player-probe",
-      "dest": "/api/player-probe"
+      "src": "/api/vidnest-clean",
+      "dest": "/api/vidnest-clean"
+    },
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "bingebox-movie-omega.vercel.app"
+        }
+      ],
+      "dest": "/api/vidnest-clean?path=$1"
     },
     {
       "src": "/(.*)",
@@ -192,8 +202,8 @@
     "api/movie-proxy.js": {
       "maxDuration": 60
     },
-    "api/player-probe.js": {
-      "maxDuration": 30
+    "api/vidnest-clean.js": {
+      "maxDuration": 60
     }
   }
 }
