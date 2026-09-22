@@ -1,5 +1,5 @@
-Deployment trigger for BingeBox Workspace revamp production release.
+Deployment trigger for BingeBox Movie production release.
 
-Source commit: a602db2793184f76f7b0da0be43ac22f60f681c5
-Workspace features: revamped navigation, readable library, sync monitoring, provider filters, refresh status, responsive styling.
-Preserve current playback and backend fixes.
+Branch: movie-preview
+Purpose: verify Production environment branch tracking and publish the sanitized movie proxy.
+Triggered: 2026-09-22 23:08 Asia/Manila
