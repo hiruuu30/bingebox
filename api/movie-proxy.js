@@ -107,6 +107,13 @@ function sanitizeScript(text) {
   return out;
 }
 
+function bustPlayerChunkRefs(text) {
+  return String(text).replaceAll(
+    '/_next/static/chunks/3v4azrekrwc02.js',
+    '/_next/static/chunks/3v4azrekrwc02.js?bbv=nosandbox-2'
+  );
+}
+
 function sanitizeAdminConfig(text) {
   try {
     const data = JSON.parse(text);
@@ -286,12 +293,21 @@ async function proxy(request) {
     if (requestedPath === '/api/sys-admin/config' && isJson) {
       text = sanitizeAdminConfig(text);
     } else if (isHtml) {
-      text = sanitizeHtml(text);
+      text = bustPlayerChunkRefs(sanitizeHtml(text));
     } else if (isScript) {
       text = sanitizeScript(text);
     } else {
       text = replaceBranding(text);
+      if (isFlight || isJson) text = bustPlayerChunkRefs(text);
     }
+
+    // We transform JS responses at the proxy, so never let browsers retain a stale transformed bundle.
+    if (isScript) {
+      headers.set('cache-control', 'private, no-cache, no-store, max-age=0, must-revalidate');
+      headers.set('pragma', 'no-cache');
+      headers.set('expires', '0');
+    }
+
     return new Response(text, { status: upstream.status, headers });
   }
 
