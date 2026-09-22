@@ -55,25 +55,21 @@ function replaceBranding(input) {
     .replace(/>Discord</g, '>Community<');
 }
 
+function isAdUrl(value) {
+  const lower = String(value || '').toLowerCase();
+  return AD_HOSTS.some((host) => lower.includes(host));
+}
+
 function stripKnownAds(html) {
-  let out = html;
-
-  for (const host of AD_HOSTS) {
-    const escaped = escapeRegex(host);
-    out = out
-      .replace(new RegExp('<script\\b[^>]*src=["\\'][^"\\']*' + escaped + '[^"\\']*["\\'][^>]*>\\s*<\\/script>', 'gi'), '')
-      .replace(new RegExp('<link\\b[^>]*href=["\\'][^"\\']*' + escaped + '[^"\\']*["\\'][^>]*>', 'gi'), '')
-      .replace(new RegExp('<iframe\\b[^>]*src=["\\'][^"\\']*' + escaped + '[^"\\']*["\\'][^>]*>[\\s\\S]*?<\\/iframe>', 'gi'), '');
-  }
-
-  out = out
+  return String(html)
+    .replace(/<script\b[^>]*src=["'][^"']+["'][^>]*>\s*<\/script>/gi, (tag) => isAdUrl(tag) ? '' : tag)
+    .replace(/<link\b[^>]*href=["'][^"']+["'][^>]*>/gi, (tag) => isAdUrl(tag) ? '' : tag)
+    .replace(/<iframe\b[^>]*src=["'][^"']+["'][^>]*>[\s\S]*?<\/iframe>/gi, (tag) => isAdUrl(tag) ? '' : tag)
     .replace(/<script\b[^>]*src=["'][^"']*\/cdn-cgi\/scripts\/[^"']*rocket-loader[^"']*["'][^>]*>\s*<\/script>/gi, '')
     .replace(/<script\b[^>]*src=["'][^"']*\/cdn-cgi\/scripts\/[^"']*email-decode[^"']*["'][^>]*>\s*<\/script>/gi, '')
     .replace(/\sdata-cf-settings=["'][^"']*["']/gi, '')
     .replace(/type=["'][a-f0-9]+-text\/javascript["']/gi, 'type="text/javascript"')
     .replace(/href=["']\/cdn-cgi\/l\/email-protection#[^"']*["']/gi, 'href="#"');
-
-  return out;
 }
 
 function sanitizeHtml(html) {
@@ -92,13 +88,7 @@ function sanitizeHtml(html) {
 }
 
 function sanitizeScript(text) {
-  let out = replaceBranding(text);
-  for (const host of AD_HOSTS) {
-    const escaped = escapeRegex(host);
-    out = out.replace(new RegExp('https?:\\/\\/[^"\\'\\s]*' + escaped + '[^"\\'\\s]*', 'gi'), 'about:blank');
-    out = out.replace(new RegExp('\\/\\/[^"\\'\\s]*' + escaped + '[^"\\'\\s]*', 'gi'), 'about:blank');
-  }
-  return out;
+  return replaceBranding(text).replace(/https?:\/\/[^"'\s)]+/gi, (url) => isAdUrl(url) ? 'about:blank' : url);
 }
 
 function manifestResponse() {
