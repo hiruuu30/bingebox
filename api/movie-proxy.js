@@ -101,7 +101,7 @@ function sanitizeScript(text) {
     .replace(/useState\)\("EMBED_SU"\)/g, 'useState)("AUTOEMBED")')
     .replace(
       'className:"w-full h-full border-0 absolute inset-0 z-0 bg-black",allowFullScreen:!0',
-      'className:"w-full h-full border-0 absolute inset-0 z-0 bg-black",sandbox:"allow-scripts allow-same-origin allow-forms allow-presentation allow-downloads",referrerPolicy:"no-referrer",allowFullScreen:!0'
+      'className:"w-full h-full border-0 absolute inset-0 z-0 bg-black",referrerPolicy:"no-referrer",allowFullScreen:!0'
     );
 
   return out;
