@@ -349,7 +349,7 @@ function renderTv() {
     <section class="native-page-head">
       <div class="native-kicker">Native BingeBox</div>
       <h1 class="native-page-title">TV Shows</h1>
-      <p class="native-page-copy">The movie frontend is now independent. The native TV catalog is the next backend migration, so this route no longer falls back to Bingeflix.</p>
+      <p class="native-page-copy">The movie frontend is now independent. The native TV catalog is the next backend migration, so this route no longer falls back to a legacy upstream.</p>
     </section>
     <div class="native-empty"><strong>TV catalog migration in progress.</strong><div class="native-muted" style="margin-top:8px">Movies, search, details and playback are already using the BingeBox backend.</div></div>
   `;
