@@ -5,6 +5,10 @@
   "outputDirectory": "public",
   "routes": [
     {
+      "src": "/api/movie-proxy",
+      "dest": "/api/movie-proxy"
+    },
+    {
       "src": "/(.*)",
       "has": [
         {
@@ -12,7 +16,7 @@
           "value": "movie.bingebox.bond"
         }
       ],
-      "dest": "https://bingebox-movie-d92skq5ue-hello-65386311.vercel.app/$1"
+      "dest": "/api/movie-proxy?path=$1"
     },
     {
       "src": "/.*",
@@ -180,6 +184,9 @@
       "functionFailoverRegions": [
         "sin1"
       ]
+    },
+    "api/movie-proxy.js": {
+      "maxDuration": 60
     }
   }
 }
