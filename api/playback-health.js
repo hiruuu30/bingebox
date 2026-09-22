@@ -4,47 +4,61 @@ const headers={apikey:KEY,Accept:'application/json'};
 
 async function timed(label,fn){
   const started=Date.now();
-  try{
-    const value=await fn();
-    return {label,ok:true,ms:Date.now()-started,value};
-  }catch(error){
-    return {label,ok:false,ms:Date.now()-started,error:String(error?.message||error)};
-  }
+  try{return {label,ok:true,ms:Date.now()-started,value:await fn()}}
+  catch(error){return {label,ok:false,ms:Date.now()-started,error:String(error?.message||error)}}
 }
 
 export async function GET(){
-  const drama=await timed('drama_lookup',async()=>{
-    const r=await fetch(SUPABASE_URL+'/rest/v1/dramas?published=eq.true&slug=eq.hero-husband-s-apocalypse-harem&select=id,slug,title&limit=1',{headers,cache:'no-store'});
+  const catalog=await timed('catalog_snapshot',async()=>{
+    const r=await fetch('https://bingebox.bond/data/catalog.json',{cache:'no-store',headers:{Accept:'application/json'}});
     if(!r.ok)throw new Error('HTTP '+r.status);
-    const rows=await r.json(); if(!rows?.[0])throw new Error('not_found'); return rows[0];
+    const body=await r.json();
+    const items=Array.isArray(body)?body:body?.items;
+    const drama=(items||[]).find(x=>x.slug==='hero-husband-s-apocalypse-harem')||(items||[])[0];
+    if(!drama?.id)throw new Error('no_drama');
+    return {id:drama.id,slug:drama.slug,title:drama.title};
   });
-  if(!drama.ok)return Response.json({ok:false,steps:[drama]},{status:503});
+  if(!catalog.ok)return Response.json({ok:false,steps:[catalog]},{status:503});
 
-  const eps=await timed('playable_episode_rpc',async()=>{
-    const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/get_drama_playable_episodes',{
-      method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({p_drama_id:drama.value.id}),cache:'no-store'
-    });
-    if(!r.ok){const t=await r.text().catch(()=>String(r.status));throw new Error('HTTP '+r.status+' '+t.slice(0,240));}
-    const rows=await r.json(); if(!rows?.length)throw new Error('no_playable_episodes'); return {count:rows.length,first:rows[0]};
-  });
-  if(!eps.ok)return Response.json({ok:false,steps:[drama,{...eps,value:undefined}]},{status:503});
-
-  const first=eps.value.first;
-  const src=await timed('source_lookup',async()=>{
-    const q=SUPABASE_URL+'/rest/v1/episode_sources?episode_id=eq.'+encodeURIComponent(first.episode_id)+'&active=eq.true&select=provider,source_type,source_url,health_status,priority&order=priority.asc&limit=3';
+  const episodes=await timed('episode_lookup',async()=>{
+    const q=new URL(SUPABASE_URL+'/rest/v1/episodes');
+    q.searchParams.set('drama_id','eq.'+catalog.value.id);
+    q.searchParams.set('published','eq.true');
+    q.searchParams.set('select','id,episode_number,video_key,video_url');
+    q.searchParams.set('order','episode_number.asc');
+    q.searchParams.set('limit','5');
     const r=await fetch(q,{headers,cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const rows=await r.json();
-    return {count:rows.length,providers:rows.map(x=>x.provider),healthy:rows.map(x=>x.health_status)};
+    if(!rows?.length)throw new Error('no_published_episodes');
+    return {count:rows.length,first:rows[0]};
+  });
+  if(!episodes.ok)return Response.json({ok:false,steps:[catalog,episodes]},{status:503});
+
+  const first=episodes.value.first;
+  const media=await timed('media_probe',async()=>{
+    if(!first.video_url)return {skipped:true,reason:'no_direct_url'};
+    const r=await fetch(first.video_url,{method:'HEAD',cache:'no-store',redirect:'follow'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return {reachable:true,contentType:r.headers.get('content-type')||null};
   });
 
-  const token=first.video_key?await timed('r2_token',async()=>{
-    const r=await fetch('https://bingebox-upload.hero-tolentino.workers.dev/token?key='+encodeURIComponent(first.video_key),{headers:{Accept:'application/json'},cache:'no-store'});
-    const body=await r.json().catch(()=>({}));
-    if(!r.ok||!body.url)throw new Error('HTTP '+r.status);
-    return {urlIssued:true};
-  }):{label:'r2_token',ok:true,ms:0,value:{skipped:true}};
+  const source=await timed('alternate_source_lookup',async()=>{
+    const q=SUPABASE_URL+'/rest/v1/episode_sources?episode_id=eq.'+encodeURIComponent(first.id)+'&active=eq.true&select=provider,source_type,health_status,priority&order=priority.asc&limit=3';
+    const r=await fetch(q,{headers,cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const rows=await r.json();
+    return {count:rows.length,providers:rows.map(x=>x.provider),health:rows.map(x=>x.health_status)};
+  });
 
-  const steps=[drama,{...eps,value:{count:eps.value.count,first:{episode_id:first.episode_id,episode_number:first.episode_number,has_video_key:!!first.video_key,has_video_url:!!first.video_url}}},src,token];
-  return Response.json({ok:steps.every(x=>x.ok),steps},{headers:{'cache-control':'no-store'}});
+  const critical=[catalog,episodes,media];
+  return Response.json({
+    ok:critical.every(x=>x.ok),
+    steps:[
+      catalog,
+      {...episodes,value:{count:episodes.value.count,first:{id:first.id,episode_number:first.episode_number,has_video_key:!!first.video_key,has_video_url:!!first.video_url}}},
+      media,
+      source
+    ]
+  },{status:critical.every(x=>x.ok)?200:503,headers:{'cache-control':'no-store'}});
 }
