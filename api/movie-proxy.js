@@ -1,5 +1,6 @@
 const UPSTREAM_ORIGIN = 'https://bingeflix.tv';
 const PUBLIC_ORIGIN = 'https://movie.bingebox.bond';
+const PARTNERSHIP_EMAIL = 'partnership@bingebox.bond';
 
 const AD_HOSTS = [
   'acscdn.com',
@@ -45,9 +46,14 @@ function escapeRegex(value) {
 function replaceBranding(input) {
   return String(input)
     .replace(/https?:\/\/(?:www\.)?bingeflix\.tv/gi, PUBLIC_ORIGIN)
+    .replace(/mailto:bingeflex@protonmail\.me/gi, 'mailto:' + PARTNERSHIP_EMAIL)
+    .replace(/bingeflex@protonmail\.me/gi, PARTNERSHIP_EMAIL)
     .replace(/\bBINGEFLIX\b/g, 'BINGEBOX')
     .replace(/\bBingeflix\b/g, 'BingeBox')
     .replace(/\bbingeflix\b/g, 'bingebox')
+    .replace(/\bBINGEFLEX\b/g, 'BINGEBOX')
+    .replace(/\bBingeflex\b/g, 'BingeBox')
+    .replace(/\bbingeflex\b/g, 'bingebox')
     .replace(/https?:\/\/discord\.com\/invite\/ajRY6Bn3rr/gi, '/')
     .replace(/https?:\/\/discord\.gg\/ajRY6Bn3rr/gi, '/')
     .replace(/Join our Discord/gi, 'Community')
