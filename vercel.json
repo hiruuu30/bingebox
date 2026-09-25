@@ -33,6 +33,16 @@
       "dest": "/api/movie-proxy?path=$1"
     },
     {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "movie.bingebox.org"
+        }
+      ],
+      "dest": "/api/movie-proxy?path=$1"
+    },
+    {
       "src": "/.*",
       "headers": {
         "X-Frame-Options": "DENY",
