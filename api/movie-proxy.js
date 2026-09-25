@@ -1,5 +1,6 @@
 const UPSTREAM_ORIGIN = 'https://bingeflix.tv';
 const PUBLIC_ORIGIN = 'https://movie.bingebox.bond';
+const PUBLIC_HOSTS = new Set(['movie.bingebox.bond', 'movie.bingebox.org']);
 const PARTNERSHIP_EMAIL = 'partnership@bingebox.bond';
 
 const AD_HOSTS = [
@@ -43,9 +44,18 @@ function escapeRegex(value) {
   return String(value).replace(/[.*+?^$()|[\]\\{}]/g, '\\$&');
 }
 
-function replaceBranding(input) {
+function resolvePublicOrigin(request) {
+  try {
+    const url = new URL(request.url);
+    const host = (request.headers.get('x-forwarded-host') || request.headers.get('host') || url.host || '').split(',')[0].trim().toLowerCase();
+    if (PUBLIC_HOSTS.has(host)) return `https://${host}`;
+  } catch {}
+  return PUBLIC_ORIGIN;
+}
+
+function replaceBranding(input, publicOrigin = PUBLIC_ORIGIN) {
   return String(input)
-    .replace(/https?:\/\/(?:www\.)?bingeflix\.tv/gi, PUBLIC_ORIGIN)
+    .replace(/https?:\/\/(?:www\.)?bingeflix\.tv/gi, publicOrigin)
     .replace(/mailto:bingeflex@protonmail\.me/gi, 'mailto:' + PARTNERSHIP_EMAIL)
     .replace(/bingeflex@protonmail\.me/gi, PARTNERSHIP_EMAIL)
     .replace(/\bBINGEFLIX\b/g, 'BINGEBOX')
@@ -78,8 +88,8 @@ function stripKnownAds(html) {
     .replace(/href=["']\/cdn-cgi\/l\/email-protection#[^"']*["']/gi, 'href="#"');
 }
 
-function sanitizeHtml(html) {
-  let out = stripKnownAds(replaceBranding(html));
+function sanitizeHtml(html, publicOrigin = PUBLIC_ORIGIN) {
+  let out = stripKnownAds(replaceBranding(html, publicOrigin));
 
   // Neutralize the hard-coded pop-ad scripts while preserving page hydration.
   out = out
@@ -98,8 +108,8 @@ function sanitizeHtml(html) {
   return out;
 }
 
-function sanitizeScript(text) {
-  let out = replaceBranding(text)
+function sanitizeScript(text, publicOrigin = PUBLIC_ORIGIN) {
+  let out = replaceBranding(text, publicOrigin)
     .replace(/https?:\/\/[^"'\s)]+/gi, (url) => isAdUrl(url) ? 'about:blank' : url);
 
   // Player-only hardening: start with VidNest and prevent embedded players from opening popups/new tabs.
@@ -205,11 +215,11 @@ function requestHeaders(request) {
   return headers;
 }
 
-function responseHeaders(upstream, contentType, isHtml) {
+function responseHeaders(upstream, contentType, isHtml, publicOrigin = PUBLIC_ORIGIN) {
   const headers = new Headers();
   for (const [key, value] of upstream.headers.entries()) {
     if (!DROP_RESPONSE_HEADERS.has(key.toLowerCase()) && key.toLowerCase() !== 'set-cookie') {
-      headers.set(key, replaceBranding(value));
+      headers.set(key, replaceBranding(value, publicOrigin));
     }
   }
 
@@ -232,6 +242,8 @@ function responseHeaders(upstream, contentType, isHtml) {
 
 async function proxy(request) {
   const incoming = new URL(request.url);
+  const publicOrigin = resolvePublicOrigin(request);
+  const publicHost = new URL(publicOrigin).hostname;
   const requestedPath = '/' + (incoming.searchParams.get('path') || '').replace(/^\/+/, '');
 
   if (requestedPath === '/manifest.json') return manifestResponse();
@@ -262,8 +274,8 @@ async function proxy(request) {
 
   if (upstream.status >= 300 && upstream.status < 400) {
     const location = upstream.headers.get('location');
-    const headers = responseHeaders(upstream, upstream.headers.get('content-type'), false);
-    if (location) headers.set('location', replaceBranding(location));
+    const headers = responseHeaders(upstream, upstream.headers.get('content-type'), false, publicOrigin);
+    if (location) headers.set('location', replaceBranding(location, publicOrigin));
     return new Response(null, { status: upstream.status, headers });
   }
 
@@ -276,7 +288,7 @@ async function proxy(request) {
   const isText = contentType.startsWith('text/');
   const shouldTransform = isHtml || isScript || isJson || isCss || isFlight || isText;
 
-  const headers = responseHeaders(upstream, contentType, isHtml);
+  const headers = responseHeaders(upstream, contentType, isHtml, publicOrigin);
 
   // No-content statuses cannot be returned with a transformed/string body.
   if (upstream.status === 204 || upstream.status === 205) {
@@ -287,8 +299,8 @@ async function proxy(request) {
   const cookies = getSetCookie ? getSetCookie() : [];
   if (cookies.length) {
     const cleaned = cookies.map((cookie) =>
-      replaceBranding(cookie)
-        .replace(/;\s*Domain=\.?bingeflix\.tv/gi, '; Domain=movie.bingebox.bond')
+      replaceBranding(cookie, publicOrigin)
+        .replace(/;\s*Domain=\.?bingeflix\.tv/gi, '; Domain=' + publicHost)
     );
     headers.set('set-cookie', cleaned.join(', '));
   }
@@ -300,11 +312,11 @@ async function proxy(request) {
     if (requestedPath === '/api/sys-admin/config' && isJson) {
       text = sanitizeAdminConfig(text);
     } else if (isHtml) {
-      text = bustPlayerChunkRefs(sanitizeHtml(text));
+      text = bustPlayerChunkRefs(sanitizeHtml(text, publicOrigin));
     } else if (isScript) {
-      text = sanitizeScript(text);
+      text = sanitizeScript(text, publicOrigin);
     } else {
-      text = replaceBranding(text);
+      text = replaceBranding(text, publicOrigin);
       if (isFlight || isJson) text = bustPlayerChunkRefs(text);
     }
 
