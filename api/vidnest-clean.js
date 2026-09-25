@@ -166,6 +166,13 @@ async function proxy(request) {
 
   const headers = responseHeaders(upstream, contentType, isText);
 
+  // 204/205 responses must never carry a body. Re-wrapping an upstream body
+  // (or an empty string after text transformation) makes Undici reject the
+  // Response on Vercel/Node 24 with "Invalid response status code 204".
+  if (upstream.status === 204 || upstream.status === 205) {
+    return new Response(null, { status: upstream.status, headers });
+  }
+
   if (upstream.status >= 300 && upstream.status < 400) {
     const location = rewriteLocation(upstream.headers.get('location'));
     if (location) headers.set('location', location);
