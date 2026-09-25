@@ -172,7 +172,7 @@ function faviconResponse() {
 }
 
 function blockedAdResponse() {
-  return new Response('', {
+  return new Response(null, {
     status: 204,
     headers: {
       'cache-control': 'public, max-age=86400, s-maxage=604800'
@@ -277,6 +277,11 @@ async function proxy(request) {
   const shouldTransform = isHtml || isScript || isJson || isCss || isFlight || isText;
 
   const headers = responseHeaders(upstream, contentType, isHtml);
+
+  // No-content statuses cannot be returned with a transformed/string body.
+  if (upstream.status === 204 || upstream.status === 205) {
+    return new Response(null, { status: upstream.status, headers });
+  }
 
   const getSetCookie = upstream.headers.getSetCookie?.bind(upstream.headers);
   const cookies = getSetCookie ? getSetCookie() : [];
