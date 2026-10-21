@@ -134,8 +134,17 @@
     const base=(config.supabaseUrl||'').replace(/\/$/,''),headers={apikey:config.supabasePublishableKey,Accept:'application/json'};
     const existing=Array.isArray(item.sources)?item.sources:[];
     const remote=await fetchSourcesForEpisode(base,headers,item.episode_id);
-    const seen=new Set(existing.map(x=>String(x.source_url||'')+'|'+String(x.provider||'')));
-    item.sources=[...existing,...remote.filter(x=>{const k=String(x.source_url||'')+'|'+String(x.provider||'');if(seen.has(k))return false;seen.add(k);return true})];
+    // The episode.video_url can be stale even when the source table has a working URL.
+    // For non-R2 media, prefer source table URLs; keep episode_url only for fallback.
+    // For R2 uploads, preserve secure token-based playback at the front.
+    const preferred=item.video_key?[...existing,...remote]:[...remote,...existing];
+    const seen=new Set();
+    item.sources=preferred.filter(x=>{
+      const url=String(x.source_url||'').trim();
+      if(!url||seen.has(url))return false;
+      seen.add(url);
+      return true;
+    });
     item.sourcesLoaded=true;
     return item.sources;
   }
@@ -258,8 +267,11 @@
     const dramaPos=Math.max(0,sameDrama.findIndex(x=>x.episode_id===item.episode_id));
     $('#swipePosition').textContent=randomModeActive?`SURPRISE · ${index+1} / ${feed.length}`:`${dramaPos+1} / ${sameDrama.length}`;renderFavorite();renderEpisodeSheet();resetCounts();history.replaceState(null,'',`/watch?drama=${encodeURIComponent(item.slug)}&ep=${item.episode_number}`);
     try{
-      if(!(item.sources?.length))await ensureSources(item);
-      else ensureSources(item).then(()=>{if(s===seq)renderServers(item)}).catch(()=>{});
+      // Wait for current, filtered source metadata before picking the playback server.
+      // If Supabase is unavailable, retain a locally known URL as a fallback.
+      try{await ensureSources(item)}catch(sourceError){
+        if(!(item.sources?.length))throw sourceError;
+      }
       if(s!==seq)return;
       const src=item.sources?.[currentSourceIndex]||item.sources?.[0]||null;renderServers(item);currentMode=src?.source_type==='embed'?'embed':'direct';shell.classList.remove('landscape-mode');syncMediaLayout();
       if(currentMode==='embed'){video.classList.add('hidden');embed.classList.remove('hidden');embed.src=src.source_url;loading.classList.add('hidden');playBtn.classList.add('hidden');centerControls?.classList.add('embed-disabled');progressWrap?.classList.add('hidden');if(startedEpisodeId!==item.episode_id){startedEpisodeId=item.episode_id;BBUser?.track?.('watch_start',{dramaId:item.drama_id,episodeId:item.episode_id,metadata:{mode:'unified',provider:src.provider||'external'}}).catch(()=>{})}loadCounts(item).catch(()=>{});prefetchNeighborSources();setChrome(true,true);return}
