@@ -96,43 +96,15 @@
       }
     } catch {}
 
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3500);
-    try {
-      if (config.backendMode !== 'supabase' || !config.supabaseUrl || !config.supabasePublishableKey) throw new Error('Catalog unavailable.');
-      const base = config.supabaseUrl.replace(/\/$/,'');
-      const params = new URLSearchParams();
-      params.set('published','eq.true');
-      params.set('select','id,slug,title,genre,poster_url,is_complete,is_r18,sort_order,created_at');
-      params.set('order','sort_order.asc,created_at.desc');
-      params.set('limit',String(PAGE_SIZE));
-      params.set('offset',String((page-1)*PAGE_SIZE));
-      const safeQuery=query.replace(/[*,%]/g,' ').replace(/\s+/g,' ').trim();
-      if (safeQuery) params.set('title',`ilike.*${safeQuery}*`);
-      const res = await fetch(`${base}/rest/v1/dramas?${params}`, {
-        signal:controller.signal,
-        headers:{apikey:config.supabasePublishableKey,Accept:'application/json',Prefer:'count=exact'},
-        cache:'no-store'
-      });
-      if (!res.ok) throw new Error('Catalog unavailable.');
-      const rows = await res.json();
-      const liveTotal = parseTotal(res.headers.get('content-range'), (page-1)*PAGE_SIZE + rows.length);
-      const pages = Math.max(1, Math.ceil(liveTotal/PAGE_SIZE));
-      if (page > pages) { page = pages; writeUrlState(true); clearTimeout(timer); return load(); }
-      renderRows(rows, liveTotal);
-    } catch (err) {
-      if (!fallbackShown) {
-        console.error(err);
-        total = 0;
-        grid.innerHTML = '<p class="lite-empty">The Lite catalog is temporarily unavailable. Please try again.</p>';
-        status.textContent = 'Could not load catalog';
-        pageLabel.textContent = 'Page 1';
-        prev.disabled = true; next.disabled = true;
-      }
-    } finally {
-      clearTimeout(timer);
-      grid.setAttribute('aria-busy','false');
+    // Do not overwrite audited results with unfiltered published dramas.
+    if (!fallbackShown) {
+      total = 0;
+      grid.innerHTML = '<p class="lite-empty">Playable catalog temporarily unavailable. Please try again.</p>';
+      status.textContent = 'Could not load playable catalog';
+      pageLabel.textContent = 'Page 1';
+      prev.disabled = true; next.disabled = true;
     }
+    grid.setAttribute('aria-busy','false');
   }
 
   form?.addEventListener('submit', e => {
