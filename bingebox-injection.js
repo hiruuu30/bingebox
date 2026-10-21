@@ -299,7 +299,7 @@
     }));
   }
 
-  const HOME_CACHE_KEY='bb-home-playable-v1';
+  const HOME_CACHE_KEY='bb-home-http-verified-v1';
   const HOME_LIMIT=160;
 
   function normalizeRows(rows){
@@ -341,7 +341,7 @@
     const res=await fetch(url,{signal,cache:'no-store',headers:{Accept:'application/json'}});
     if(!res.ok)throw new Error('Playable catalog temporarily unavailable.');
     const data=await res.json();
-    if(data?.source!=='supabase-playability-audit-2026-10-21')throw new Error('Playable catalog audit missing.');
+    if(data?.source!=='supabase-http-verified-direct-2026-10-21')throw new Error('Playable catalog audit missing.');
     const rows=Array.isArray(data.items)?data.items:[];
     if(!rows.length)throw new Error('EMPTY_CATALOG');
     return rows.slice(0,HOME_LIMIT);
