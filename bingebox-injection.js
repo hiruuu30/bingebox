@@ -299,7 +299,7 @@
     }));
   }
 
-  const HOME_CACHE_KEY='bb-home-catalog-v3';
+  const HOME_CACHE_KEY='bb-home-playable-v1';
   const HOME_LIMIT=160;
 
   function normalizeRows(rows){
@@ -336,45 +336,15 @@
   }
 
   async function fetchHomeRows(signal){
-    const staticUrl=String(cfg.catalogEndpoint||'/data/catalog.json');
-    try{
-      const staticRes=await fetch(staticUrl,{
-        signal,
-        cache:'no-store',
-        headers:{Accept:'application/json'}
-      });
-      if(staticRes.ok){
-        const body=await staticRes.json();
-        const rows=Array.isArray(body)?body:body?.items;
-        if(Array.isArray(rows)&&rows.length)return rows.slice(0,HOME_LIMIT);
-      }
-    }catch(err){
-      if(signal.aborted)throw err;
-    }
-
-    try{
-      const res=await fetch('/api/catalog',{signal,headers:{Accept:'application/json'}});
-      if(!res.ok)throw new Error(`Catalog API ${res.status}`);
-      const body=await res.json();
-      const rows=Array.isArray(body)?body:body?.items;
-      if(!Array.isArray(rows)||!rows.length)throw new Error('EMPTY_CATALOG');
-      return rows;
-    }catch(apiError){
-      if(signal.aborted)throw apiError;
-      const base=String(cfg.supabaseUrl||'').replace(/\/$/,'');
-      if(!base||!cfg.supabasePublishableKey)throw apiError;
-      const params=new URLSearchParams({
-        published:'eq.true',
-        select:'id,slug,title,genre,mood,description,poster_url,featured,sort_order,created_at,updated_at,is_complete,publish_at,is_r18',
-        limit:String(HOME_LIMIT)
-      });
-      const res=await fetch(`${base}/rest/v1/dramas?${params}`,{
-        signal,
-        headers:{apikey:cfg.supabasePublishableKey,Accept:'application/json'}
-      });
-      if(!res.ok)throw new Error(`Catalog ${res.status}`);
-      return await res.json();
-    }
+    // Fail closed: never show an unfiltered catalog when playable media is unavailable.
+    const url=String(cfg.catalogEndpoint||'/data/catalog.json');
+    const res=await fetch(url,{signal,cache:'no-store',headers:{Accept:'application/json'}});
+    if(!res.ok)throw new Error('Playable catalog temporarily unavailable.');
+    const data=await res.json();
+    if(data?.source!=='supabase-playability-audit-2026-10-21')throw new Error('Playable catalog audit missing.');
+    const rows=Array.isArray(data.items)?data.items:[];
+    if(!rows.length)throw new Error('EMPTY_CATALOG');
+    return rows.slice(0,HOME_LIMIT);
   }
 
   async function load(){
