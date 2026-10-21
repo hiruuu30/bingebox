@@ -52,45 +52,59 @@
     return match && match[1] !== '*' ? Number(match[1]) : fallback;
   }
 
+  function renderRows(rows, count) {
+    total = Math.max(0, Number(count) || 0);
+    const pages = Math.max(1, Math.ceil(total/PAGE_SIZE));
+    grid.innerHTML = rows.length ? rows.map(card).join('') : '<p class="lite-empty">No matching dramas found.</p>';
+    const from = total && rows.length ? (page-1)*PAGE_SIZE+1 : 0;
+    const to = total && rows.length ? Math.min(from+rows.length-1,total) : 0;
+    status.textContent = query ? `${from}–${to} of ${total} matching titles` : `${from}–${to} of ${total} titles`;
+    pageLabel.textContent = `Page ${page} / ${pages}`;
+    prev.disabled = page <= 1;
+    next.disabled = page >= pages;
+  }
+
   async function load() {
     if (!grid) return;
     grid.setAttribute('aria-busy','true');
     status.textContent = 'Loading catalog…';
     prev.disabled = true; next.disabled = true;
+
+    let fallbackShown = false;
+
     try {
-      if (config.backendMode !== 'supabase' || !config.supabaseUrl || !config.supabasePublishableKey) throw new Error('Catalog unavailable.');
-      const base = config.supabaseUrl.replace(/\/$/,'');
-      const params = new URLSearchParams();
-      params.set('published','eq.true');
-      params.set('select','id,slug,title,genre,poster_url,is_complete,is_r18,sort_order,created_at');
-      params.set('order','sort_order.asc,created_at.desc');
-      params.set('limit',String(PAGE_SIZE));
-      params.set('offset',String((page-1)*PAGE_SIZE));
-      const safeQuery=query.replace(/[*,%]/g,' ').replace(/\s+/g,' ').trim();
-      if (safeQuery) params.set('title',`ilike.*${safeQuery}*`);
-      const res = await fetch(`${base}/rest/v1/dramas?${params}`, { headers:{apikey:config.supabasePublishableKey,Accept:'application/json',Prefer:'count=exact'}, cache:'no-store' });
-      if (!res.ok) throw new Error('Catalog unavailable.');
-      const rows = await res.json();
-      total = parseTotal(res.headers.get('content-range'), (page-1)*PAGE_SIZE + rows.length);
-      const pages = Math.max(1, Math.ceil(total/PAGE_SIZE));
-      if (page > pages) { page = pages; writeUrlState(true); return load(); }
-      grid.innerHTML = rows.length ? rows.map(card).join('') : '<p class="lite-empty">No matching dramas found.</p>';
-      const from = total && rows.length ? (page-1)*PAGE_SIZE+1 : 0;
-      const to = total && rows.length ? Math.min(from+rows.length-1,total) : 0;
-      status.textContent = query ? `${from}–${to} of ${total} matching titles` : `${from}–${to} of ${total} titles`;
-      pageLabel.textContent = `Page ${page} / ${pages}`;
-      prev.disabled = page <= 1;
-      next.disabled = page >= pages;
-      grid.setAttribute('aria-busy','false');
-    } catch (err) {
-      console.error(err);
+      const snapshotRes = await fetch(config.catalogEndpoint || '/data/catalog.json', {
+        headers:{Accept:'application/json'},
+        cache:'no-store'
+      });
+      if (snapshotRes.ok) {
+        const payload = await snapshotRes.json();
+        let items = Array.isArray(payload) ? payload : payload?.items;
+        if (Array.isArray(items) && items.length) {
+          const safe = query.toLowerCase();
+          if (safe) {
+            items = items.filter(d => `${d.title||''} ${d.genre||''} ${Array.isArray(d.mood)?d.mood.join(' '):''}`.toLowerCase().includes(safe));
+          }
+          const snapshotTotal = items.length;
+          const snapshotPages = Math.max(1, Math.ceil(snapshotTotal/PAGE_SIZE));
+          if (page <= snapshotPages) {
+            const offset = (page-1)*PAGE_SIZE;
+            renderRows(items.slice(offset, offset+PAGE_SIZE), snapshotTotal);
+            fallbackShown = true;
+          }
+        }
+      }
+    } catch {}
+
+    // Do not overwrite audited results with unfiltered published dramas.
+    if (!fallbackShown) {
       total = 0;
-      grid.innerHTML = '<p class="lite-empty">The Lite catalog is temporarily unavailable. Please try again.</p>';
-      status.textContent = 'Could not load catalog';
+      grid.innerHTML = '<p class="lite-empty">Playable catalog temporarily unavailable. Please try again.</p>';
+      status.textContent = 'Could not load playable catalog';
       pageLabel.textContent = 'Page 1';
       prev.disabled = true; next.disabled = true;
-      grid.setAttribute('aria-busy','false');
     }
+    grid.setAttribute('aria-busy','false');
   }
 
   form?.addEventListener('submit', e => {
