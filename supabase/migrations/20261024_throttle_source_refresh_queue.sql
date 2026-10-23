@@ -1,8 +1,8 @@
--- Emergency maintenance recovery, 2026-10-24.
--- Source refresh is bounded to 25 titles per run and suppresses duplicate
--- pending/in-flight jobs or recent (<24h) retries for the same title.
--- This prevents the previous 1.8M-job queue explosion and read-only database.
--- Only fetch/verify already publicly accessible provider media; no unlock bypass.
+-- 2026-10-24 production recovery. This function is already applied in Supabase.
+-- Limit enqueueing to 25 mapped titles per invocation, suppress per-title duplicates
+-- for at least 24 hours, and stop when there are >=2500 active sync jobs.
+-- This protects the Free-plan database against the 1.8M-row queue explosion.
+-- Protected/locked media is never bypassed during source repair.
 
 CREATE OR REPLACE FUNCTION public.enqueue_expiring_dramabox_refresh()
  RETURNS integer
@@ -11,6 +11,11 @@ CREATE OR REPLACE FUNCTION public.enqueue_expiring_dramabox_refresh()
 AS $function$
 DECLARE v_count integer := 0;
 BEGIN
+  -- Backpressure: do not refill the media queue while providers are still draining.
+  IF (SELECT count(*) FROM public.sync_queue
+      WHERE status IN ('pending','retry_wait','processing')) >= 2500 THEN
+    RETURN 0;
+  END IF;
   WITH due AS (
     SELECT m.source_content_id
     FROM public.content_source_map m
